@@ -1,3 +1,5 @@
+"use client";
+
 import { PageNotFound, UnsubscribeReleaseMail } from "../containers";
 import { useQueryParams } from "../utils";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import "../../../index.scss";
 
 import AddIcon from "@mui/icons-material/Add";

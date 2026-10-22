@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 
 import { useUnsubscribeMutation } from "../../hooks";
 import { EcDialog } from "../../stories/components/EcDialog/EcDialog";

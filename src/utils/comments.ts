@@ -1,3 +1,5 @@
+"use client";
+
 import ExcelJS from "exceljs";
 import saveAs from "file-saver";
 import { cloneDeep, sortBy as sort } from "lodash";

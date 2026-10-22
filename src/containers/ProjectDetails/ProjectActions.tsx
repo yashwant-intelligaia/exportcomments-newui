@@ -1,3 +1,5 @@
+"use client";
+
 import {
     ArrowDropDown as ArrowDropDownIcon,
     FileDownloadOutlined as FileDownloadOutlinedIcon,

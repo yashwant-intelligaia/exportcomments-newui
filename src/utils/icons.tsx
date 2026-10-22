@@ -1,3 +1,5 @@
+"use client";
+
 import { SvgIcon, SvgIconProps } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 

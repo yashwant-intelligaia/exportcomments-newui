@@ -1,6 +1,8 @@
+"use client";
+
 import axios, { AxiosPromise, AxiosRequestConfig } from "axios";
 import EmojiConvertor from "emoji-js";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@/utils/navigation";
 
 import { APP_CONSTANT } from "../constants/AppConstant";
 import { FormattedResponseType, ResponseType } from "../types";

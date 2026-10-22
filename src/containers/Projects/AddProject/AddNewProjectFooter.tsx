@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Button } from "@mui/material";
 import { useContext } from "react";
 

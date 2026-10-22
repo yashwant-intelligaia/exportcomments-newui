@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";

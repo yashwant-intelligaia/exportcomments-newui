@@ -1,6 +1,8 @@
+"use client";
+
 import { get } from "lodash";
 import { useContext } from "react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
@@ -10,8 +12,7 @@ const usePageMutations = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
 
-    const verifyPage = useMutation(
-        async (formData: any) => {
+    const verifyPage = useMutation({ mutationFn: async (formData: any) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.verifyPage}`,
@@ -24,9 +25,7 @@ const usePageMutations = () => {
             });
 
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -36,9 +35,7 @@ const usePageMutations = () => {
                     showToast({ message, severity: "error" });
                 }
                 return response;
-            },
-        }
-    );
+            } });
     return {
         verifyPage,
     };

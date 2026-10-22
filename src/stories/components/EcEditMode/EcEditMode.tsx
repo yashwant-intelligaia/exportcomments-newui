@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Clear,
     CreateOutlined as CreateOutlinedIcon,

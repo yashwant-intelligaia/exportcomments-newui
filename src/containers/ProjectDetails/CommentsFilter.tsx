@@ -1,3 +1,5 @@
+"use client";
+
 import {
     CloseRounded as CloseRoundedIcon,
     SearchRounded as SearchRoundedIcon,
@@ -14,7 +16,7 @@ import {
     Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 
 import { ProjectDetailsContext } from "../../contexts";
 import { useCommentMutation } from "../../hooks";

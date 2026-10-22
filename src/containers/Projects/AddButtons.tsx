@@ -1,3 +1,5 @@
+"use client";
+
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { Button } from "@mui/material";

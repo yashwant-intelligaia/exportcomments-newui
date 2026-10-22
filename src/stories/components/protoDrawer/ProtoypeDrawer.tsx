@@ -1,3 +1,5 @@
+"use client";
+
 import { InsertDriveFileOutlined as InsertDriveFileOutlinedIcon } from "@mui/icons-material";
 import ShareIcon from "@mui/icons-material/Share";
 import { Avatar, AvatarGroup, Divider, Link, Menu, MenuItem } from "@mui/material";

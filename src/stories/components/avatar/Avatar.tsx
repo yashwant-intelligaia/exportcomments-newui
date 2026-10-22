@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, createTheme, ThemeProvider } from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";

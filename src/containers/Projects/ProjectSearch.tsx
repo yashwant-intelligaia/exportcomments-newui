@@ -1,3 +1,5 @@
+"use client";
+
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { ChangeEventHandler } from "react";
 import styled from "styled-components";

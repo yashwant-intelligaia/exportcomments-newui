@@ -1,6 +1,8 @@
+"use client";
+
 import { Box } from "@mui/material";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 import styled from "styled-components";
 
 const Brand = styled.div`

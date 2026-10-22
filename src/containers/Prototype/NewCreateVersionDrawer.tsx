@@ -1,3 +1,5 @@
+"use client";
+
 import SearchIcon from "@mui/icons-material/Search";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
@@ -11,7 +13,7 @@ import {
 import TextField from "@mui/material/TextField";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useParams } from "@/utils/navigation";
 import styled from "styled-components";
 
 import { ProjectDetailsContext, PrototypePageContext } from "../../contexts";

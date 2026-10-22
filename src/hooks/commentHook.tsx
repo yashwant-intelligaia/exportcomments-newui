@@ -1,7 +1,9 @@
+"use client";
+
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { get } from "lodash";
 import { useContext } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
@@ -25,9 +27,7 @@ axios.defaults.baseURL = APP_CONSTANT.baseUrl;
 const useFetchComments = (projectId?: number, branchKey?: string) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<CommentResponseDataType, AxiosError>(
-        [COMMENTS, projectId, branchKey],
-        async () => {
+    return useQuery<CommentResponseDataType, AxiosError>({ queryKey: [COMMENTS, projectId, branchKey], queryFn: async () => {
             const payload: { projectId?: number; branchKey?: string } = {
                 projectId,
             };
@@ -44,9 +44,7 @@ const useFetchComments = (projectId?: number, branchKey?: string) => {
                 },
             });
             return get(data, "data", {}) as CommentResponseDataType;
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
             staleTime: Infinity,
             refetchOnMount: false,
@@ -61,9 +59,7 @@ const useFetchComments = (projectId?: number, branchKey?: string) => {
                     );
                     showToast({ message, severity: "error" });
                 }
-            },
-        }
-    );
+            } });
 };
 
 const callDeleteApi =
@@ -83,8 +79,7 @@ const callDeleteApi =
 const useDeleteComment = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    return useMutation(callDeleteApi(token), {
-        onSettled: (
+    return useMutation({ mutationFn: callDeleteApi(token), onSettled: (
             response: AxiosResponse | undefined,
             error: AxiosError | null
         ): any | null | AxiosError => {
@@ -97,8 +92,7 @@ const useDeleteComment = () => {
                 return error;
             }
             return null;
-        },
-    });
+        } });
 };
 
 const useReactionMutation = () => {
@@ -106,8 +100,7 @@ const useReactionMutation = () => {
     const { showToast } = useContext(ToasterContext);
     const queryClient = useQueryClient();
 
-    const getReaction = useMutation(
-        (reactionDetails: any) =>
+    const getReaction = useMutation({ mutationFn: (reactionDetails: any) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.getReaction,
@@ -120,9 +113,7 @@ const useReactionMutation = () => {
                     Authorization: `Bearer ${token}`,
                     Timezone: TIME_ZONE,
                 },
-            }),
-        {
-            onSettled: (response: any, error: any) => {
+            }), onSettled: (response: any, error: any) => {
                 if (error) {
                     const message = get(
                         error,
@@ -135,12 +126,9 @@ const useReactionMutation = () => {
 
                 showToast({ message: response?.data?.message });
                 return response;
-            },
-        }
-    );
+            } });
 
-    const addReaction = useMutation(
-        (payload: AddOrDeleteReactionRequestType) =>
+    const addReaction = useMutation({ mutationFn: (payload: AddOrDeleteReactionRequestType) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.addReaction,
@@ -150,9 +138,7 @@ const useReactionMutation = () => {
                     Authorization: `Bearer ${token}`,
                     Timezone: TIME_ZONE,
                 },
-            }),
-        {
-            onSettled: async (response, error, variables) => {
+            }), onSettled: async (response, error, variables) => {
                 if (error) {
                     const message = get(
                         error,
@@ -164,7 +150,7 @@ const useReactionMutation = () => {
                 }
                 const { projectId, commentId, emoji } = variables;
                 const queryName = [COMMENTS, projectId];
-                await queryClient.cancelQueries(queryName);
+                await queryClient.cancelQueries({ queryKey: queryName });
                 const previousData = await queryClient.getQueryData(queryName);
                 const comments = get(previousData, "data.comments.comments.comments", []);
                 comments.forEach((comment: any) => {
@@ -183,14 +169,11 @@ const useReactionMutation = () => {
                         ];
                     }
                 });
-                queryClient.invalidateQueries([COMMENTS]);
+                queryClient.invalidateQueries({ queryKey: [COMMENTS] });
                 return response;
-            },
-        }
-    );
+            } });
 
-    const deleteReaction = useMutation(
-        (payload: AddOrDeleteReactionRequestType) =>
+    const deleteReaction = useMutation({ mutationFn: (payload: AddOrDeleteReactionRequestType) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.deleteReaction,
@@ -200,9 +183,7 @@ const useReactionMutation = () => {
                     Authorization: `Bearer ${token}`,
                     Timezone: TIME_ZONE,
                 },
-            }),
-        {
-            onSettled: async (response, error, variables) => {
+            }), onSettled: async (response, error, variables) => {
                 if (error) {
                     const message = get(
                         error,
@@ -214,7 +195,7 @@ const useReactionMutation = () => {
                 }
                 const { projectId, commentId, emoji } = variables;
                 const queryName = [COMMENTS, projectId];
-                await queryClient.cancelQueries(queryName);
+                await queryClient.cancelQueries({ queryKey: queryName });
                 const previousData = await queryClient.getQueryData(queryName);
                 const comments = get(previousData, "data.comments.comments.comments", []);
                 comments.forEach((comment: any) => {
@@ -232,11 +213,9 @@ const useReactionMutation = () => {
                         );
                     }
                 });
-                queryClient.invalidateQueries([COMMENTS]);
+                queryClient.invalidateQueries({ queryKey: [COMMENTS] });
                 return response;
-            },
-        }
-    );
+            } });
     return { getReaction, addReaction, deleteReaction };
 };
 
@@ -245,8 +224,7 @@ const useCommentMutation = () => {
     const { showToast } = useContext(ToasterContext);
     const queryClient = useQueryClient();
 
-    const replyComment = useMutation(
-        async (formData: IReplyRequestType) => {
+    const replyComment = useMutation({ mutationFn: async (formData: IReplyRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.reply,
@@ -257,21 +235,16 @@ const useCommentMutation = () => {
                 data: formData,
             });
             return get(data, "data", {});
-        },
-        {
-            onError: (error: AxiosError) => {
+        }, onError: (error: AxiosError) => {
                 const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
                 showToast({ message, severity: "error" });
             },
             onSuccess: (_, payload) => {
-                queryClient.refetchQueries([COMMENTS, payload.projectId, payload.branchKey]);
+                queryClient.refetchQueries({ queryKey: [COMMENTS, payload.projectId, payload.branchKey] });
                 showToast({ message: "Reply posted Successfully" });
-            },
-        }
-    );
+            } });
 
-    const markAsRead = useMutation(
-        async (formData: { projectId: number; branchKey: string }) => {
+    const markAsRead = useMutation({ mutationFn: async (formData: { projectId: number; branchKey: string }) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.markAsRead,
@@ -282,18 +255,14 @@ const useCommentMutation = () => {
                 data: formData,
             });
             return get(data, "data", {});
-        },
-        {
-            onError: (error: AxiosError) => {
+        }, onError: (error: AxiosError) => {
                 const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
                 showToast({ message, severity: "error" });
             },
             onSuccess: (_, { projectId, branchKey }) => {
-                queryClient.invalidateQueries([COMMENTS, projectId, branchKey]);
+                queryClient.invalidateQueries({ queryKey: [COMMENTS, projectId, branchKey] });
                 showToast({ message: "Comments marked as read" });
-            },
-        }
-    );
+            } });
 
     return { replyComment, markAsRead };
 };

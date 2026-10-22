@@ -1,3 +1,5 @@
+"use client";
+
 import AddReactionOutlinedIcon from "@mui/icons-material/AddReactionOutlined";
 import ClearIcon from "@mui/icons-material/ClearOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -25,8 +27,8 @@ import { AxiosError } from "axios";
 import { format } from "date-fns";
 import * as React from "react";
 import { useState } from "react";
-import { QueryObserverResult } from "react-query";
-import { useParams } from "react-router-dom";
+import { QueryObserverResult } from "@tanstack/react-query";
+import { useParams } from "@/utils/navigation";
 import styled from "styled-components";
 
 import angryFace from "../../assets/angry-face.svg";

@@ -1,3 +1,5 @@
+"use client";
+
 import defaultLoader from "../assets/loader.gif";
 
 const loadingMessagesForComments = [

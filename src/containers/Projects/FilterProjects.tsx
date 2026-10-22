@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Button, List, ListItem, ListItemButton, Popover, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 

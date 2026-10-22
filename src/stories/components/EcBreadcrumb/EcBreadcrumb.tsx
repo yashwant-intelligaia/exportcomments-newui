@@ -1,3 +1,5 @@
+"use client";
+
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 
 import { uniqueKey } from "../../../utils";

@@ -1,3 +1,5 @@
+"use client";
+
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { useEffect, useRef } from "react";

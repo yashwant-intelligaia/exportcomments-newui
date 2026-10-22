@@ -1,7 +1,9 @@
+"use client";
+
 import { get } from "lodash";
 import { useContext } from "react";
-import { useMutation } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { useHistory } from "@/utils/navigation";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
@@ -15,8 +17,7 @@ const useAuthMutations = () => {
     const history = useHistory();
     const { setToken, setUser } = UserContext();
 
-    const saveFigmaAccessToken = useMutation(
-        async (requestData: RequestTokenType) => {
+    const saveFigmaAccessToken = useMutation({ mutationFn: async (requestData: RequestTokenType) => {
             const { data } = await api({
                 url: `${APP_CONSTANT.webApi.getToken}`,
                 version: "v2",
@@ -27,9 +28,7 @@ const useAuthMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -39,9 +38,7 @@ const useAuthMutations = () => {
                     showToast({ message, severity: "error" });
                 }
                 return response;
-            },
-        }
-    );
+            } });
 
     const logoutUserSession = () => {
         removeUserToken();

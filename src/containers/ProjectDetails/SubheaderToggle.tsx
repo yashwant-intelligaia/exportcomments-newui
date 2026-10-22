@@ -1,6 +1,8 @@
+"use client";
+
 import { Box, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import React, { useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 import styled from "styled-components";
 
 import { ProjectDetailsContext } from "../../contexts";

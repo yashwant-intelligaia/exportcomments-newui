@@ -1,9 +1,11 @@
+"use client";
+
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { Box, List, ListItemButton, Menu, MenuItem } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 
 import checkCircle from "../../assets/check_circle.svg";
 import figJamIcon from "../../assets/figjamIcon.svg";

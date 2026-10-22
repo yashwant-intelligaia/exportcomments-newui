@@ -1,3 +1,5 @@
+"use client";
+
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 import Button from "@mui/material/Button";

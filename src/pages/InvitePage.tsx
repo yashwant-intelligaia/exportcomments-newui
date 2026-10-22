@@ -1,4 +1,6 @@
-import { useParams } from "react-router-dom";
+"use client";
+
+import { useParams } from "@/utils/navigation";
 
 import { InvitePageFlow, InviteProject, InviteProjectPage, PageNotFound } from "../containers";
 

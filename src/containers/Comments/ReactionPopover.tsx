@@ -1,3 +1,5 @@
+"use client";
+
 import { AddReactionOutlined as AddReactionOutlinedIcon } from "@mui/icons-material";
 import { Box, Button, IconButton, Popover } from "@mui/material";
 import { useState } from "react";

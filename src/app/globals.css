@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/* Intelligaia design system tokens (light theme only). */
+@theme {
+    --color-paper: #fafaf6;
+    --color-surface: #ffffff;
+    --color-surface-sunk: #eef0ed;
+    --color-ink: #04050a;
+    --color-body: #2a2a24;
+    --color-muted: #524f43;
+    --color-line: #dedad0;
+    --color-line-cool: #d8dfda;
+    --color-yellow: #ffc800;
+    --color-blue: #4a8bf5;
+    --color-blue-ink: #1a5fcc;
+    --color-blue-soft: #dce8fd;
+    --color-purple: #8a5af0;
+    --color-purple-ink: #7546dc;
+    --color-purple-soft: #e7dcfd;
+    --color-navy: #233464;
+    --color-mint: #deebe4;
+    --color-sage: #ccd7d0;
+    --color-danger: #b42318;
+    --color-danger-soft: #fde8e6;
+
+    --font-display: var(--font-oswald), "Arial Narrow", sans-serif;
+    --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-pill: 99px;
+
+    --shadow-card: 0 12px 45px 0 rgba(35, 52, 100, 0.055);
+
+    --text-display-hero: clamp(72px, 6.9vw, 200px);
+    --text-display-1: clamp(64px, 5.6vw, 168px);
+    --text-display-stat: clamp(44px, 4.8vw, 135px);
+    --text-heading-3: clamp(26px, 2.1vw, 58px);
+    --text-claim: clamp(18px, 1.6vw, 38px);
+    --text-lead: clamp(17px, 1.22vw, 34px);
+    --text-ui: 14px;
+    --text-fine: 12px;
+
+    --spacing-gutter: clamp(24px, 4.5vw, 150px);
+    --spacing-control: 50px;
+}
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        color: var(--color-body);
+        background: var(--color-paper);
+    }
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+    h1, h2, h3 {
+        font-family: var(--font-display);
+        font-weight: 300;
+        letter-spacing: -0.025em;
+        color: var(--color-ink);
+    }
+    :focus-visible {
+        outline: 2px solid var(--color-ink);
+        outline-offset: 2px;
+    }
+    button { cursor: pointer; }
+}

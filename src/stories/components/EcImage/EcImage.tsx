@@ -1,3 +1,5 @@
+"use client";
+
 import { ImageListItem, ImageListItemProps } from "@mui/material";
 
 const EcImage = (props: ImageListItemProps) => {

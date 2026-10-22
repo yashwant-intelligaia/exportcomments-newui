@@ -1,5 +1,7 @@
+"use client";
+
 import { useContext, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "@/utils/navigation";
 
 import { CommentsList } from "../containers";
 import { SubHeader } from "../containers/ProjectDetails";

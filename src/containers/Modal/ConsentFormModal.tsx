@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Checkbox, FormControlLabel, FormGroup, Grid, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";

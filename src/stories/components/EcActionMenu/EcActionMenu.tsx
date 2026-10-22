@@ -1,3 +1,5 @@
+"use client";
+
 import { ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover";
 import { styled } from "@mui/material/styles";

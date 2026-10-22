@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useState } from "react";
 
 import { ProjectCardContextType, ProjectCardDataType } from "../types/project";

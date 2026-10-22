@@ -1,6 +1,8 @@
+"use client";
+
 import { Box } from "@mui/material";
 import { useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 import styled from "styled-components";
 
 import { ProjectDetailsContext } from "../../contexts";

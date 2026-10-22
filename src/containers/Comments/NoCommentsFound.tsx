@@ -1,3 +1,5 @@
+"use client";
+
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 import styled from "styled-components";
 

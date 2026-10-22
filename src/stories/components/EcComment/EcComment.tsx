@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, Box, Typography } from "@mui/material";
 import { format, parseISO } from "date-fns";
 

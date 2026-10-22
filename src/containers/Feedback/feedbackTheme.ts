@@ -1,3 +1,5 @@
+"use client";
+
 import { ITheme } from "survey-core";
 
 export const themeJson: ITheme = {

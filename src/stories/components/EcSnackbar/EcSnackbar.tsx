@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Slide, Snackbar, Typography } from "@mui/material";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import React from "react";

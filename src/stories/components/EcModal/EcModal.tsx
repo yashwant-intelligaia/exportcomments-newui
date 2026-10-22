@@ -1,3 +1,5 @@
+"use client";
+
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Breakpoint, Container, IconButton, Modal, Stack, Typography } from "@mui/material";
 import { isArray } from "lodash";

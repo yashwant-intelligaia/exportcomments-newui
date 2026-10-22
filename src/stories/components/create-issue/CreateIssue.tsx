@@ -1,3 +1,5 @@
+"use client";
+
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Box, Button, Modal } from "@mui/material";
 import { useEffect, useState } from "react";

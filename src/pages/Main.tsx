@@ -1,3 +1,5 @@
+"use client";
+
 import "../../node_modules/react-responsive-carousel/lib/styles/carousel.min.css";
 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";

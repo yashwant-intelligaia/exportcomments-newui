@@ -1,3 +1,5 @@
+"use client";
+
 import { Close as CloseIcon } from "@mui/icons-material";
 import { Box, CardMedia, IconButton, Modal, Typography } from "@mui/material";
 import styled from "styled-components";

@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./AddButtons";
 export * from "./AddProject";
 export * from "./AddUserDrawer";

@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./AddProjectContext";
 export * from "./ProjectDetailsContext";
 export * from "./PrototypePageContext";

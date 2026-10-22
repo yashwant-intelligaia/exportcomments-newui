@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, ReactNode, useState } from "react";
 
 import { AddProjectDataType } from "../types";

@@ -1,8 +1,10 @@
+"use client";
+
 import { AxiosError } from "axios";
 import { get } from "lodash";
 import { useContext } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useHistory, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useHistory, useParams } from "@/utils/navigation";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
@@ -39,8 +41,7 @@ const useProjectMutations = () => {
     const { token } = UserContext();
     const queryClient = useQueryClient();
 
-    const updateProject = useMutation(
-        async (formData: UpdateProjectDataType) => {
+    const updateProject = useMutation({ mutationFn: async (formData: UpdateProjectDataType) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.updateProjectTitle,
@@ -52,20 +53,15 @@ const useProjectMutations = () => {
                 data: formData,
             });
             return get(data, "data", {});
-        },
-        {
-            onError: (error: AxiosError) => {
+        }, onError: (error: AxiosError) => {
                 const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
                 showToast({ message, severity: "error" });
             },
             onSuccess: () => {
                 showToast({ message: "Project Title Updated Successfully" });
-            },
-        }
-    );
+            } });
 
-    const verifyUserInvite = useMutation(
-        async (formData: { inviteToken: string }) => {
+    const verifyUserInvite = useMutation({ mutationFn: async (formData: { inviteToken: string }) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.verifyUserInvite,
@@ -77,21 +73,16 @@ const useProjectMutations = () => {
                 data: formData,
             });
             return get(data, "data", {});
-        },
-        {
-            onError: (error: AxiosError) => {
+        }, onError: (error: AxiosError) => {
                 const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
                 showToast({ message, severity: "error" });
             },
             onSuccess: () => {
-                queryClient.refetchQueries([FILES]);
+                queryClient.refetchQueries({ queryKey: [FILES] });
                 showToast({ message: "User invitation verified successfully" });
-            },
-        }
-    );
+            } });
 
-    const sendInvite = useMutation(
-        async (formData: ProjectInviteRequestType) => {
+    const sendInvite = useMutation({ mutationFn: async (formData: ProjectInviteRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.inviteProjectUser}`,
@@ -103,19 +94,14 @@ const useProjectMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) return { type: "error", message: error };
-                queryClient.refetchQueries([INVITEES]);
+                queryClient.refetchQueries({ queryKey: [INVITEES] });
                 showToast({ message: "Invite sent successfully" });
                 return response;
-            },
-        }
-    );
+            } });
 
-    const invitePage = useMutation(
-        async (formData: InvitePageRequestType) => {
+    const invitePage = useMutation({ mutationFn: async (formData: InvitePageRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.invitePage}`,
@@ -127,9 +113,7 @@ const useProjectMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -138,15 +122,12 @@ const useProjectMutations = () => {
                     );
                     return showToast({ message, severity: "error" });
                 }
-                queryClient.refetchQueries([INVITEES]);
+                queryClient.refetchQueries({ queryKey: [INVITEES] });
                 showToast({ message: "Page Link sent successfully" });
                 return response;
-            },
-        }
-    );
+            } });
 
-    const inviteFlow = useMutation(
-        async (formData: InviteFlowRequestType) => {
+    const inviteFlow = useMutation({ mutationFn: async (formData: InviteFlowRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.inviteFlow}`,
@@ -158,9 +139,7 @@ const useProjectMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -169,15 +148,12 @@ const useProjectMutations = () => {
                     );
                     showToast({ message, severity: "error" });
                 }
-                queryClient.refetchQueries([INVITEES]);
+                queryClient.refetchQueries({ queryKey: [INVITEES] });
                 showToast({ message: "Flow Link sent successfully" });
                 return response;
-            },
-        }
-    );
+            } });
 
-    const inviteVersion = useMutation(
-        async (formData: InviteVersionRequestType) => {
+    const inviteVersion = useMutation({ mutationFn: async (formData: InviteVersionRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.inviteVersion}`,
@@ -189,9 +165,7 @@ const useProjectMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -200,15 +174,12 @@ const useProjectMutations = () => {
                     );
                     return showToast({ message, severity: "error" });
                 }
-                queryClient.refetchQueries([VERSIONS]);
+                queryClient.refetchQueries({ queryKey: [VERSIONS] });
                 showToast({ message: "Version Link sent successfully" });
                 return response;
-            },
-        }
-    );
+            } });
 
-    const markAsFavourite = useMutation(
-        async (formData: { projectId: number; status: boolean }) => {
+    const markAsFavourite = useMutation({ mutationFn: async (formData: { projectId: number; status: boolean }) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.userFavorite}`,
@@ -221,9 +192,7 @@ const useProjectMutations = () => {
             const response = get(data, "data", {});
             const statusMessage = get(data, "message", "");
             return formattedResponse<any>(response, statusMessage);
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -233,12 +202,10 @@ const useProjectMutations = () => {
                     showToast({ message, severity: "error" });
                     return;
                 }
-                queryClient.refetchQueries([VERSIONS]);
+                queryClient.refetchQueries({ queryKey: [VERSIONS] });
                 const { statusMessage } = response || { statusMessage: "" };
                 showToast({ message: statusMessage });
-            },
-        }
-    );
+            } });
 
     return {
         updateProject,
@@ -254,9 +221,7 @@ const useProjectMutations = () => {
 const useFetchProjectUsers = (projectId?: number) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<ProjectUserResponseType[], AxiosError>(
-        [ProjectUsers, projectId],
-        async () => {
+    return useQuery<ProjectUserResponseType[], AxiosError>({ queryKey: [ProjectUsers, projectId], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.userFiles}`,
@@ -270,9 +235,7 @@ const useFetchProjectUsers = (projectId?: number) => {
                 },
             });
             return get(data, "data", {}) as ProjectUserResponseType[];
-        },
-        {
-            enabled: !!projectId,
+        }, enabled: !!projectId,
             retryDelay: 3,
             staleTime: 60 * 1000,
             onSettled: (data, error) => {
@@ -284,17 +247,13 @@ const useFetchProjectUsers = (projectId?: number) => {
                     );
                     showToast({ message, severity: "error" });
                 }
-            },
-        }
-    );
+            } });
 };
 
 const useFetchProjectBranch = (projectId?: number) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<BranchResponseType[], AxiosError>(
-        [BRANCH_LIST, projectId],
-        async () => {
+    return useQuery<BranchResponseType[], AxiosError>({ queryKey: [BRANCH_LIST, projectId], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: `project/${projectId}/branch`,
@@ -306,9 +265,7 @@ const useFetchProjectBranch = (projectId?: number) => {
             });
 
             return get(data, "data", {}) as any;
-        },
-        {
-            enabled: !!projectId,
+        }, enabled: !!projectId,
             retryDelay: 3,
             staleTime: Infinity,
             onSettled: (data, error) => {
@@ -321,9 +278,7 @@ const useFetchProjectBranch = (projectId?: number) => {
                     showToast({ message, severity: "error" });
                 }
                 return data;
-            },
-        }
-    );
+            } });
 };
 
 const useFetchPrototypeList = (branchKey: string) => {
@@ -335,9 +290,7 @@ const useFetchPrototypeList = (branchKey: string) => {
     }: {
         projectId: string;
     } = useParams();
-    return useQuery<PageType[], AxiosError>(
-        [PROTOTYPES, projectId, branchKey],
-        async () => {
+    return useQuery<PageType[], AxiosError>({ queryKey: [PROTOTYPES, projectId, branchKey], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.prototypes}`,
@@ -352,11 +305,9 @@ const useFetchPrototypeList = (branchKey: string) => {
                 },
             });
             return get(data, "data", {}) as PageType[];
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
-            cacheTime: 60 * 5 * 1000,
+            gcTime: 60 * 5 * 1000,
             staleTime: 60 * 5 * 1000,
             refetchInterval: 60 * 5 * 1000,
             refetchOnMount: false,
@@ -372,9 +323,7 @@ const useFetchPrototypeList = (branchKey: string) => {
                     history.push("/");
                 }
                 return prototypeResponse;
-            },
-        }
-    );
+            } });
 };
 
 const useFetchProjectList = ({
@@ -385,9 +334,7 @@ const useFetchProjectList = ({
 }: FetchProjectListParams) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<IUserFile[], AxiosError>(
-        [PROJECT_LIST, key],
-        async () => {
+    return useQuery<IUserFile[], AxiosError>({ queryKey: [PROJECT_LIST, key], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.fetchProject}${
@@ -400,9 +347,7 @@ const useFetchProjectList = ({
                 },
             });
             return get(data, "data", {}) as IUserFile[];
-        },
-        {
-            retryDelay: 3,
+        }, retryDelay: 3,
             staleTime: 60 * 5 * 1000,
             enabled,
             onSettled: (prototypeResponse, error) => {
@@ -415,9 +360,7 @@ const useFetchProjectList = ({
                     showToast({ message, severity: "error" });
                 }
                 return prototypeResponse;
-            },
-        }
-    );
+            } });
 };
 
 const getFilterDateRange = ({

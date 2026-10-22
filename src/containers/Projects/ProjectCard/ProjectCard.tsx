@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { useContext, useEffect } from "react";
 import styled from "styled-components";

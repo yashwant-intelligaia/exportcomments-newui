@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 
 import { APP_CONSTANT } from "../constants/AppConstant";
 import { PageNotFound } from "../containers";
@@ -54,7 +56,7 @@ export const FigmaAuth = () => {
     }
 
     if (data) {
-        history.push("projects");
+        history.push("/projects");
     }
 
     return <></>;

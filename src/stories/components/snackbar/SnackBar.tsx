@@ -1,3 +1,5 @@
+"use client";
+
 // TODO: remove this component once ToasterContext implemented at all places.
 // We need to use EcSnackbar component in future
 import { Slide, Snackbar } from "@mui/material";

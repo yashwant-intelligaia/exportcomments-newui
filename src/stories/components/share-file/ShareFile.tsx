@@ -1,3 +1,5 @@
+"use client";
+
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import DoneIcon from "@mui/icons-material/Done";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";

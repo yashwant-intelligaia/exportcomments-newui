@@ -1,9 +1,11 @@
+"use client";
+
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { Box, Grid, IconButton, Typography } from "@mui/material";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "@/utils/navigation";
 
 import placeHolderImg from "../../assets/imagePlaceholder.svg";
 import previewLoaderImg from "../../assets/previewLoader.gif";

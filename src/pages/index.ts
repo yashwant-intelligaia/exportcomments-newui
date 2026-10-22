@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./FeedbackFormPage";
 export * from "./FigmaAuth";
 export * from "./GenerateAccessToken";

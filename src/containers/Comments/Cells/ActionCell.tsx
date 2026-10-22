@@ -1,3 +1,5 @@
+"use client";
+
 import { KeyboardArrowDown as KeyboardArrowDownIcon } from "@mui/icons-material";
 import { Box, IconButton, Menu, MenuItem } from "@mui/material";
 import React from "react";

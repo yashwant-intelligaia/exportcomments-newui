@@ -1,7 +1,9 @@
+"use client";
+
 import { AxiosError } from "axios";
 import { get } from "lodash";
 import { useContext } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
@@ -13,8 +15,7 @@ const useFlowMutations = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
     const queryClient = useQueryClient();
-    const verifyFlow = useMutation(
-        async (formData: any) => {
+    const verifyFlow = useMutation({ mutationFn: async (formData: any) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.verifyFlow}`,
@@ -26,9 +27,7 @@ const useFlowMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -38,11 +37,8 @@ const useFlowMutations = () => {
                     showToast({ message, severity: "error" });
                 }
                 return response;
-            },
-        }
-    );
-    const verifyFeedbackVersion = useMutation(
-        async (formData: any) => {
+            } });
+    const verifyFeedbackVersion = useMutation({ mutationFn: async (formData: any) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.verifyFeedbackVersion}`,
@@ -54,9 +50,7 @@ const useFlowMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -66,11 +60,8 @@ const useFlowMutations = () => {
                     showToast({ message, severity: "error" });
                 }
                 return response;
-            },
-        }
-    );
-    const flowVersion = useMutation(
-        async (formData: any) => {
+            } });
+    const flowVersion = useMutation({ mutationFn: async (formData: any) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.flowVersion}`,
@@ -82,9 +73,7 @@ const useFlowMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -96,11 +85,8 @@ const useFlowMutations = () => {
                 }
                 showToast({ message: "Flow version created successfully" });
                 return response;
-            },
-        }
-    );
-    const flowVersionList = useMutation(
-        async (formData: any) => {
+            } });
+    const flowVersionList = useMutation({ mutationFn: async (formData: any) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.flowVersionList}`,
@@ -112,9 +98,7 @@ const useFlowMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -125,11 +109,8 @@ const useFlowMutations = () => {
                     showToast({ message, severity: "error" });
                 }
                 return response;
-            },
-        }
-    );
-    const feedbackRating = useMutation(
-        async (formData: feedbackRatingType) => {
+            } });
+    const feedbackRating = useMutation({ mutationFn: async (formData: feedbackRatingType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.feedbackRating}`,
@@ -141,9 +122,7 @@ const useFlowMutations = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -153,11 +132,9 @@ const useFlowMutations = () => {
 
                     showToast({ message, severity: "error" });
                 }
-                queryClient.refetchQueries([VERSIONS]);
+                queryClient.refetchQueries({ queryKey: [VERSIONS] });
                 return response;
-            },
-        }
-    );
+            } });
 
     return {
         verifyFlow,
@@ -170,9 +147,7 @@ const useFlowMutations = () => {
 const useFetchFlowList = (flowId: any) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<any, AxiosError>(
-        [VERSIONS, flowId],
-        async () => {
+    return useQuery<any, AxiosError>({ queryKey: [VERSIONS, flowId], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.flowVersionList}`,
@@ -184,9 +159,7 @@ const useFetchFlowList = (flowId: any) => {
                 data: { flowId },
             });
             return get(data, "data", {}) as any;
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
             refetchOnMount: false,
             staleTime: Infinity,
@@ -203,9 +176,7 @@ const useFetchFlowList = (flowId: any) => {
                     showToast({ message, severity: "error" });
                 }
                 return versionResponse;
-            },
-        }
-    );
+            } });
 };
 
 export { useFetchFlowList, useFlowMutations };

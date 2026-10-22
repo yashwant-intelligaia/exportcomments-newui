@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./Cell";
 export * from "./CellExpanderFormatter";
 export * from "./CreateVersionDrawer";

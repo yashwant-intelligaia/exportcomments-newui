@@ -1,3 +1,5 @@
+"use client";
+
 import { Box } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";

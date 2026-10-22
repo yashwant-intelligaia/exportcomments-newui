@@ -1,3 +1,5 @@
+"use client";
+
 import { PlayArrowRounded as PlayArrowRoundedIcon } from "@mui/icons-material";
 import { Box, Link, Typography } from "@mui/material";
 import { useContext } from "react";

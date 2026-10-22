@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./colors";
 export * from "./comments";
 export * from "./common";

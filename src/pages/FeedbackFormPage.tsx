@@ -1,8 +1,10 @@
+"use client";
+
 import "../assets/css/defaultV2.css";
 
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@/utils/navigation";
 import { Model, SurveyModel } from "survey-core";
 import { Survey } from "survey-react-ui";
 

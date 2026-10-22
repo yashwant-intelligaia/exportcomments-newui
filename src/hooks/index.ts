@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./authHook";
 export * from "./commentHook";
 export * from "./feedbackHook";

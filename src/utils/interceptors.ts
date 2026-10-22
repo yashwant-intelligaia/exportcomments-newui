@@ -1,3 +1,5 @@
+"use client";
+
 import axios from "axios";
 
 import { APP_CONSTANT } from "../constants/AppConstant";

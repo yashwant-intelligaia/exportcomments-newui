@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Button, Popover, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";

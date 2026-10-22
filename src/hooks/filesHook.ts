@@ -1,7 +1,9 @@
+"use client";
+
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { get } from "lodash";
 import { useContext } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext } from "../contexts";
@@ -24,9 +26,7 @@ interface IFetchProject {
 
 const useFetchPluginCount = () => {
     const { showToast } = useContext(ToasterContext);
-    return useQuery<PluginCountResponseType, AxiosError>(
-        [PluginCount],
-        async () => {
+    return useQuery<PluginCountResponseType, AxiosError>({ queryKey: [PluginCount], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.pluginCount}`,
@@ -36,9 +36,7 @@ const useFetchPluginCount = () => {
                 },
             });
             return get(data, "data", {}) as PluginCountResponseType;
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
             staleTime: 0,
             refetchOnMount: true,
@@ -52,9 +50,7 @@ const useFetchPluginCount = () => {
                     );
                     showToast({ message, severity: "error" });
                 }
-            },
-        }
-    );
+            } });
 };
 
 const processPluginDownloadCount = (data?: PluginCountResponseType) => {
@@ -83,9 +79,7 @@ const processPluginDownloadCount = (data?: PluginCountResponseType) => {
 const useFetchFiles = (props: ISnackBarMessage & { isEnabled?: boolean }) => {
     const { token } = UserContext();
 
-    return useQuery<IUserFileResponse, AxiosError>(
-        [Projects],
-        async () => {
+    return useQuery<IUserFileResponse, AxiosError>({ queryKey: [Projects], queryFn: async () => {
             const response = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.getFileList,
@@ -97,9 +91,7 @@ const useFetchFiles = (props: ISnackBarMessage & { isEnabled?: boolean }) => {
                 data: {},
             });
             return response as any;
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
             staleTime: 30 * 1000,
             refetchInterval: 30 * 1000,
@@ -134,9 +126,7 @@ const useFetchFiles = (props: ISnackBarMessage & { isEnabled?: boolean }) => {
                     return error;
                 }
                 return null;
-            },
-        }
-    );
+            } });
 };
 
 const postApiCall = (token: string, request: any) =>
@@ -152,8 +142,7 @@ const postApiCall = (token: string, request: any) =>
 const useCommonPost = <G>(props?: CommonPostPropsType) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useMutation((body: G) => postApiCall(token, body), {
-        onSettled: (response: AxiosResponse | undefined, error: AxiosError | null): any => {
+    return useMutation({ mutationFn: (body: G) => postApiCall(token, body), onSettled: (response: AxiosResponse | undefined, error: AxiosError | null): any => {
             if (response) {
                 if (props?.alertRequired) {
                     showToast({ message: response.data.message });
@@ -170,8 +159,7 @@ const useCommonPost = <G>(props?: CommonPostPropsType) => {
                 return error;
             }
             return null;
-        },
-    });
+        } });
 };
 
 const postApiCallForFetchComments = (token: string, request: any) =>
@@ -184,8 +172,7 @@ const postApiCallForFetchComments = (token: string, request: any) =>
 
 const useFetchCommentsForDashboard = <G>(props: ISnackBarMessage, alertRequired?: boolean) => {
     const { token } = UserContext();
-    return useMutation((body: G) => postApiCallForFetchComments(token, body), {
-        onSettled: (response: AxiosResponse | undefined, error: AxiosError | null): any => {
+    return useMutation({ mutationFn: (body: G) => postApiCallForFetchComments(token, body), onSettled: (response: AxiosResponse | undefined, error: AxiosError | null): any => {
             if (response) {
                 if (props.snackbarShowMessage && alertRequired) {
                     props.snackbarShowMessage(response.data.message, "success");
@@ -200,8 +187,7 @@ const useFetchCommentsForDashboard = <G>(props: ISnackBarMessage, alertRequired?
                 return error;
             }
             return null;
-        },
-    });
+        } });
 };
 
 const useAddProject = () => {
@@ -209,8 +195,7 @@ const useAddProject = () => {
     const queryClient = useQueryClient();
     const { showToast } = useContext(ToasterContext);
 
-    const addProject = useMutation(
-        (fileDetails: any) =>
+    const addProject = useMutation({ mutationFn: (fileDetails: any) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.addProject,
@@ -220,9 +205,7 @@ const useAddProject = () => {
                     Timezone: TIME_ZONE,
                 },
                 data: { fileDetails },
-            }),
-        {
-            onSettled: (response: any, error: any) => {
+            }), onSettled: (response: any, error: any) => {
                 if (error) {
                     return error;
                 }
@@ -231,9 +214,7 @@ const useAddProject = () => {
                 });
                 showToast({ message: response?.data?.message });
                 return response;
-            },
-        }
-    );
+            } });
     return { addProject };
 };
 
@@ -241,8 +222,7 @@ const useDeleteProject = () => {
     const { token } = UserContext();
     const queryClient = useQueryClient();
     const { showToast } = useContext(ToasterContext);
-    const deleteProject = useMutation(
-        (projectId: number) =>
+    const deleteProject = useMutation({ mutationFn: (projectId: number) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.deleteProject,
@@ -252,9 +232,7 @@ const useDeleteProject = () => {
                     Timezone: TIME_ZONE,
                 },
                 data: { projectId },
-            }),
-        {
-            onSettled: (response: any, error: any) => {
+            }), onSettled: (response: any, error: any) => {
                 if (error) {
                     const message = get(
                         error,
@@ -269,17 +247,14 @@ const useDeleteProject = () => {
                 });
                 showToast({ message: response?.data?.message });
                 return response;
-            },
-        }
-    );
+            } });
     return { deleteProject };
 };
 
 const useFetchProjectDetails = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    const fetchProjectDetails = useMutation(
-        (projectDetails: IFetchProject) =>
+    const fetchProjectDetails = useMutation({ mutationFn: (projectDetails: IFetchProject) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.fetchProjectDetails,
@@ -291,17 +266,13 @@ const useFetchProjectDetails = () => {
                 data: {
                     projectKey: projectDetails.projectKey,
                 },
-            }),
-        {
-            onSettled: (response: any, error: any) => {
+            }), onSettled: (response: any, error: any) => {
                 if (error) {
                     return error;
                 }
                 showToast({ message: response?.data?.message });
                 return response;
-            },
-        }
-    );
+            } });
     return { fetchProjectDetails };
 };
 

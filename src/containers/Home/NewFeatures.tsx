@@ -1,3 +1,5 @@
+"use client";
+
 import { FiberManualRecord as FiberManualRecordIcon } from "@mui/icons-material";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { blue } from "@mui/material/colors";

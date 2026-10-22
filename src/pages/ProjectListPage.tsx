@@ -1,3 +1,5 @@
+"use client";
+
 import StarIcon from "@mui/icons-material/Star";
 import {
     Box,
@@ -11,7 +13,7 @@ import {
     Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "@/utils/navigation";
 import styledComponent from "styled-components";
 
 import filterIcon from "../assets/filter.svg";
@@ -305,11 +307,6 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
     }, [user.acceptTermsOfUseAndPrivacyPolicy]);
 
     useEffect(() => {
-        if (location.state === "success") {
-            history.replace({ state: {} });
-        }
-    }, [location]);
-    useEffect(() => {
         if (isFetchCommentDataSuccess) {
             exportCommentsToExcel(
                 commentsData?.data?.data?.comments,
@@ -410,7 +407,7 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
     };
 
     const handleViewPrototypeLink = (item: any) => {
-        history.push(`project/${item.projectId}/details?view=prototypes`);
+        history.push(`/project/${item.projectId}/details?view=prototypes`);
     };
 
     const { startDate, endDate } = getFilterDateRange({ filter, ...range });

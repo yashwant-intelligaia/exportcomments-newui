@@ -1,3 +1,5 @@
+"use client";
+
 import { Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useContext, useEffect, useMemo, useState } from "react";

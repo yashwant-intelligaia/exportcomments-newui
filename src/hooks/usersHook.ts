@@ -1,7 +1,9 @@
+"use client";
+
 import axios, { AxiosError } from "axios";
 import { get } from "lodash";
 import { useContext } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext } from "../contexts";
@@ -28,11 +30,7 @@ const FILES = "files";
 axios.defaults.baseURL = APP_CONSTANT.baseUrl;
 
 const useFetchUsers = (props: ISnackBarMessage) =>
-    useQuery<IUserInformationResponse, AxiosError>(
-        [USER_LIST],
-        () => axios.get(`${APP_CONSTANT.webApi.getUserList}`),
-        {
-            retry: 3,
+    useQuery<IUserInformationResponse, AxiosError>({ queryKey: [USER_LIST], queryFn: () => axios.get(`${APP_CONSTANT.webApi.getUserList}`), retry: 3,
             retryDelay: 3,
 
             onSettled: (
@@ -50,9 +48,7 @@ const useFetchUsers = (props: ISnackBarMessage) =>
                     return error;
                 }
                 return null;
-            },
-        }
-    );
+            } });
 
 const useFetchUserDetails = ({
     showError = true,
@@ -63,9 +59,7 @@ const useFetchUserDetails = ({
 }) => {
     const { token, setUser } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    return useQuery<any, AxiosError>(
-        [USER],
-        async () => {
+    return useQuery<any, AxiosError>({ queryKey: [USER], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.getUser,
@@ -76,9 +70,7 @@ const useFetchUserDetails = ({
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            retry: false,
+        }, retry: false,
             enabled,
             // staleTime: 5 * 1000,
             staleTime: Infinity,
@@ -97,17 +89,13 @@ const useFetchUserDetails = ({
                 if (data) {
                     setUser(data);
                 }
-            },
-        }
-    );
+            } });
 };
 
 const useFetchFigmaUserData = () => {
     const { token, setFigmaUser } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    return useQuery<FigmaUserType, AxiosError>(
-        [FIGMA_USER],
-        async () => {
+    return useQuery<FigmaUserType, AxiosError>({ queryKey: [FIGMA_USER], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.getUserFigmaDetails,
@@ -118,9 +106,7 @@ const useFetchFigmaUserData = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
             staleTime: Infinity,
             refetchOnMount: false,
@@ -137,17 +123,13 @@ const useFetchFigmaUserData = () => {
                 if (data) {
                     setFigmaUser(data);
                 }
-            },
-        }
-    );
+            } });
 };
 
 const useFetchInviteeUsers = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    return useQuery<UserResponseType[], AxiosError>(
-        [INVITEES],
-        async () => {
+    return useQuery<UserResponseType[], AxiosError>({ queryKey: [INVITEES], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.getAllUsers,
@@ -158,9 +140,7 @@ const useFetchInviteeUsers = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
             staleTime: 0,
             refetchOnMount: false,
@@ -174,9 +154,7 @@ const useFetchInviteeUsers = () => {
                     );
                     showToast({ message, severity: "error" });
                 }
-            },
-        }
-    );
+            } });
 };
 
 const useProcessInviteesData = (data: UserResponseType[]): ProcessedInviteesDataType[] => {
@@ -200,8 +178,7 @@ const useAddUserToProject = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
 
-    const addUserToProject = useMutation(
-        async (formData: AddUserFormDataType[]) => {
+    const addUserToProject = useMutation({ mutationFn: async (formData: AddUserFormDataType[]) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.addUser,
@@ -213,9 +190,7 @@ const useAddUserToProject = () => {
                 data: formData,
             });
             return get(data, "data", {});
-        },
-        {
-            onSettled: (response, error) => {
+        }, onSettled: (response, error) => {
                 if (error) {
                     const message = get(
                         error,
@@ -227,9 +202,7 @@ const useAddUserToProject = () => {
                 }
                 showToast({ message: response?.data?.message });
                 return response;
-            },
-        }
-    );
+            } });
     return { addUserToProject };
 };
 
@@ -237,8 +210,7 @@ const useDeleteProjectMember = (callback: () => void) => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
     const queryClient = useQueryClient();
-    const deleteProjectMember = useMutation(
-        async (formData: DeleteProjectMemberDataType) => {
+    const deleteProjectMember = useMutation({ mutationFn: async (formData: DeleteProjectMemberDataType) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.deleteProjectMember,
@@ -250,9 +222,7 @@ const useDeleteProjectMember = (callback: () => void) => {
                 data: formData,
             });
             return get(data, "data", {});
-        },
-        {
-            onError: (error: AxiosError) => {
+        }, onError: (error: AxiosError) => {
                 const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
                 showToast({ message, severity: "error" });
             },
@@ -263,16 +233,13 @@ const useDeleteProjectMember = (callback: () => void) => {
                     message: "User removed from project successfully",
                     severity: "success",
                 });
-                queryClient.refetchQueries([FILES]);
-            },
-        }
-    );
+                queryClient.refetchQueries({ queryKey: [FILES] });
+            } });
     return { deleteProjectMember };
 };
 const useUnsubscribeMutation = () => {
     const { showToast } = useContext(ToasterContext);
-    const releaseEmail = useMutation(
-        (payloadData: { token: string }) =>
+    const releaseEmail = useMutation({ mutationFn: (payloadData: { token: string }) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.unsubscribeReleaseEmail,
@@ -281,9 +248,7 @@ const useUnsubscribeMutation = () => {
                 headers: {
                     Timezone: TIME_ZONE,
                 },
-            }),
-        {
-            onSettled: (response: any, error: any) => {
+            }), onSettled: (response: any, error: any) => {
                 if (error) {
                     const message = get(
                         error,
@@ -297,9 +262,7 @@ const useUnsubscribeMutation = () => {
                     message: "You have successfully unsubscribed to future release emails",
                 });
                 return response;
-            },
-        }
-    );
+            } });
     return { releaseEmail };
 };
 
@@ -323,15 +286,12 @@ const useUserMutation = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
 
-    const acceptTermsOfUseAndPrivacyPolicy = useMutation(
-        () =>
+    const acceptTermsOfUseAndPrivacyPolicy = useMutation({ mutationFn: () =>
             axios.get(APP_CONSTANT.webApi.acceptTermsOfUseAndPrivacyPolicy, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            }),
-        {
-            onSettled: (response: any, error: any) => {
+            }), onSettled: (response: any, error: any) => {
                 if (error) {
                     const message = get(
                         error,
@@ -351,9 +311,7 @@ const useUserMutation = () => {
                     };
                 });
                 return response;
-            },
-        }
-    );
+            } });
 
     return { acceptTermsOfUseAndPrivacyPolicy };
 };

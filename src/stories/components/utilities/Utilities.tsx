@@ -1,10 +1,12 @@
+"use client";
+
 import "../../../index.scss";
 
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 import styled from "styled-components";
 
 import { APP_CONSTANT, TIME_ZONE } from "../../../constants/AppConstant";

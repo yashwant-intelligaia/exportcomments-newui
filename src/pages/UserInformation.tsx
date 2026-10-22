@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 import DataGrid, { Column, FormatterProps, HeaderRendererProps } from "react-data-grid";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import styled from "styled-components";

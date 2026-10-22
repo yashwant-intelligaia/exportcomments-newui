@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Button, Checkbox, FormControlLabel } from "@mui/material";
 import { useContext, useState } from "react";
 

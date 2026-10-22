@@ -1,3 +1,5 @@
+"use client";
+
 // TODO: remove this HOC once ToasterContext implemented at all places.
 // We need to use EcSnackbar component in future
 import { AlertColor } from "@mui/material";

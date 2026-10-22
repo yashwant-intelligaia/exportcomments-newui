@@ -1,3 +1,5 @@
+"use client";
+
 export const validateEmail = (value: any) => {
     const emailPattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     return emailPattern.test(value) || "Email is not valid";

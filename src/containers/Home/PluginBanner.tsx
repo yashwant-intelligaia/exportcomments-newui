@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Button } from "@mui/material";
 import { styled as styledComponent } from "@mui/material/styles";
 import Lottie from "lottie-react";

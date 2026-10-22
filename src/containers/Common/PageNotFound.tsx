@@ -1,7 +1,9 @@
+"use client";
+
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "@/utils/navigation";
 import styled from "styled-components";
 
 export const PageNotFound = () => {

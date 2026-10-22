@@ -1,3 +1,5 @@
+"use client";
+
 import AddReactionOutlinedIcon from "@mui/icons-material/AddReactionOutlined";
 import ClearIcon from "@mui/icons-material/ClearOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";

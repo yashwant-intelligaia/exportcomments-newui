@@ -1,3 +1,5 @@
+"use client";
+
 import { ContentCopy as ContentCopyIcon, Done as DoneIcon } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import React, { useState } from "react";

@@ -1,3 +1,5 @@
+"use client";
+
 import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import { Box } from "@mui/material";

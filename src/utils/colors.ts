@@ -1,3 +1,5 @@
+"use client";
+
 import { grey } from "@mui/material/colors";
 
 const GREY_300 = grey[300];

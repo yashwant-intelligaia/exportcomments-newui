@@ -1,10 +1,12 @@
+"use client";
+
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Box, Container, Grid } from "@mui/material";
 import CardMedia from "@mui/material/CardMedia";
 import Link from "@mui/material/Link";
 import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "@/utils/navigation";
 import styled from "styled-components";
 
 import DribbleIcon from "../../../assets/dribble.svg";

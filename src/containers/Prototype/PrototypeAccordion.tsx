@@ -1,3 +1,5 @@
+"use client";
+
 import { Accordion } from "@mui/material";
 
 import { ProcessedPageDataType } from "../../types/prototype";

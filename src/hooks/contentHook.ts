@@ -1,7 +1,9 @@
+"use client";
+
 import { AxiosError } from "axios";
 import { get } from "lodash";
 import { useContext } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { APP_CONSTANT } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
@@ -14,9 +16,7 @@ const TERMS_OF_USE = "terms-of-use";
 const useFetchedPrivacyPolicyContent = () => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<ContentType, AxiosError>(
-        [PRIVACY_POLICY],
-        async () => {
+    return useQuery<ContentType, AxiosError>({ queryKey: [PRIVACY_POLICY], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.privacyPolicy}`,
@@ -26,9 +26,7 @@ const useFetchedPrivacyPolicyContent = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
             staleTime: Infinity,
             refetchOnMount: false,
@@ -42,16 +40,12 @@ const useFetchedPrivacyPolicyContent = () => {
                     );
                     showToast({ message, severity: "error" });
                 }
-            },
-        }
-    );
+            } });
 };
 const useFetchedTermsOfUseContent = () => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<ContentType, AxiosError>(
-        [TERMS_OF_USE],
-        async () => {
+    return useQuery<ContentType, AxiosError>({ queryKey: [TERMS_OF_USE], queryFn: async () => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.termOfUse}`,
@@ -61,9 +55,7 @@ const useFetchedTermsOfUseContent = () => {
                 },
             });
             return get(data, "data", {});
-        },
-        {
-            retry: 3,
+        }, retry: 3,
             retryDelay: 3,
             staleTime: Infinity,
             refetchOnMount: false,
@@ -77,9 +69,7 @@ const useFetchedTermsOfUseContent = () => {
                     );
                     showToast({ message, severity: "error" });
                 }
-            },
-        }
-    );
+            } });
 };
 
 export { useFetchedPrivacyPolicyContent, useFetchedTermsOfUseContent };

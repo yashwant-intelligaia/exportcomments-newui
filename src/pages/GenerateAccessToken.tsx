@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 
 import { APP_CONSTANT } from "../constants/AppConstant";

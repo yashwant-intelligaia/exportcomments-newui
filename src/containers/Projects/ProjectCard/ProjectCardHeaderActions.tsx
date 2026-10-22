@@ -1,3 +1,5 @@
+"use client";
+
 import { MoreVert as MoreVertIcon, Star as StarIcon } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 import { useContext } from "react";

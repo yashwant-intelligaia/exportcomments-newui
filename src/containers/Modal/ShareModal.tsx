@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Modal } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import styled from "styled-components";

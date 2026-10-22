@@ -1,3 +1,5 @@
+"use client";
+
 export const feedbackJson: any = {
     // title: "We Appreciate Your Feedback!",
     // description:

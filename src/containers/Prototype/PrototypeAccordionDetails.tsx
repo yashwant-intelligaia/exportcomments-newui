@@ -1,3 +1,5 @@
+"use client";
+
 import { Done as DoneIcon } from "@mui/icons-material";
 import {
     AccordionDetails,

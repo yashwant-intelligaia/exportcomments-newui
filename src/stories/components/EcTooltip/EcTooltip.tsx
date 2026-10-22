@@ -1,3 +1,5 @@
+"use client";
+
 import { Tooltip, tooltipClasses, TooltipProps, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import styled from "styled-components";

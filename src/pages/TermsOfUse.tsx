@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable react/no-danger */
 import { useEffect, useState } from "react";
 import styled from "styled-components";
