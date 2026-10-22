@@ -1,0 +1,211 @@
+import { AxiosError } from "axios";
+import { get } from "lodash";
+import { useContext } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
+import { ToasterContext, UserContext } from "../contexts";
+import { feedbackRatingType } from "../types/flow";
+import { api, messages } from "../utils";
+
+const VERSIONS = "versions";
+const useFlowMutations = () => {
+    const { token } = UserContext();
+    const { showToast } = useContext(ToasterContext);
+    const queryClient = useQueryClient();
+    const verifyFlow = useMutation(
+        async (formData: any) => {
+            const { data } = await api({
+                version: "v2",
+                url: `${APP_CONSTANT.webApi.verifyFlow}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Timezone: TIME_ZONE,
+                },
+            });
+            return get(data, "data", {});
+        },
+        {
+            onSettled: (response, error) => {
+                if (error) {
+                    const message = get(
+                        error,
+                        "response.data.message",
+                        messages.SOMETHING_WENT_WRONG
+                    );
+                    showToast({ message, severity: "error" });
+                }
+                return response;
+            },
+        }
+    );
+    const verifyFeedbackVersion = useMutation(
+        async (formData: any) => {
+            const { data } = await api({
+                version: "v2",
+                url: `${APP_CONSTANT.webApi.verifyFeedbackVersion}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Timezone: TIME_ZONE,
+                },
+            });
+            return get(data, "data", {});
+        },
+        {
+            onSettled: (response, error) => {
+                if (error) {
+                    const message = get(
+                        error,
+                        "response.data.message",
+                        messages.SOMETHING_WENT_WRONG
+                    );
+                    showToast({ message, severity: "error" });
+                }
+                return response;
+            },
+        }
+    );
+    const flowVersion = useMutation(
+        async (formData: any) => {
+            const { data } = await api({
+                version: "v2",
+                url: `${APP_CONSTANT.webApi.flowVersion}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Timezone: TIME_ZONE,
+                },
+            });
+            return get(data, "data", {});
+        },
+        {
+            onSettled: (response, error) => {
+                if (error) {
+                    const message = get(
+                        error,
+                        "response.data.message",
+                        messages.SOMETHING_WENT_WRONG
+                    );
+
+                    return showToast({ message, severity: "error" });
+                }
+                showToast({ message: "Flow version created successfully" });
+                return response;
+            },
+        }
+    );
+    const flowVersionList = useMutation(
+        async (formData: any) => {
+            const { data } = await api({
+                version: "v2",
+                url: `${APP_CONSTANT.webApi.flowVersionList}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Timezone: TIME_ZONE,
+                },
+            });
+            return get(data, "data", {});
+        },
+        {
+            onSettled: (response, error) => {
+                if (error) {
+                    const message = get(
+                        error,
+                        "response.data.message",
+                        messages.SOMETHING_WENT_WRONG
+                    );
+
+                    showToast({ message, severity: "error" });
+                }
+                return response;
+            },
+        }
+    );
+    const feedbackRating = useMutation(
+        async (formData: feedbackRatingType) => {
+            const { data } = await api({
+                version: "v2",
+                url: `${APP_CONSTANT.webApi.feedbackRating}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Timezone: TIME_ZONE,
+                },
+            });
+            return get(data, "data", {});
+        },
+        {
+            onSettled: (response, error) => {
+                if (error) {
+                    const message = get(
+                        error,
+                        "response.data.message",
+                        messages.SOMETHING_WENT_WRONG
+                    );
+
+                    showToast({ message, severity: "error" });
+                }
+                queryClient.refetchQueries([VERSIONS]);
+                return response;
+            },
+        }
+    );
+
+    return {
+        verifyFlow,
+        flowVersion,
+        flowVersionList,
+        feedbackRating,
+        verifyFeedbackVersion,
+    };
+};
+const useFetchFlowList = (flowId: any) => {
+    const { showToast } = useContext(ToasterContext);
+    const { token } = UserContext();
+    return useQuery<any, AxiosError>(
+        [VERSIONS, flowId],
+        async () => {
+            const { data } = await api({
+                version: "v2",
+                url: `${APP_CONSTANT.webApi.flowVersionList}`,
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Timezone: TIME_ZONE,
+                },
+                data: { flowId },
+            });
+            return get(data, "data", {}) as any;
+        },
+        {
+            retry: 3,
+            retryDelay: 3,
+            refetchOnMount: false,
+            staleTime: Infinity,
+            // staleTime: 60 * 5 * 10000,
+            // refetchInterval: 60 * 5 * 1000,
+
+            onSettled: (versionResponse, error) => {
+                if (error) {
+                    const message = get(
+                        error,
+                        "response.data.message",
+                        messages.SOMETHING_WENT_WRONG
+                    );
+                    showToast({ message, severity: "error" });
+                }
+                return versionResponse;
+            },
+        }
+    );
+};
+
+export { useFetchFlowList, useFlowMutations };
