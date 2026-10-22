@@ -23,7 +23,7 @@ export const SubheaderToggle = () => {
 
     return (
         <div className="flex items-center justify-between px-5 max-md:flex-col max-md:items-start max-md:gap-2">
-            <h6 className="my-[5px] font-sans text-xl leading-[30px] font-semibold tracking-normal text-ink max-md:text-base">
+            <h6 className="text-ink my-[5px] font-sans text-xl leading-[30px] font-semibold tracking-normal max-md:text-base">
                 All {view === "prototypes" ? "Prototypes" : "Comments"}
             </h6>
             <div className="flex items-center justify-end">

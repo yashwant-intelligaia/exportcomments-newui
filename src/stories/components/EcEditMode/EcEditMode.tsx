@@ -76,9 +76,9 @@ const EcEditMode = ({
                         aria-describedby="error"
                         aria-invalid={!!titleError}
                         className={cn(
-                            "w-[min(60vw,32rem)] border-b bg-transparent py-1 text-base text-ink focus:outline-none",
+                            "text-ink w-[min(60vw,32rem)] border-b bg-transparent py-1 text-base focus:outline-none",
                             titleError ? "border-danger" : "border-ink",
-                            className
+                            className,
                         )}
                         {...register(name, {
                             required: { value: true, message: "Project title cannot be empty" },
@@ -99,7 +99,9 @@ const EcEditMode = ({
 
                 {!isEditable && showTooltip && (
                     <EcTooltip title={title} placement="top" arrow>
-                        <span className={cn("truncate leading-9 text-ink", variantClass[variant] ?? "text-lg")}>{title}</span>
+                        <span className={cn("text-ink truncate leading-9", variantClass[variant] ?? "text-lg")}>
+                            {title}
+                        </span>
                     </EcTooltip>
                 )}
 
@@ -118,10 +120,16 @@ const EcEditMode = ({
                     </IconButton>
                 )}
 
-                <IconButton aria-label="Edit" type="submit" size="small" className="mr-5" disabled={!editable || isLoading}>
+                <IconButton
+                    aria-label="Edit"
+                    type="submit"
+                    size="small"
+                    className="mr-5"
+                    disabled={!editable || isLoading}
+                >
                     {isEditable && titleError && (
                         <EcTooltip title={titleError?.message as string} placement="top" arrow>
-                            <AlertCircle className="size-[18px] text-danger" />
+                            <AlertCircle className="text-danger size-[18px]" />
                         </EcTooltip>
                     )}
                     {isEditable && !titleError && <Check style={iconSize} />}

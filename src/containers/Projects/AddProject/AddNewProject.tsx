@@ -1,8 +1,8 @@
 "use client";
 
-import { TextField } from "@/components/ui/Form";
-
 import { useContext, useEffect, useState } from "react";
+
+import { TextField } from "@/components/ui/Form";
 
 import { AddProjectContext } from "../../../contexts";
 import { useAddProject, useFetchProjectDetails } from "../../../hooks";
@@ -16,8 +16,7 @@ interface AddNewProjectPropsType {
 }
 
 const AddNewProject = ({ onClose }: AddNewProjectPropsType) => {
-    const { onSubmit, isSubmit, projectData, addProject, removeProject, setLoading } =
-        useContext(AddProjectContext);
+    const { onSubmit, isSubmit, projectData, addProject, removeProject, setLoading } = useContext(AddProjectContext);
     const [projectUrl, setProjectUrl] = useState("");
     const [urlError, setUrlError] = useState("");
     const [projectKey, setProjectKey] = useState("");
@@ -103,15 +102,8 @@ const AddNewProject = ({ onClose }: AddNewProjectPropsType) => {
 
     useEffect(() => {
         if (projectDetailsResponse) {
-            const {
-                fileName,
-                myComments,
-                allComments,
-                resolvedComments,
-                unresolvedComments,
-                newComments,
-                editorType,
-            } = projectDetailsResponse.data.data;
+            const { fileName, myComments, allComments, resolvedComments, unresolvedComments, newComments, editorType } =
+                projectDetailsResponse.data.data;
             const tempProjectData = {
                 projectId: projectKey,
                 fileName,
@@ -153,7 +145,7 @@ const AddNewProject = ({ onClose }: AddNewProjectPropsType) => {
                     startAdornment={<FigmaIcon fontSize="small" />}
                 />
             </div>
-            <div className="flex h-full max-h-full flex-col overflow-y-auto overflow-x-visible">
+            <div className="flex h-full max-h-full flex-col overflow-x-visible overflow-y-auto">
                 <div>
                     {isLoadingProjectDetails && <ProjectLoader />}
                     {projectData && projectData.length > 0 && (

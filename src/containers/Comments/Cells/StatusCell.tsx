@@ -7,8 +7,8 @@ export const StatusCell = ({ value }: { value: any }) => {
     return (
         <div
             className={cn(
-                "h-[26px] w-[85px] rounded-pill px-2.5 py-[5px] text-center text-xs leading-4 font-medium tracking-wide text-white capitalize",
-                status === "resolved" ? "bg-[#2e7d32]" : "bg-[#b45309]"
+                "rounded-pill h-[26px] w-[85px] px-2.5 py-[5px] text-center text-xs leading-4 font-medium tracking-wide text-white capitalize",
+                status === "resolved" ? "bg-[#2e7d32]" : "bg-[#b45309]",
             )}
         >
             <span>{status}</span>

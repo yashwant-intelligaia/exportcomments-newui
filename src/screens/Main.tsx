@@ -24,7 +24,11 @@ interface Ifaq {
 }
 
 const SectionTitle = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <h2 className={`w-full text-center font-display text-[clamp(1.75rem,2.6vw,2.5rem)] leading-[1.15] font-light tracking-[-0.025em] text-ink ${className}`}>{children}</h2>
+    <h2
+        className={`font-display text-ink w-full text-center text-[clamp(1.75rem,2.6vw,2.5rem)] leading-[1.15] font-light tracking-[-0.025em] ${className}`}
+    >
+        {children}
+    </h2>
 );
 
 const STEPS = [
@@ -46,10 +50,43 @@ const STEPS = [
 ];
 
 const SLIDES = [
-    { image: "/images/bookmark-slide.jpg", alt: "Bookmark", text: <><strong>Bookmark&nbsp;</strong>your projects and have them categorised as a separate section.</> },
-    { image: "/images/share-slide.jpg", alt: "Share", text: <>Easily&nbsp;<strong>share&nbsp;</strong>file with team members and be on the same page.</> },
-    { image: "/images/reply-slide.jpg", alt: "Reply", text: <><strong>Reply&nbsp;</strong>to other people&apos;s&nbsp;<strong>comments&nbsp;</strong>and let your thoughts be heard.</> },
-    { image: "/images/filter-slide.jpg", alt: "Filter", text: <><strong>Filter comments&nbsp;</strong>according to your choice</> },
+    {
+        image: "/images/bookmark-slide.jpg",
+        alt: "Bookmark",
+        text: (
+            <>
+                <strong>Bookmark&nbsp;</strong>your projects and have them categorised as a separate section.
+            </>
+        ),
+    },
+    {
+        image: "/images/share-slide.jpg",
+        alt: "Share",
+        text: (
+            <>
+                Easily&nbsp;<strong>share&nbsp;</strong>file with team members and be on the same page.
+            </>
+        ),
+    },
+    {
+        image: "/images/reply-slide.jpg",
+        alt: "Reply",
+        text: (
+            <>
+                <strong>Reply&nbsp;</strong>to other people&apos;s&nbsp;<strong>comments&nbsp;</strong>and let your
+                thoughts be heard.
+            </>
+        ),
+    },
+    {
+        image: "/images/filter-slide.jpg",
+        alt: "Filter",
+        text: (
+            <>
+                <strong>Filter comments&nbsp;</strong>according to your choice
+            </>
+        ),
+    },
 ];
 
 export const Main = snackbar((props: ISnackBarMessage) => {
@@ -122,25 +159,29 @@ export const Main = snackbar((props: ISnackBarMessage) => {
             <div className="flex flex-wrap justify-center">
                 <PluginBanner />
 
-                <div className="w-full bg-purple-soft">
+                <div className="bg-purple-soft w-full">
                     <div className="mx-auto my-1 mt-4 max-w-[1173px] px-4">
                         <NewFeatures />
                     </div>
                 </div>
 
-                <section className="flex w-full justify-center bg-paper pt-11 max-md:pt-8">
+                <section className="bg-paper flex w-full justify-center pt-11 max-md:pt-8">
                     <div className="flex w-[1128px] max-w-[95%] flex-wrap pb-8">
-                        <SectionTitle className="mb-12 max-md:mb-4">Get started to iterate faster by downloading the plugin</SectionTitle>
+                        <SectionTitle className="mb-12 max-md:mb-4">
+                            Get started to iterate faster by downloading the plugin
+                        </SectionTitle>
                         {STEPS.map((step, i) => (
                             <div
                                 key={step.label}
                                 className={`my-6 flex w-full items-center justify-center gap-8 max-md:my-4 max-md:flex-wrap ${i === 1 ? "flex-row-reverse" : ""}`}
                             >
-                                <div className="w-[324px] max-w-full rounded-md border border-line bg-surface p-4 shadow-card">
-                                    <span className="mb-2.5 inline-block rounded-sm bg-blue-soft px-2.5 py-0.5 text-sm font-semibold text-blue-ink">{step.label}</span>
+                                <div className="border-line bg-surface shadow-card w-[324px] max-w-full rounded-md border p-4">
+                                    <span className="bg-blue-soft text-blue-ink mb-2.5 inline-block rounded-sm px-2.5 py-0.5 text-sm font-semibold">
+                                        {step.label}
+                                    </span>
                                     <p className="text-sm">{step.text}</p>
                                 </div>
-                                <div className="w-[500px] max-w-full overflow-hidden rounded-lg border border-line bg-surface">
+                                <div className="border-line bg-surface w-[500px] max-w-full overflow-hidden rounded-lg border">
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img src={step.image} alt={step.label} className="w-full" />
                                 </div>
@@ -149,24 +190,29 @@ export const Main = snackbar((props: ISnackBarMessage) => {
                     </div>
                 </section>
 
-                <section className="flex w-full justify-center bg-surface py-12">
+                <section className="bg-surface flex w-full justify-center py-12">
                     <div className="w-[1128px] max-w-[95%]">
                         <SectionTitle className="mb-4">Features that will accelerate your everyday tasks.</SectionTitle>
                         <Carousel label="Features">
                             {SLIDES.map((slide) => (
-                                <div key={slide.alt} className="flex flex-col items-center gap-6 px-4 py-6 md:flex-row md:justify-center">
-                                    <div className="max-w-[560px] overflow-hidden rounded-lg border border-line">
+                                <div
+                                    key={slide.alt}
+                                    className="flex flex-col items-center gap-6 px-4 py-6 md:flex-row md:justify-center"
+                                >
+                                    <div className="border-line max-w-[560px] overflow-hidden rounded-lg border">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={slide.image} alt={slide.alt} className="w-full" />
                                     </div>
-                                    <p className="max-w-sm text-[22px] leading-[33px] font-normal text-ink [&_strong]:font-semibold">{slide.text}</p>
+                                    <p className="text-ink max-w-sm text-[22px] leading-[33px] font-normal [&_strong]:font-semibold">
+                                        {slide.text}
+                                    </p>
                                 </div>
                             ))}
                         </Carousel>
                     </div>
                 </section>
 
-                <section className="flex w-full justify-center bg-paper py-12">
+                <section className="bg-paper flex w-full justify-center py-12">
                     <div className="w-[1128px] max-w-[95%]">
                         <SectionTitle>Do you have more questions on your mind?</SectionTitle>
                         <div className="mt-12 flex w-full flex-wrap justify-start px-0 md:px-24">
@@ -176,7 +222,7 @@ export const Main = snackbar((props: ISnackBarMessage) => {
                                     key={`action-${index + 1}`}
                                     id={`LP-faq-question-${index}`}
                                     onClick={() => handleOpen(question)}
-                                    className="w-full border-b border-muted py-4 text-left text-xl text-blue-ink hover:underline"
+                                    className="border-muted text-blue-ink w-full border-b py-4 text-left text-xl hover:underline"
                                 >
                                     {question.title}
                                 </button>
@@ -193,15 +239,22 @@ export const Main = snackbar((props: ISnackBarMessage) => {
                     </div>
                 </section>
 
-                <section className="flex w-full justify-center bg-surface-sunk py-12">
+                <section className="bg-surface-sunk flex w-full justify-center py-12">
                     <div className="w-[640px] max-w-[92%]">
                         <SectionTitle className="mb-3.5">Do you have any feedback?</SectionTitle>
-                        <p className="mb-6 w-full text-center text-lg text-muted">
-                            Send us a brief note about your thoughts and we can try to get back to you as soon as possible.
+                        <p className="text-muted mb-6 w-full text-center text-lg">
+                            Send us a brief note about your thoughts and we can try to get back to you as soon as
+                            possible.
                         </p>
-                        <div className="rounded-lg bg-surface p-[30px] pb-6 shadow-card">
-                            <h3 className="mb-3 w-full text-left font-sans text-2xl font-normal tracking-normal text-ink">We&apos;d love to hear from you</h3>
-                            <form onSubmit={handleSubmit(onSubmit)} id="LP-feedback-submit" className="flex flex-col gap-3">
+                        <div className="bg-surface shadow-card rounded-lg p-[30px] pb-6">
+                            <h3 className="text-ink mb-3 w-full text-left font-sans text-2xl font-normal tracking-normal">
+                                We&apos;d love to hear from you
+                            </h3>
+                            <form
+                                onSubmit={handleSubmit(onSubmit)}
+                                id="LP-feedback-submit"
+                                className="flex flex-col gap-3"
+                            >
                                 <TextField
                                     id="LP-feedback-fullname"
                                     placeholder="Full Name"
@@ -245,12 +298,15 @@ export const Main = snackbar((props: ISnackBarMessage) => {
                                     {...register("feedback", {
                                         required: { value: true, message: "Feedback cannot be empty." },
                                         validate: {
-                                            noSpaces: (value) => value.trim().length !== 0 || "Feedback cannot be empty.",
+                                            noSpaces: (value) =>
+                                                value.trim().length !== 0 || "Feedback cannot be empty.",
                                         },
                                     })}
                                     helperText={errors.feedback && (errors.feedback.message as string)}
                                     error={Boolean(errors.feedback)}
-                                    endAdornment={<span className="self-end text-xs">{`${feedbackLength && feedbackLength.trim().length ? feedbackLength.length : 0}/1000`}</span>}
+                                    endAdornment={
+                                        <span className="self-end text-xs">{`${feedbackLength && feedbackLength.trim().length ? feedbackLength.length : 0}/1000`}</span>
+                                    }
                                 />
                                 <div className="mt-6 flex justify-center">
                                     <Button type="submit" endIcon={<ArrowRight className="size-4" />}>

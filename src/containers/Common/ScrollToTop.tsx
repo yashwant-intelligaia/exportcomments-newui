@@ -18,7 +18,7 @@ export const ScrollToTop = () => {
             type="button"
             aria-label="Scroll to top"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed right-5 bottom-5 z-[999] flex size-10 items-center justify-center rounded-full border-2 border-ink bg-surface text-ink shadow-card transition-shadow hover:shadow-lg"
+            className="border-ink bg-surface text-ink shadow-card fixed right-5 bottom-5 z-[999] flex size-10 items-center justify-center rounded-full border-2 transition-shadow hover:shadow-lg"
         >
             <ArrowUp className="size-5" />
         </button>

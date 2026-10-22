@@ -25,12 +25,12 @@ const AddProjectInstructions = () => {
 
     return (
         <div className="max-w-[400px]">
-            <h6 className="text-xl font-medium text-ink">Steps to connect your Figma project</h6>
+            <h6 className="text-ink text-xl font-medium">Steps to connect your Figma project</h6>
             {steps.map(({ icon, title }, i) => (
                 <div key={title} className={`flex items-start ${i === 0 ? "my-6" : "mt-4"}`}>
                     {icon}
                     <div>
-                        <p className="text-lg leading-[21px] font-medium tracking-[0.25px] text-ink">{title}</p>
+                        <p className="text-ink text-lg leading-[21px] font-medium tracking-[0.25px]">{title}</p>
                         <p>{STEP_COPY}</p>
                     </div>
                 </div>

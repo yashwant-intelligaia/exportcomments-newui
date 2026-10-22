@@ -20,11 +20,17 @@ export interface ModalProps {
 /** Centered dialog. Escape / backdrop dismiss only when `onClose` is provided. */
 export const Modal = ({ open, onClose, size = "sm", showCloseIcon, className, children }: ModalProps) => (
     <Dialog open={open} onClose={() => onClose?.()} className="relative z-50">
-        <DialogBackdrop className="fixed inset-0 bg-ink/50" />
+        <DialogBackdrop className="bg-ink/50 fixed inset-0" />
         <div className="fixed inset-0 flex items-center justify-center overflow-y-auto p-4">
-            <DialogPanel className={cn("relative w-full rounded-lg bg-surface p-8 shadow-card", widths[size], className)}>
+            <DialogPanel
+                className={cn("bg-surface shadow-card relative w-full rounded-lg p-8", widths[size], className)}
+            >
                 {showCloseIcon && (
-                    <button aria-label="close" onClick={onClose} className="absolute top-3 right-3 rounded-full p-1.5 text-muted hover:bg-surface-sunk">
+                    <button
+                        aria-label="close"
+                        onClick={onClose}
+                        className="text-muted hover:bg-surface-sunk absolute top-3 right-3 rounded-full p-1.5"
+                    >
                         <X className="size-5" />
                     </button>
                 )}

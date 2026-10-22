@@ -1,10 +1,9 @@
 "use client";
 
-import { useQueryWithSettled } from "./queryUtils";
-import { AxiosError } from "axios";
-import { get } from "../utils/object";
-import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useContext } from "react";
+
 import { useHistory, useParams } from "@/utils/navigation";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
@@ -22,6 +21,8 @@ import {
     UpdateProjectDataType,
 } from "../types";
 import { api, formattedResponse, messages } from "../utils";
+import { get } from "../utils/object";
+import { useQueryWithSettled } from "./queryUtils";
 import { FILES, INVITEES } from "./usersHook";
 
 interface FetchProjectListParams {

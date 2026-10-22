@@ -9,11 +9,7 @@ export const ProjectFilterContext = Context;
 export const ProjectFilterContextProvider = ({ children }: any) => {
     const [filter, setFilter] = useState<FilterType>("");
     const [range, setRange] = useState<{ startDate: string; endDate: string }>(
-        {} as { startDate: string; endDate: string }
+        {} as { startDate: string; endDate: string },
     );
-    return (
-        <Context.Provider value={{ filter, setFilter, range, setRange }}>
-            {children}
-        </Context.Provider>
-    );
+    return <Context.Provider value={{ filter, setFilter, range, setRange }}>{children}</Context.Provider>;
 };

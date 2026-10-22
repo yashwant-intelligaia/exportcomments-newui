@@ -4,10 +4,10 @@ import { LogOut, Menu as MenuIcon, Plus } from "lucide-react";
 import { useContext, useState } from "react";
 
 import { Button, IconButton } from "@/components/ui/Button";
+import { cn } from "@/components/ui/cn";
 import { Avatar } from "@/components/ui/Display";
 import { Drawer } from "@/components/ui/Drawer";
 import { Menu, MenuItem } from "@/components/ui/Popover";
-import { cn } from "@/components/ui/cn";
 
 import { APP_CONSTANT } from "../../../constants/AppConstant";
 import { AddButtons, AddProjectDrawer, AddUserDrawer } from "../../../containers";
@@ -33,16 +33,16 @@ export default function SwipeableTemporaryDrawer({ user }: any) {
                 <MenuIcon className="size-6" />
             </IconButton>
             <Drawer open={open} onClose={() => setOpen(false)} anchor="left" className="w-[280px]">
-                <header className="flex flex-col items-center gap-1 border-b border-line bg-paper px-4 py-6 text-center">
+                <header className="border-line bg-paper flex flex-col items-center gap-1 border-b px-4 py-6 text-center">
                     <Avatar src={user.avatar} name={user.name} size={56} />
-                    <span className="font-semibold text-ink">{user.name}</span>
-                    <span className="text-sm text-muted">{user.email}</span>
+                    <span className="text-ink font-semibold">{user.name}</span>
+                    <span className="text-muted text-sm">{user.email}</span>
                 </header>
                 <footer className="p-2">
                     <button
                         type="button"
                         onClick={() => logoutUserSession()}
-                        className="flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-left text-ink hover:bg-surface-sunk"
+                        className="text-ink hover:bg-surface-sunk flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-left"
                     >
                         <LogOut className="size-5" />
                         Logout
@@ -81,7 +81,11 @@ export const GlobalHeader = ({ headerValue, onDrawerToggle }: GlobalHeaderPropsT
         <div className="flex items-center">
             <div className="relative mr-4 min-w-6">
                 <div className="hidden sm:inline-flex">
-                    <AddButtons options={ADD_OPTIONS} onButtonClick={() => undefined} onOptionClick={handleButtonOptionClick} />
+                    <AddButtons
+                        options={ADD_OPTIONS}
+                        onButtonClick={() => undefined}
+                        onOptionClick={handleButtonOptionClick}
+                    />
                 </div>
                 <div className="inline-flex sm:hidden">
                     <EcTooltip
@@ -94,7 +98,12 @@ export const GlobalHeader = ({ headerValue, onDrawerToggle }: GlobalHeaderPropsT
                             <Plus className="size-5" />
                         </IconButton>
                     </EcTooltip>
-                    <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)} placement="bottom-end">
+                    <Menu
+                        open={Boolean(anchorEl)}
+                        anchorEl={anchorEl}
+                        onClose={() => setAnchorEl(null)}
+                        placement="bottom-end"
+                    >
                         {ADD_OPTIONS.map(({ title }, index) => (
                             <MenuItem
                                 key={title}
@@ -134,13 +143,19 @@ export const GlobalHeader = ({ headerValue, onDrawerToggle }: GlobalHeaderPropsT
         <>
             <header
                 className={cn(
-                    "fixed top-0 z-[100] flex h-[60px] w-full items-center justify-between border-b border-line bg-surface pr-5 max-sm:h-[50px]",
-                    token ? "pl-[50px] md:pl-5" : "pl-5"
+                    "border-line bg-surface fixed top-0 z-[100] flex h-[60px] w-full items-center justify-between border-b pr-5 max-sm:h-[50px]",
+                    token ? "pl-[50px] md:pl-5" : "pl-5",
                 )}
             >
                 {isResponsiveDrawer ? (
                     <div className="flex items-center gap-2">
-                        <Button variant="outlined" size="small" aria-label="open drawer" onClick={onDrawerToggle} className="px-2 sm:hidden">
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            aria-label="open drawer"
+                            onClick={onDrawerToggle}
+                            className="px-2 sm:hidden"
+                        >
                             <MenuIcon className="size-5" />
                         </Button>
                         <SbLogo />

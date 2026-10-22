@@ -10,7 +10,15 @@ export interface SvgIconProps extends SVGProps<SVGSVGElement> {
 const sizes = { small: "1.25rem", medium: "1.5rem", large: "2.1875rem", inherit: "1em" };
 
 /** Inline-SVG wrapper: sized in em, inherits text colour via `currentColor`. */
-export const SvgIcon = ({ fontSize = "medium", htmlColor, className, style, children, fill = "currentColor", ...rest }: SvgIconProps) => (
+export const SvgIcon = ({
+    fontSize = "medium",
+    htmlColor,
+    className,
+    style,
+    children,
+    fill = "currentColor",
+    ...rest
+}: SvgIconProps) => (
     <svg
         aria-hidden="true"
         focusable="false"

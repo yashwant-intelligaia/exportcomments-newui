@@ -49,7 +49,7 @@ const AddButtons = ({ options, onOptionClick }: AddButtonsPropsType) => {
                                     onOptionClick?.(index);
                                     setAnchorEl(null);
                                 }}
-                                className="block w-36 px-4 py-2 text-left text-sm text-ink hover:bg-surface-sunk disabled:cursor-not-allowed disabled:text-muted disabled:hover:bg-transparent"
+                                className="text-ink hover:bg-surface-sunk disabled:text-muted block w-36 px-4 py-2 text-left text-sm disabled:cursor-not-allowed disabled:hover:bg-transparent"
                             >
                                 {title}
                             </button>

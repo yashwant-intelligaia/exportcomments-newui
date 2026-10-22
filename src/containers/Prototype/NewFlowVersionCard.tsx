@@ -162,9 +162,7 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
     const [totalFeedback, setTotalFeedback] = useState(false);
     const handleChipClick = (chipLabel: string) => {
         setSelectedChips((prevSelected) => [...prevSelected, chipLabel]);
-        setCustomText((prevCustomText) =>
-            prevCustomText ? `${prevCustomText}, ${chipLabel}` : chipLabel
-        );
+        setCustomText((prevCustomText) => (prevCustomText ? `${prevCustomText}, ${chipLabel}` : chipLabel));
     };
     const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = event.target.value;
@@ -266,11 +264,12 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                 versionUsers={versionData.versionUser}
                 branchName=""
                 flowNodeId={flowNodeId}
-            />
+            />,
         );
     };
     const isExpanded = expandedId === version.versionId;
-    const meta = "relative mx-2 my-px border-l border-muted pl-2.5 text-sm leading-[15px] max-sm:mx-0 max-sm:border-l-0 max-sm:pl-0";
+    const meta =
+        "relative mx-2 my-px border-l border-muted pl-2.5 text-sm leading-[15px] max-sm:mx-0 max-sm:border-l-0 max-sm:pl-0";
 
     return (
         <div>
@@ -279,8 +278,16 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                     <div className="min-w-0 grow">
                         <div className="flex items-center max-sm:w-full max-sm:flex-col max-sm:items-stretch max-sm:gap-4">
                             <div className="pr-1.5 text-xl">
-                                <EcOverflowTooltip childRef={versionNameRef} title={version.versionName} placement="top" arrow>
-                                    <span ref={versionNameRef} className="inline-block max-w-[250px] truncate pr-1.5 align-bottom text-[1.375rem]">
+                                <EcOverflowTooltip
+                                    childRef={versionNameRef}
+                                    title={version.versionName}
+                                    placement="top"
+                                    arrow
+                                >
+                                    <span
+                                        ref={versionNameRef}
+                                        className="inline-block max-w-[250px] truncate pr-1.5 align-bottom text-[1.375rem]"
+                                    >
                                         {`${version.versionName}`}
                                     </span>
                                 </EcOverflowTooltip>
@@ -293,7 +300,7 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                                     <button
                                         type="button"
                                         onClick={() => handleShareFlowVersion(version, nodeId)}
-                                        className="flex items-center gap-1 text-sm font-medium text-blue-ink"
+                                        className="text-blue-ink flex items-center gap-1 text-sm font-medium"
                                     >
                                         <Share2 className="size-3.5" />
                                         Share
@@ -303,20 +310,31 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                         </div>
                         <div className="flex items-center pt-[18px] max-sm:w-full max-sm:flex-col max-sm:items-stretch max-sm:gap-4">
                             <div className="flex items-center">
-                                <span className="mr-1 text-sm">{version.versionRating != null ? "Average rating" : "Add rating"}</span>
+                                <span className="mr-1 text-sm">
+                                    {version.versionRating != null ? "Average rating" : "Add rating"}
+                                </span>
                                 {averageEmoji !== null && version.versionRating != null && (
                                     <span className="mr-0.5 flex items-center">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={averageEmoji.src} alt={averageEmoji.alt} className="size-5" />
                                     </span>
                                 )}
-                                <button type="button" aria-label="Add rating" onClick={() => handleExpandClickEmoji(version.versionId)}>
+                                <button
+                                    type="button"
+                                    aria-label="Add rating"
+                                    onClick={() => handleExpandClickEmoji(version.versionId)}
+                                >
                                     <SmilePlus className="size-5 cursor-pointer" />
                                 </button>
                             </div>
                             {version.versionRating != null && (
-                                <button type="button" className={cn(meta, "cursor-pointer text-left")} onClick={() => handleExpandTotalFeedback(version.versionId)}>
-                                    Total Feedback :<span className="mx-1 text-base font-bold">{version.versionRating.length}</span>
+                                <button
+                                    type="button"
+                                    className={cn(meta, "cursor-pointer text-left")}
+                                    onClick={() => handleExpandTotalFeedback(version.versionId)}
+                                >
+                                    Total Feedback :
+                                    <span className="mx-1 text-base font-bold">{version.versionRating.length}</span>
                                 </button>
                             )}
                             <div className="flex items-center">
@@ -326,8 +344,16 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                                         <>
                                             <AvatarGroup max={4} size={24}>
                                                 {version.versionUser.map((versionuser: UserType) => (
-                                                    <button key={versionuser.user_id} type="button" onClick={(event) => handleClick(event, version.versionId)}>
-                                                        <Avatar src={versionuser.avatar} name={versionuser.name || versionuser.email} size={24} />
+                                                    <button
+                                                        key={versionuser.user_id}
+                                                        type="button"
+                                                        onClick={(event) => handleClick(event, version.versionId)}
+                                                    >
+                                                        <Avatar
+                                                            src={versionuser.avatar}
+                                                            name={versionuser.name || versionuser.email}
+                                                            size={24}
+                                                        />
                                                     </button>
                                                 ))}
                                             </AvatarGroup>
@@ -339,14 +365,20 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                                             >
                                                 {version.versionUser.map((versionuser: UserType) => (
                                                     <MenuItem key={versionuser.user_id}>
-                                                        <Avatar src={versionuser.avatar} name={versionuser.name || versionuser.email} size={25} />
-                                                        <span className="text-sm">{versionuser.name || versionuser.email}</span>
+                                                        <Avatar
+                                                            src={versionuser.avatar}
+                                                            name={versionuser.name || versionuser.email}
+                                                            size={25}
+                                                        />
+                                                        <span className="text-sm">
+                                                            {versionuser.name || versionuser.email}
+                                                        </span>
                                                     </MenuItem>
                                                 ))}
                                             </Menu>
                                         </>
                                     ) : (
-                                        <span className="text-xs font-normal text-muted">There is no contributors</span>
+                                        <span className="text-muted text-xs font-normal">There is no contributors</span>
                                     )}
                                 </div>
                             </div>
@@ -356,14 +388,14 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                         aria-label="show more"
                         aria-expanded={isExpanded}
                         onClick={() => handleExpandClick(version.versionId)}
-                        className="mt-5 ml-auto max-sm:w-full max-sm:rounded-sm max-sm:bg-surface-sunk"
+                        className="max-sm:bg-surface-sunk mt-5 ml-auto max-sm:w-full max-sm:rounded-sm"
                     >
                         <ChevronDown className={cn("size-5 transition-transform", isExpanded && "rotate-180")} />
                     </IconButton>
                 </div>
                 {isExpanded &&
                     (totalFeedback && version.versionRating ? (
-                        <div className="border-t border-line p-4">
+                        <div className="border-line border-t p-4">
                             <p className="text-base font-bold">Recent Feedback</p>
                             <div className="mt-5 max-h-[360px] overflow-auto">
                                 {version.versionRating.map((rating: any, index: number) => (
@@ -374,7 +406,10 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                                                 <span>{rating.name}</span>
                                             </div>
                                             <span className="text-xs">
-                                                Date :<span>{format(new Date(rating.ratingCreatedAt), "MMMM dd, yyyy")}</span>{" "}
+                                                Date :
+                                                <span>
+                                                    {format(new Date(rating.ratingCreatedAt), "MMMM dd, yyyy")}
+                                                </span>{" "}
                                             </span>
                                         </div>
                                         <p className="mt-2.5 pl-1 text-sm">{rating.comment}</p>
@@ -383,9 +418,11 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                             </div>
                         </div>
                     ) : (
-                        <div className="border-t border-line p-4">
+                        <div className="border-line border-t p-4">
                             <p className="text-center text-base font-bold">How do you find this prototype</p>
-                            <p className="mt-2 text-center text-sm">Rating should be based on whether the protoype/design meets the objective or not</p>
+                            <p className="mt-2 text-center text-sm">
+                                Rating should be based on whether the protoype/design meets the objective or not
+                            </p>
                             <div className="mt-10 flex justify-center">
                                 {EMOJI_DATA.map((emoji) => (
                                     <button
@@ -393,10 +430,17 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                                         key={emoji.id}
                                         aria-pressed={selectedEmoji.id === emoji.id}
                                         onClick={() => handleEmojiClick(emoji)}
-                                        className="mr-2.5 inline-flex size-[50px] items-center justify-center rounded-full bg-transparent transition-colors hover:bg-surface-sunk"
+                                        className="hover:bg-surface-sunk mr-2.5 inline-flex size-[50px] items-center justify-center rounded-full bg-transparent transition-colors"
                                     >
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={emoji.src} alt={emoji.alt} className={cn("transition-transform", selectedEmoji.id === emoji.id && "scale-[1.4]")} />
+                                        <img
+                                            src={emoji.src}
+                                            alt={emoji.alt}
+                                            className={cn(
+                                                "transition-transform",
+                                                selectedEmoji.id === emoji.id && "scale-[1.4]",
+                                            )}
+                                        />
                                     </button>
                                 ))}
                             </div>
@@ -408,7 +452,7 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                                                 type="button"
                                                 key={suggestionsLabel}
                                                 onClick={() => handleChipClick(suggestionsLabel)}
-                                                className="mb-3 rounded-pill border border-ink/60 px-3 py-1 text-sm text-ink hover:bg-surface-sunk"
+                                                className="rounded-pill border-ink/60 text-ink hover:bg-surface-sunk mb-3 border px-3 py-1 text-sm"
                                             >
                                                 {suggestionsLabel}
                                             </button>
@@ -423,7 +467,11 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                                             value={customText}
                                             onChange={handleTextFieldChange as any}
                                             endAdornment={
-                                                <IconButton aria-label="Clear comment" size="small" onClick={() => setCustomText("")}>
+                                                <IconButton
+                                                    aria-label="Clear comment"
+                                                    size="small"
+                                                    onClick={() => setCustomText("")}
+                                                >
                                                     <X className="size-4" />
                                                 </IconButton>
                                             }
@@ -431,7 +479,10 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
                                     </div>
                                     <div className="flex justify-end gap-2.5">
                                         <Button onClick={handleCancel}>Cancel</Button>
-                                        <Button onClick={handlePost} disabled={selectedEmoji.id === undefined || customText.trim().length === 0}>
+                                        <Button
+                                            onClick={handlePost}
+                                            disabled={selectedEmoji.id === undefined || customText.trim().length === 0}
+                                        >
                                             Post
                                         </Button>
                                     </div>

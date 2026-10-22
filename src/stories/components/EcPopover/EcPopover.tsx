@@ -18,7 +18,15 @@ interface EcPopoverPropsType {
     actionButtons?: ActionButtonType[];
 }
 
-const EcPopover = ({ title, description, open, anchorEl, anchorOrigin, actionButtons = [], handleClose }: EcPopoverPropsType) => (
+const EcPopover = ({
+    title,
+    description,
+    open,
+    anchorEl,
+    anchorOrigin,
+    actionButtons = [],
+    handleClose,
+}: EcPopoverPropsType) => (
     <Popover
         open={open}
         anchorEl={anchorEl ?? null}
@@ -26,8 +34,8 @@ const EcPopover = ({ title, description, open, anchorEl, anchorOrigin, actionBut
         placement={anchorOrigin?.horizontal === "left" ? "bottom-start" : "bottom-end"}
     >
         <div className="max-w-[296px] p-4">
-            <p className="pb-1 text-base font-medium text-ink">{title}</p>
-            <p className="pb-2 text-sm text-muted">{description}</p>
+            <p className="text-ink pb-1 text-base font-medium">{title}</p>
+            <p className="text-muted pb-2 text-sm">{description}</p>
             {actionButtons.length > 0 && (
                 <div className="flex flex-col gap-2 pt-2 sm:flex-row">
                     {actionButtons.map(({ label, onClick, size, variant }, index) => (

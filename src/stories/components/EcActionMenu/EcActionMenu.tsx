@@ -1,6 +1,7 @@
 "use client";
 
 import { Menu, MenuItem } from "@/components/ui/Popover";
+
 import { ActionMenuItemType } from "../../../types";
 import { uniqueKey } from "../../../utils";
 import { EcTooltip } from "../EcTooltip";
@@ -17,7 +18,12 @@ interface EcActionMenuPropsType {
 }
 
 const EcActionMenu = ({ open, anchorEl, items = [], closeOnClickOutside = true, onClose }: EcActionMenuPropsType) => (
-    <Menu open={open} anchorEl={anchorEl ?? null} onClose={closeOnClickOutside && onClose ? onClose : () => undefined} placement="right-start">
+    <Menu
+        open={open}
+        anchorEl={anchorEl ?? null}
+        onClose={closeOnClickOutside && onClose ? onClose : () => undefined}
+        placement="right-start"
+    >
         {items.map(({ label, onClick, icon, disabled, tooltipTitle }, index) => {
             const item = (
                 <MenuItem key={uniqueKey(index)} onClick={disabled ? undefined : onClick} disabled={disabled}>

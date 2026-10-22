@@ -21,8 +21,8 @@ export const Tooltip = ({
             <span
                 role="tooltip"
                 className={cn(
-                    "pointer-events-none absolute left-1/2 z-[70] hidden max-w-xs -translate-x-1/2 rounded-sm bg-ink px-2 py-1 text-xs font-normal text-white group-focus-within/tip:block group-hover/tip:block",
-                    placement === "top" ? "bottom-full mb-1" : "top-full mt-1"
+                    "bg-ink pointer-events-none absolute left-1/2 z-[70] hidden max-w-xs -translate-x-1/2 rounded-sm px-2 py-1 text-xs font-normal text-white group-focus-within/tip:block group-hover/tip:block",
+                    placement === "top" ? "bottom-full mb-1" : "top-full mt-1",
                 )}
             >
                 {title}

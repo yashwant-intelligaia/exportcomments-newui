@@ -10,7 +10,7 @@ export const Loader = ({ image, message }: LoaderPropsType) => (
         <div className="flex flex-col items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={image} alt="Loader" className="size-[200px]" />
-            <p className="my-2 text-xl font-light text-muted">{message}</p>
+            <p className="text-muted my-2 text-xl font-light">{message}</p>
         </div>
     </div>
 );

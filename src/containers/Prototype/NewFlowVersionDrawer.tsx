@@ -16,7 +16,11 @@ interface FlowVersionDrawerPropsType {
     onClose: () => void;
 }
 
-export const NewFlowVersionDrawer = ({ data: { prototypeId, nodeId, prototypeTitle, pageId }, open, onClose }: FlowVersionDrawerPropsType) => {
+export const NewFlowVersionDrawer = ({
+    data: { prototypeId, nodeId, prototypeTitle, pageId },
+    open,
+    onClose,
+}: FlowVersionDrawerPropsType) => {
     const { data: versionList = [], refetch: versionListRefetch } = useFetchFlowList(prototypeId);
 
     return (
@@ -35,7 +39,11 @@ export const NewFlowVersionDrawer = ({ data: { prototypeId, nodeId, prototypeTit
         >
             <div className="mt-5 mb-4 w-[330px] max-w-[700px] rounded-md px-2.5 sm:w-auto">
                 {versionList?.map((version: any) => (
-                    <NewFlowVersionCard key={version.versionId} data={{ version, nodeId, pageId }} refetchCallback={versionListRefetch} />
+                    <NewFlowVersionCard
+                        key={version.versionId}
+                        data={{ version, nodeId, pageId }}
+                        refetchCallback={versionListRefetch}
+                    />
                 ))}
             </div>
         </EcDrawer>

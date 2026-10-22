@@ -1,6 +1,7 @@
 "use client";
 
 import { useContext, useEffect } from "react";
+
 import { useLocation, useParams } from "@/utils/navigation";
 
 import { CommentsList } from "../containers";
@@ -16,15 +17,8 @@ export const ProjectDetailsPage = () => {
     const viewByParam = queryParams.get("view");
     const filterByParam = queryParams.get("filter");
 
-    const {
-        view,
-        setProjectId,
-        setProjectData,
-        setProjectList,
-        onChangeView,
-        setCommentFilter,
-        setSelectedBranch,
-    } = useContext(ProjectDetailsContext);
+    const { view, setProjectId, setProjectData, setProjectList, onChangeView, setCommentFilter, setSelectedBranch } =
+        useContext(ProjectDetailsContext);
 
     const {
         projectId,
@@ -45,9 +39,7 @@ export const ProjectDetailsPage = () => {
             setProjectList(projectListData);
         }
         if (parsedProjectId && projectListData) {
-            const filteredProjectDetail = projectListData.find(
-                ({ projectId: id }) => id === parseInt(projectId, 10)
-            );
+            const filteredProjectDetail = projectListData.find(({ projectId: id }) => id === parseInt(projectId, 10));
             setProjectData(filteredProjectDetail);
         }
     }, [projectListData, parsedProjectId]);

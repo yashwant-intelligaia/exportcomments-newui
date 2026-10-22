@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useHistory } from "@/utils/navigation";
 
 import { useUnsubscribeMutation } from "../../hooks";
@@ -45,7 +46,7 @@ export const UnsubscribeReleaseMail = (props: UnsubscribeReleaseMailPropsType) =
                     onClose={() => {
                         setConfirmDialog(undefined);
                     }}
-                />
+                />,
             );
         }
     }, [token]);

@@ -12,8 +12,13 @@ interface PrototypeAccordionPropsType {
 }
 
 const PrototypeAccordion = ({ data, onExpandToggle, figmaImage, figmaImageLoading }: PrototypeAccordionPropsType) => (
-    <div className="mb-4 rounded-md bg-surface shadow-card">
-        <PrototypeAccordionSummary data={data} onExpandToggle={onExpandToggle} figmaImage={figmaImage} figmaImageLoading={figmaImageLoading} />
+    <div className="bg-surface shadow-card mb-4 rounded-md">
+        <PrototypeAccordionSummary
+            data={data}
+            onExpandToggle={onExpandToggle}
+            figmaImage={figmaImage}
+            figmaImageLoading={figmaImageLoading}
+        />
         {data.expanded && <PrototypeAccordionDetails data={{ prototypes: data.prototypes, pageId: data.pageId }} />}
     </div>
 );

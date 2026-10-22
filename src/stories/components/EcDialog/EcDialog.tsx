@@ -17,13 +17,24 @@ interface EcDialogPropsType {
     actionButtons?: ActionButtonType[];
 }
 
-const EcDialog = ({ title, description, closeOnClickOutside = false, open, onClose, actionButtons = [] }: EcDialogPropsType) => (
+const EcDialog = ({
+    title,
+    description,
+    closeOnClickOutside = false,
+    open,
+    onClose,
+    actionButtons = [],
+}: EcDialogPropsType) => (
     <Modal open={open} onClose={closeOnClickOutside ? onClose : undefined} size="sm">
-        <button aria-label="close" onClick={onClose} className="absolute top-3 right-3 rounded-full p-1.5 text-muted hover:bg-surface-sunk">
+        <button
+            aria-label="close"
+            onClick={onClose}
+            className="text-muted hover:bg-surface-sunk absolute top-3 right-3 rounded-full p-1.5"
+        >
             <X className="size-5" />
         </button>
         <h2 className="font-sans text-xl font-semibold tracking-normal">{title}</h2>
-        <p className="mt-2 text-sm text-muted">{description}</p>
+        <p className="text-muted mt-2 text-sm">{description}</p>
         <div className="mt-6 flex justify-end gap-2">
             {actionButtons.map(({ label, onClick, variant, size }, i) => (
                 <Button key={uniqueKey(i)} variant={variant} size={size} onClick={onClick}>

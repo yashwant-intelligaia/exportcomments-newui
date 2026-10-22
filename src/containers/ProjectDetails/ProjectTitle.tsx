@@ -54,13 +54,19 @@ export const ProjectTitle = () => {
                         onClick={(event) => setAnchorEl(openMenu ? null : event.currentTarget)}
                         className="group flex items-start text-left"
                     >
-                        <h4 className="m-0 h-[30px] max-w-[300px] truncate font-sans text-xl font-medium tracking-normal text-ink md:text-[26px]">
+                        <h4 className="text-ink m-0 h-[30px] max-w-[300px] truncate font-sans text-xl font-medium tracking-normal md:text-[26px]">
                             {projectData?.fileName}
                         </h4>
-                        <ChevronDown className={cn("mt-1 size-5 transition-transform group-hover:text-blue-ink", openMenu && "rotate-180 text-blue-ink")} />
+                        <ChevronDown
+                            className={cn(
+                                "group-hover:text-blue-ink mt-1 size-5 transition-transform",
+                                openMenu && "text-blue-ink rotate-180",
+                            )}
+                        />
                     </button>
-                    <div className="block w-full pl-[5px] text-sm font-medium text-muted md:pl-0">
-                        Last updated on {projectData?.createdAt ? format(new Date(projectData.createdAt), "MMM d, yyyy") : "-"}
+                    <div className="text-muted block w-full pl-[5px] text-sm font-medium md:pl-0">
+                        Last updated on{" "}
+                        {projectData?.createdAt ? format(new Date(projectData.createdAt), "MMM d, yyyy") : "-"}
                     </div>
                 </div>
             </div>

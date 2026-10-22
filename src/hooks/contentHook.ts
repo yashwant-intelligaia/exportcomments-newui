@@ -1,15 +1,15 @@
 "use client";
 
-import { useQueryWithSettled } from "./queryUtils";
-import { AxiosError } from "axios";
-import { get } from "../utils/object";
-import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useContext } from "react";
 
 import { APP_CONSTANT } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
 import { ContentType } from "../types";
 import { api, messages } from "../utils";
+import { get } from "../utils/object";
+import { useQueryWithSettled } from "./queryUtils";
 
 const PRIVACY_POLICY = "privacy-policy";
 const TERMS_OF_USE = "terms-of-use";

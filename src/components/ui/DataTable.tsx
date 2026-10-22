@@ -60,7 +60,7 @@ export function DataTable<T>({
 
     const template = useMemo(
         () => columns.map((c) => (c.width ? `${c.width}px` : `minmax(${c.minWidth ?? 120}px, 1fr)`)).join(" "),
-        [columns]
+        [columns],
     );
     const minTableWidth = useMemo(() => columns.reduce((sum, c) => sum + (c.width ?? c.minWidth ?? 120), 0), [columns]);
 
@@ -85,13 +85,13 @@ export function DataTable<T>({
             aria-rowcount={rows.length}
             onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
             style={{ height }}
-            className={cn("overflow-auto bg-surface-sunk", className)}
+            className={cn("bg-surface-sunk overflow-auto", className)}
         >
             <div style={{ minWidth: minTableWidth }}>
                 <div
                     role="row"
                     style={{ gridTemplateColumns: template, height: headerHeight }}
-                    className="sticky top-0 z-10 grid border-b border-line bg-surface"
+                    className="border-line bg-surface sticky top-0 z-10 grid border-b"
                 >
                     {columns.map((c) => {
                         const sort = sortColumns.find((s) => s.columnKey === c.key);
@@ -101,12 +101,24 @@ export function DataTable<T>({
                                 key={c.key}
                                 role="columnheader"
                                 aria-sort={sort ? (sort.direction === "ASC" ? "ascending" : "descending") : "none"}
-                                className={cn("flex items-center px-2.5 text-sm font-semibold text-ink", c.headerClassName)}
+                                className={cn(
+                                    "text-ink flex items-center px-2.5 text-sm font-semibold",
+                                    c.headerClassName,
+                                )}
                             >
                                 {sortable ? (
-                                    <button type="button" onClick={() => toggleSort(c.key)} className="flex items-center gap-2 text-left">
+                                    <button
+                                        type="button"
+                                        onClick={() => toggleSort(c.key)}
+                                        className="flex items-center gap-2 text-left"
+                                    >
                                         {c.name}
-                                        {sort && (sort.direction === "ASC" ? <ArrowUp className="size-4" /> : <ArrowDown className="size-4" />)}
+                                        {sort &&
+                                            (sort.direction === "ASC" ? (
+                                                <ArrowUp className="size-4" />
+                                            ) : (
+                                                <ArrowDown className="size-4" />
+                                            ))}
                                     </button>
                                 ) : (
                                     c.name
@@ -126,10 +138,17 @@ export function DataTable<T>({
                                 height: rowHeight,
                                 transform: `translateY(${(start + i) * rowHeight}px)`,
                             }}
-                            className={cn("absolute top-0 left-0 grid w-full border-b border-line bg-surface text-ink hover:bg-blue-soft", rowClassName?.(row))}
+                            className={cn(
+                                "border-line bg-surface text-ink hover:bg-blue-soft absolute top-0 left-0 grid w-full border-b",
+                                rowClassName?.(row),
+                            )}
                         >
                             {columns.map((c) => (
-                                <div key={c.key} role="cell" className="flex min-w-0 items-center overflow-hidden px-2.5">
+                                <div
+                                    key={c.key}
+                                    role="cell"
+                                    className="flex min-w-0 items-center overflow-hidden px-2.5"
+                                >
                                     {c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? "")}
                                 </div>
                             ))}

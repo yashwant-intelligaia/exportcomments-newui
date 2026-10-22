@@ -42,16 +42,21 @@ export const Utilities = ({ user, userOptions }: any) => {
     return (
         <ul className="m-0 flex list-none items-center p-0">
             <li ref={wrapRef} className="relative z-[99] px-2">
-                <button type="button" aria-label="Open profile menu" onClick={() => setIsActive(!isActive)} id="NB-user-avatar">
+                <button
+                    type="button"
+                    aria-label="Open profile menu"
+                    onClick={() => setIsActive(!isActive)}
+                    id="NB-user-avatar"
+                >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img alt="profile" src={user?.avatar} className="size-9 rounded-full object-cover" />
                 </button>
 
                 {isActive && (
-                    <div className="absolute top-[calc(100%+8px)] right-0 z-[1000] min-w-56 overflow-hidden rounded-md border border-line bg-surface pb-1 shadow-card">
-                        <div className="border-b border-line bg-paper px-4 py-3">
-                            <span className="block font-semibold text-ink">{user?.name}</span>
-                            <p className="m-0 text-sm text-muted">{user?.email}</p>
+                    <div className="border-line bg-surface shadow-card absolute top-[calc(100%+8px)] right-0 z-[1000] min-w-56 overflow-hidden rounded-md border pb-1">
+                        <div className="border-line bg-paper border-b px-4 py-3">
+                            <span className="text-ink block font-semibold">{user?.name}</span>
+                            <p className="text-muted m-0 text-sm">{user?.email}</p>
                         </div>
                         {userOptions.map((item: string, index: number) => (
                             <button
@@ -59,7 +64,7 @@ export const Utilities = ({ user, userOptions }: any) => {
                                 type="button"
                                 onClick={handleMenuItemClick(item)}
                                 id={`NB-user-profile-option-${index}`}
-                                className="flex w-full px-4 py-2.5 text-left text-sm text-ink hover:bg-surface-sunk"
+                                className="text-ink hover:bg-surface-sunk flex w-full px-4 py-2.5 text-left text-sm"
                             >
                                 {item}
                             </button>

@@ -25,7 +25,7 @@ export const ReplyCommentActions = ({ data, onAction }: ReplyCommentActionsProps
                 <button
                     type="button"
                     aria-label="more actions"
-                    className="mr-1 flex items-center rounded-sm py-1 text-blue-ink"
+                    className="text-blue-ink mr-1 flex items-center rounded-sm py-1"
                     onClick={(event) => {
                         if (!isButtonDisabled) setActionOptions(event.currentTarget);
                     }}
@@ -33,7 +33,12 @@ export const ReplyCommentActions = ({ data, onAction }: ReplyCommentActionsProps
                     <MoreVertical className="size-5" />
                 </button>
             </EcTooltip>
-            <Menu open={Boolean(actionOptions)} anchorEl={actionOptions} onClose={() => setActionOptions(null)} placement="bottom-end">
+            <Menu
+                open={Boolean(actionOptions)}
+                anchorEl={actionOptions}
+                onClose={() => setActionOptions(null)}
+                placement="bottom-end"
+            >
                 <MenuItem
                     onClick={() => {
                         setActionOptions(null);

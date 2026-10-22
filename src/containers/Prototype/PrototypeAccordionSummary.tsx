@@ -31,8 +31,8 @@ interface PrototypeAccordionSummaryPropsType {
 
 const Stat = ({ label, className, children }: { label: string; className: string; children: ReactNode }) => (
     <div className={className}>
-        <span className="block text-xs leading-7 text-body">{label}</span>
-        <span className="flex items-center gap-2 text-sm font-medium text-ink">{children}</span>
+        <span className="text-body block text-xs leading-7">{label}</span>
+        <span className="text-ink flex items-center gap-2 text-sm font-medium">{children}</span>
     </div>
 );
 
@@ -60,7 +60,7 @@ const PrototypeAccordionSummary = ({
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={imageUrl} alt="Large flow" width={976} className="block max-w-full" />
                 </div>
-            </EcModal>
+            </EcModal>,
         );
     };
 
@@ -81,15 +81,26 @@ const PrototypeAccordionSummary = ({
                     aria-label="show more"
                     disabled={!canExpand}
                     onClick={() => onExpandToggle(!expanded)}
-                    className={cn("rounded-full p-2 transition-transform hover:text-blue-ink", expanded && "rotate-90", !canExpand && "pointer-events-none text-line")}
+                    className={cn(
+                        "hover:text-blue-ink rounded-full p-2 transition-transform",
+                        expanded && "rotate-90",
+                        !canExpand && "text-line pointer-events-none",
+                    )}
                 >
                     <ChevronRight className="size-4" />
                 </button>
                 <div className="grid w-full grid-cols-12 items-center gap-x-2 gap-y-4">
                     <div className="col-span-3 lg:col-span-1">
                         <EcImage
-                            className={cn("size-[3.25rem] overflow-hidden border-2 border-[#b4b4bb]", figmaImageLoading ? "cursor-not-allowed" : "cursor-pointer")}
-                            onClick={() => (figmaImageLoading ? undefined : handlePreviewImageClick(figmaImage?.[nodeId] || "", pageTitle))}
+                            className={cn(
+                                "size-[3.25rem] overflow-hidden border-2 border-[#b4b4bb]",
+                                figmaImageLoading ? "cursor-not-allowed" : "cursor-pointer",
+                            )}
+                            onClick={() =>
+                                figmaImageLoading
+                                    ? undefined
+                                    : handlePreviewImageClick(figmaImage?.[nodeId] || "", pageTitle)
+                            }
                             id={`${projectId}-${pageTitle}-${nodeId}`}
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}

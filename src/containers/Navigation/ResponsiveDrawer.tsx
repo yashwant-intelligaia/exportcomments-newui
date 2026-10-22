@@ -21,7 +21,7 @@ const ResponsiveDrawer = ({ children }: { children: JSX.Element }) => {
                 </Drawer>
             </nav>
 
-            <main className="min-h-[calc(100vh-3.75rem)] w-full grow bg-paper px-4 py-8">{children}</main>
+            <main className="bg-paper min-h-[calc(100vh-3.75rem)] w-full grow px-4 py-8">{children}</main>
         </div>
     );
 };

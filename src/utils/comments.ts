@@ -1,6 +1,5 @@
 "use client";
 
-import { cloneDeep, downloadBlob } from "./object";
 import { format } from "date-fns";
 
 import { APP_CONSTANT } from "../constants/AppConstant";
@@ -17,12 +16,13 @@ import {
     ReactionActionType,
 } from "../types";
 import { EMOJIS_MAP } from "./emojis";
+import { cloneDeep, downloadBlob } from "./object";
 
 const exportCommentsToExcel = async (
     originalComments: ExportCommentRowType[],
     filterType: CommentFilterType,
     user: IUserToken,
-    commentsFileInfo: CommentResponseFileInfoType
+    commentsFileInfo: CommentResponseFileInfoType,
 ) => {
     const fileInfoData = { ...commentsFileInfo };
     const exportComments = [...originalComments];
@@ -137,10 +137,7 @@ const exportCommentsToExcel = async (
                 commentList.forEach((value) => {
                     if (user.userId === parseInt(value.user.id, 10)) {
                         myCommentIdList.push(value.id);
-                        if (
-                            value.parentId !== "" &&
-                            myCommentIdList.indexOf(value.parentId) === -1
-                        ) {
+                        if (value.parentId !== "" && myCommentIdList.indexOf(value.parentId) === -1) {
                             myCommentIdList.push(value.parentId);
                         }
                     }
@@ -321,8 +318,7 @@ const exportCommentsToExcel = async (
                     cells: cellArray,
                 });
             } else {
-                groupColorArray[groupColorIndex].cells =
-                    groupColorArray[groupColorIndex].cells.concat(cellArray);
+                groupColorArray[groupColorIndex].cells = groupColorArray[groupColorIndex].cells.concat(cellArray);
             }
         }
         lastGroup = object.group;
@@ -393,8 +389,7 @@ const processTreeData = (newData: ITreeRowType[], expandId: any[]): ITreeRowType
     if (expandId.length) {
         expandId.forEach((comment: ITreeRowType) => {
             const rowIndex = newData.findIndex(
-                (expandedComment: ITreeRowType) =>
-                    comment.id === expandedComment.id && !comment.parentId
+                (expandedComment: ITreeRowType) => comment.id === expandedComment.id && !comment.parentId,
             );
             if (rowIndex > -1) {
                 const { children } = newData[rowIndex];
@@ -431,7 +426,7 @@ const sortingTreeData = (
     rows: ITreeRowType[],
     sortColumn: readonly { columnKey: string; direction: "ASC" | "DESC" }[],
     expandId: any[],
-    filterText: string
+    filterText: string,
 ) => {
     const v = sortColumn[0].direction === "ASC" ? 1 : -1;
     const key = sortColumn[0].columnKey;
@@ -477,7 +472,7 @@ const getUnResolvedFilteredComments = (comments: CommentRowType[]) => {
     const filteredComments: CommentRowType[] = comments.filter(
         (comment: CommentRowType) =>
             (!comment.parentId && resolvedParent.indexOf(comment.id) === -1) ||
-            (comment.parentId && resolvedParent.indexOf(comment.parentId) === -1)
+            (comment.parentId && resolvedParent.indexOf(comment.parentId) === -1),
     );
 
     return filteredComments;
@@ -521,10 +516,7 @@ const getUnreadComments = (comments: CommentRowType[], fileInfo: CommentResponse
     });
 
     comments.forEach((comment) => {
-        if (
-            comment.parentId === "" &&
-            new Date(comment.createdAt) > new Date(fileInfo.lastViewedAt)
-        ) {
+        if (comment.parentId === "" && new Date(comment.createdAt) > new Date(fileInfo.lastViewedAt)) {
             commentsCount += 1;
             comment.unreadComment = true;
             filteredComments.push(comment);
@@ -555,10 +547,7 @@ const getUnreadReplies = (comments: CommentRowType[], fileInfo: CommentResponseF
     });
 
     comments.forEach((comment: CommentRowType) => {
-        if (
-            comment.parentId !== "" &&
-            new Date(comment.createdAt) > new Date(fileInfo.lastViewedAt)
-        ) {
+        if (comment.parentId !== "" && new Date(comment.createdAt) > new Date(fileInfo.lastViewedAt)) {
             const commentsMapData = commentsMap.get(comment.parentId);
             if (commentsMapData) {
                 filteredComments.push(commentsMapData);
@@ -577,7 +566,7 @@ const getUnreadReplies = (comments: CommentRowType[], fileInfo: CommentResponseF
 
 const processCommentsRowData = (data: CommentDataType[]) => {
     const commentsRowData: CommentRowType[] = data.map(
-        ({
+        ({ id, fileKey, parentId, orderId, createdAt, resolvedAt, user, clientMeta, message, reactions }) => ({
             id,
             fileKey,
             parentId,
@@ -588,27 +577,12 @@ const processCommentsRowData = (data: CommentDataType[]) => {
             clientMeta,
             message,
             reactions,
-        }) => ({
-            id,
-            fileKey,
-            parentId,
-            orderId,
-            createdAt,
-            resolvedAt,
-            user,
-            clientMeta,
-            message,
-            reactions,
-        })
+        }),
     );
     return commentsRowData;
 };
 
-const processCommentsData = (
-    filterType: CommentFilterType,
-    user: IUserToken,
-    data: CommentResponseDataType
-) => {
+const processCommentsData = (filterType: CommentFilterType, user: IUserToken, data: CommentResponseDataType) => {
     const nodeId = "?node-id=";
     const commentsRowData = processCommentsRowData(data.comments);
     const originalResponse = cloneDeep(data.comments);
@@ -641,24 +615,19 @@ const processCommentsData = (
         comment.markAsReadCreatedAt = comment.createdAt;
         if (!comment.clientMeta) {
             if (commentIdSet.has(comment.parentId)) {
-                comment.myComment =
-                    user.figmaUserId.toString() === comment.user.id.toString() ? "Y" : "";
+                comment.myComment = user.figmaUserId.toString() === comment.user.id.toString() ? "Y" : "";
                 comment.userName = comment.user.handle;
                 comment.status = comment.resolvedAt ? "resolved" : "Unresolved";
             }
         } else {
             comment.commentLocation = `${APP_CONSTANT.figmaUrl}/file/${comment.fileKey}${nodeId}${comment.clientMeta.nodeId}#${comment.id}`;
 
-            comment.myComment =
-                user.figmaUserId.toString() === comment.user.id.toString() ? "Y" : "";
+            comment.myComment = user.figmaUserId.toString() === comment.user.id.toString() ? "Y" : "";
             comment.userName = comment.user.handle;
             comment.status = comment.resolvedAt ? "resolved" : "Unresolved";
             if (comment.parentId !== "")
-                comment.unreadReply =
-                    new Date(data.fileInfo.lastViewedAt) < new Date(comment.createdAt);
-            else
-                comment.unreadComment =
-                    new Date(data.fileInfo.lastViewedAt) < new Date(comment.createdAt);
+                comment.unreadReply = new Date(data.fileInfo.lastViewedAt) < new Date(comment.createdAt);
+            else comment.unreadComment = new Date(data.fileInfo.lastViewedAt) < new Date(comment.createdAt);
         }
     });
     comments = [...comments].sort((a, b) => (a.createdAt > b.createdAt ? 1 : a.createdAt < b.createdAt ? -1 : 0));
@@ -700,8 +669,7 @@ const getReactionAction = (reactions: any[], reaction: string, figmaUser: FigmaU
     let action: ReactionActionType = "add";
     if (reactions.length) {
         const userReactionExist = reactions.find(
-            ({ emoji, user }: { emoji: string; user: any }) =>
-                emoji === reaction && user.id === figmaUser.id
+            ({ emoji, user }: { emoji: string; user: any }) => emoji === reaction && user.id === figmaUser.id,
         );
         if (userReactionExist) {
             action = "delete";

@@ -52,16 +52,21 @@ export const PrototypeNameCell = ({ onClick, projectId, data }: PrototypeNameCel
             </EcImage>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={desktopIcon.src} alt="desktop" className="mx-2.5" />
-            <a target="_blank" rel="noreferrer" href={prototypeLink} className="mr-2.5 cursor-pointer text-sm font-medium text-blue-ink">
+            <a
+                target="_blank"
+                rel="noreferrer"
+                href={prototypeLink}
+                className="text-blue-ink mr-2.5 cursor-pointer text-sm font-medium"
+            >
                 {name}
             </a>
             {isCopied ? (
                 <EcTooltip title="Link Copied" placement="top" arrow>
-                    <Check className="size-5 text-blue-ink" />
+                    <Check className="text-blue-ink size-5" />
                 </EcTooltip>
             ) : (
                 <button type="button" aria-label="Copy link" onClick={handleCopyLink}>
-                    <Copy className="size-5 cursor-pointer text-blue-ink" />
+                    <Copy className="text-blue-ink size-5 cursor-pointer" />
                 </button>
             )}
         </Cell>

@@ -8,13 +8,7 @@ import { cn } from "@/components/ui/cn";
 import { ProjectDetailsContext, UserContext } from "../../contexts";
 import { useCommentMutation } from "../../hooks";
 import { SbAvatar } from "../../stories/components/avatar/Avatar";
-import {
-    CommentActionType,
-    CommentReactionType,
-    CommentRowType,
-    IFileUser,
-    ReactionActionType,
-} from "../../types";
+import { CommentActionType, CommentReactionType, CommentRowType, IFileUser, ReactionActionType } from "../../types";
 import { getMessagesWithEmojis, getReactionAction } from "../../utils";
 import { CreatedByCell, DateCell } from "./Cells";
 import { ReactionList } from "./ReactionList";
@@ -23,17 +17,9 @@ import { ReplyCommentActions } from "./ReplyCommentActions";
 
 interface ReplyCommentsDrawerPropsType {
     users: IFileUser[];
-    onCommentsDrawer: (
-        type: CommentActionType,
-        data: CommentRowType,
-        callback?: () => void
-    ) => void;
+    onCommentsDrawer: (type: CommentActionType, data: CommentRowType, callback?: () => void) => void;
     data: CommentRowType;
-    onAddOrRemoveReaction: (
-        reaction: string,
-        action: ReactionActionType,
-        commentId: string
-    ) => void;
+    onAddOrRemoveReaction: (reaction: string, action: ReactionActionType, commentId: string) => void;
     onCancel: () => void;
 }
 
@@ -63,9 +49,7 @@ const ReplyCommentsDrawer = (props: ReplyCommentsDrawerPropsType) => {
 
     useEffect(() => {
         if (originalComments && commentData.id) {
-            const updatedChildren = originalComments
-                .filter((comment) => comment.parentId === commentData.id)
-                .reverse();
+            const updatedChildren = originalComments.filter((comment) => comment.parentId === commentData.id).reverse();
             setChildrenComment(updatedChildren);
         }
     }, [originalComments, commentData.id]);
@@ -98,11 +82,9 @@ const ReplyCommentsDrawer = (props: ReplyCommentsDrawerPropsType) => {
             setFilterOption(
                 users.filter(
                     (option: IFileUser) =>
-                        option.name
-                            .toString()
-                            .toLowerCase()
-                            .startsWith(slicedReply.toString().toLowerCase()) || option.selected
-                )
+                        option.name.toString().toLowerCase().startsWith(slicedReply.toString().toLowerCase()) ||
+                        option.selected,
+                ),
             );
             setShowSearch(true);
         } else {
@@ -122,10 +104,7 @@ const ReplyCommentsDrawer = (props: ReplyCommentsDrawerPropsType) => {
         setShowSearch(false);
         const lastIndex = replyComment.lastIndexOf(typedName);
         const replyComment2 = replyComment.substring(0, lastIndex);
-        const replyComment3 = replyComment.substring(
-            lastIndex + typedName.length,
-            replyComment.length
-        );
+        const replyComment3 = replyComment.substring(lastIndex + typedName.length, replyComment.length);
         if (buttonClick) {
             setReplycomment(`${replyComment} @${option.name}`);
         } else {
@@ -158,14 +137,14 @@ const ReplyCommentsDrawer = (props: ReplyCommentsDrawerPropsType) => {
             onAddOrRemoveReaction(
                 reaction,
                 getReactionAction((target.reactions as CommentReactionType[]) || [], reaction, figmaUser),
-                target.id
+                target.id,
             );
         }
     };
 
     return (
         <div className="drawer-body">
-            <div ref={dropdownRef} className="rounded-md border border-line p-4">
+            <div ref={dropdownRef} className="border-line rounded-md border p-4">
                 <textarea
                     name="comment"
                     id="fullwidth"
@@ -175,13 +154,18 @@ const ReplyCommentsDrawer = (props: ReplyCommentsDrawerPropsType) => {
                     value={replyComment}
                     onChange={handleChangeComment}
                     className={cn(
-                        "w-full resize-y border-b bg-transparent py-1 text-sm text-ink placeholder:text-muted focus:outline-none",
-                        error ? "border-danger" : "border-ink/60 focus:border-ink"
+                        "text-ink placeholder:text-muted w-full resize-y border-b bg-transparent py-1 text-sm focus:outline-none",
+                        error ? "border-danger" : "border-ink/60 focus:border-ink",
                     )}
                 />
-                {error && <p className="mt-1 text-xs text-danger">Comment cannot be empty</p>}
+                {error && <p className="text-danger mt-1 text-xs">Comment cannot be empty</p>}
                 <div className="flex w-full items-center justify-between pt-2.5">
-                    <button type="button" aria-label="Mention a user" onClick={handleClick} className="size-10 rounded-full text-xl hover:bg-surface-sunk">
+                    <button
+                        type="button"
+                        aria-label="Mention a user"
+                        onClick={handleClick}
+                        className="hover:bg-surface-sunk size-10 rounded-full text-xl"
+                    >
                         @
                     </button>
                     <Button disabled={isLoadingReplyComment} onClick={handleSubmitReply}>
@@ -190,18 +174,18 @@ const ReplyCommentsDrawer = (props: ReplyCommentsDrawerPropsType) => {
                 </div>
             </div>
             {filteredOption && filteredOption.length > 0 && showSearch && (
-                <div className="absolute top-[60px] z-[9] h-[180px] w-full overflow-y-auto rounded-b-sm bg-surface shadow-card">
+                <div className="bg-surface shadow-card absolute top-[60px] z-[9] h-[180px] w-full overflow-y-auto rounded-b-sm">
                     {filteredOption.map((option) => (
                         <button
                             type="button"
                             key={option.userId}
                             onClick={() => handleOptionSelect(option)}
-                            className="group flex w-full items-center px-5 py-2.5 text-left transition-colors hover:bg-ink hover:text-white"
+                            className="group hover:bg-ink flex w-full items-center px-5 py-2.5 text-left transition-colors hover:text-white"
                         >
                             <SbAvatar imageAlt="profile" size="medium" imageSrc={option.avatar} />
                             <span className="ml-2 flex flex-wrap">
                                 <span className="w-full text-sm font-medium">{option.name}</span>
-                                <span className="w-full text-xs text-muted group-hover:text-white">{option.email}</span>
+                                <span className="text-muted w-full text-xs group-hover:text-white">{option.email}</span>
                             </span>
                         </button>
                     ))}
@@ -209,7 +193,10 @@ const ReplyCommentsDrawer = (props: ReplyCommentsDrawerPropsType) => {
             )}
             <div className="h-[calc(100vh-250px)] w-full overflow-y-auto">
                 {childrenComment.map((comment, commentIndex) => (
-                    <div key={comment.id} className="flex w-full flex-wrap items-center justify-between border-b border-line py-5">
+                    <div
+                        key={comment.id}
+                        className="border-line flex w-full flex-wrap items-center justify-between border-b py-5"
+                    >
                         <div className="mb-1 flex w-full items-center justify-between">
                             <div>
                                 <CreatedByCell value={comment} />
@@ -231,7 +218,10 @@ const ReplyCommentsDrawer = (props: ReplyCommentsDrawerPropsType) => {
                         </div>
                         <div className="flex w-full flex-wrap items-center justify-start">
                             <ReactionPopover onClickReaction={(reaction) => reactTo(reaction, commentIndex)} />
-                            <ReactionList data={comment?.reactions || []} onClick={(reaction: string) => reactTo(reaction, commentIndex)} />
+                            <ReactionList
+                                data={comment?.reactions || []}
+                                onClick={(reaction: string) => reactTo(reaction, commentIndex)}
+                            />
                         </div>
                     </div>
                 ))}

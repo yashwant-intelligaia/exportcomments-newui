@@ -28,13 +28,7 @@ const AddProjectDrawer = (props: AddProjectDrawerPropsType) => {
             open
             direction="right"
             onClose={onClose}
-            footer={
-                step === 1 ? (
-                    <AddProjectInstructionsFooter />
-                ) : (
-                    <AddNewProjectFooter onClose={onClose} />
-                )
-            }
+            footer={step === 1 ? <AddProjectInstructionsFooter /> : <AddNewProjectFooter onClose={onClose} />}
         >
             {step === 1 ? <AddProjectInstructions /> : <AddNewProject onClose={onClose} />}
         </EcDrawer>

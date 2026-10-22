@@ -15,7 +15,14 @@ interface EcOverflowTooltipProps {
 }
 
 /* Only shows the tooltip when the referenced child's text is truncated. */
-const EcOverflowTooltip = ({ title, description, titleFontWeight, childRef, placement, children }: EcOverflowTooltipProps) => {
+const EcOverflowTooltip = ({
+    title,
+    description,
+    titleFontWeight,
+    childRef,
+    placement,
+    children,
+}: EcOverflowTooltipProps) => {
     const [showHover, setShowHover] = useState(false);
 
     useEffect(() => {

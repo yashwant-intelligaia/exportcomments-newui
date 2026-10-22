@@ -6,9 +6,17 @@ import { useContext, useEffect, useState } from "react";
 import { ProjectDetailsContext } from "../../contexts";
 import { useDebounce } from "../../utils";
 
-const SearchField = ({ id, value, onChange }: { id: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => (
-    <div className="flex w-full items-center border-b border-ink/60 focus-within:border-ink">
-        <Search className="mr-2 size-5 shrink-0 text-muted" />
+const SearchField = ({
+    id,
+    value,
+    onChange,
+}: {
+    id: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) => (
+    <div className="border-ink/60 focus-within:border-ink flex w-full items-center border-b">
+        <Search className="text-muted mr-2 size-5 shrink-0" />
         <input
             id={id}
             value={value}
@@ -16,7 +24,7 @@ const SearchField = ({ id, value, onChange }: { id: string; value: string; onCha
             aria-label="Search prototypes"
             autoComplete="off"
             onChange={onChange}
-            className="w-full bg-transparent py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none"
+            className="text-ink placeholder:text-muted w-full bg-transparent py-1.5 text-sm focus:outline-none"
         />
     </div>
 );

@@ -44,20 +44,34 @@ export const CommonActionsCell = (props: any) => {
     return (
         <span className="flex items-center">
             {from === "comments" && (
-                <button type="button" className="text-sm font-bold tracking-wide text-blue-ink" onClick={handleAction(defaultActions)}>
+                <button
+                    type="button"
+                    className="text-blue-ink text-sm font-bold tracking-wide"
+                    onClick={handleAction(defaultActions)}
+                >
                     {defaultLabel}
                 </button>
             )}
-            <span className="mr-1 ml-2 inline-block h-5 w-px bg-line" />
+            <span className="bg-line mr-1 ml-2 inline-block h-5 w-px" />
             {defaultLabel !== "Go to My Files" && (
-                <button type="button" className="mr-1 flex items-center rounded-sm p-1 text-blue-ink" aria-label="more action" onClick={handleProfileMenuOpen}>
+                <button
+                    type="button"
+                    className="text-blue-ink mr-1 flex items-center rounded-sm p-1"
+                    aria-label="more action"
+                    onClick={handleProfileMenuOpen}
+                >
                     <Tooltip title={isButtonDisabled ? "This Action Can't Be Performed" : undefined}>
                         {from === "drawer" ? <MoreVertical className="size-5" /> : <ChevronDown className="size-5" />}
                     </Tooltip>
                 </button>
             )}
 
-            <Menu open={Boolean(actionOptions)} anchorEl={actionOptions} onClose={() => setActionOptions(null)} placement="bottom-end">
+            <Menu
+                open={Boolean(actionOptions)}
+                anchorEl={actionOptions}
+                onClose={() => setActionOptions(null)}
+                placement="bottom-end"
+            >
                 {defaultLabel !== "Reply" && from === "comments" && !value.row.parentId && (
                     <MenuItem onClick={handleAction("reply")}>Reply</MenuItem>
                 )}

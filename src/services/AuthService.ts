@@ -45,8 +45,7 @@ export const saveGenerateAccessTokenStatus = (status: string) => {
     sessionStorage.setItem("GenerateAccessToken", status);
 };
 
-export const fetchDoNotShowAddProjectInstruction = () =>
-    localStorage.getItem(DO_NOT_SHOW_ADD_PROJECT_INSTRUCTION);
+export const fetchDoNotShowAddProjectInstruction = () => localStorage.getItem(DO_NOT_SHOW_ADD_PROJECT_INSTRUCTION);
 
 export const saveDoNotShowAddProjectInstruction = () => {
     localStorage.setItem(DO_NOT_SHOW_ADD_PROJECT_INSTRUCTION, "true");

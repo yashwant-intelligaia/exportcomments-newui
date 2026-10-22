@@ -1,4 +1,4 @@
-import { TermsOfUse } from "@/pages/TermsOfUse";
+import { TermsOfUse } from "@/screens/TermsOfUse";
 import { GlobalHeader } from "@/stories/components/global-header/GlobalHeader";
 
 export default function Page() {

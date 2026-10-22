@@ -1,5 +1,4 @@
 import type { Severity as AlertColor } from "../components/ui/Snackbar";
-
 import { ITreeRowType } from ".";
 
 interface ISnackBarMessage {
@@ -43,10 +42,4 @@ interface SnackbarPropsType {
     severity?: AlertColor;
     onClose?: () => void;
 }
-export {
-    ICreateGitTicketSnackBarMessage,
-    ISharesheetSnackBarMessage,
-    ISnackBar,
-    ISnackBarMessage,
-    SnackbarPropsType,
-};
+export { ICreateGitTicketSnackBarMessage, ISharesheetSnackBarMessage, ISnackBar, ISnackBarMessage, SnackbarPropsType };

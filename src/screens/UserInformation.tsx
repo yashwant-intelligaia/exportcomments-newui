@@ -21,7 +21,7 @@ export const UserInformation = snackbar((props: ISnackBarMessage) => {
     useEffect(() => {
         if (data) {
             data.data.data = data.data.data.filter(
-                (value, index, array) => array.findIndex((user) => user.figmaUserId === value.figmaUserId) === index
+                (value, index, array) => array.findIndex((user) => user.figmaUserId === value.figmaUserId) === index,
             );
             setUsers(data.data.data);
         }
@@ -67,10 +67,10 @@ export const UserInformation = snackbar((props: ISnackBarMessage) => {
         <>
             {isLoading && <Loader message={getLoadingMessage("")} image={getLoadingImage("")} />}
             <div className="px-5 py-3">
-                <label className="mb-3 flex max-w-xs items-center border-b border-ink/60 focus-within:border-ink">
-                    <Search className="mr-2 size-5 text-muted" />
+                <label className="border-ink/60 focus-within:border-ink mb-3 flex max-w-xs items-center border-b">
+                    <Search className="text-muted mr-2 size-5" />
                     <input
-                        className="w-full bg-transparent py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none"
+                        className="text-ink placeholder:text-muted w-full bg-transparent py-1.5 text-sm focus:outline-none"
                         placeholder="Enter  Name"
                         aria-label="Filter by name"
                         value={filterValue}

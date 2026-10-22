@@ -32,17 +32,13 @@ export const FeedbackFormPage = () => {
                 // Regular expression to validate only English letters and a single space
                 const regex = /^[a-zA-Z\s]+$/;
                 if (!regex.test(comment)) {
-                    options.error =
-                        "This field can contain only alphabets and a single space between words.";
+                    options.error = "This field can contain only alphabets and a single space between words.";
                 }
             }
         });
 
         newSurvey.onCompleting.add((sender, options) => {
-            const frequency =
-                sender.data.frequency === "Other"
-                    ? sender.data.otherFrequency
-                    : sender.data.frequency;
+            const frequency = sender.data.frequency === "Other" ? sender.data.otherFrequency : sender.data.frequency;
 
             const { features } = sender.data;
             const featuresComment = sender.data["features-Comment"];

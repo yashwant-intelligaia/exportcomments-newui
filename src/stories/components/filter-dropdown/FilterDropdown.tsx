@@ -31,7 +31,7 @@ export const FilterDropdown = ({ filterOptions, handleFilterClick }: any) => {
                 aria-label="Filter comments"
                 value={commentType}
                 onChange={handleChange}
-                className="h-9 w-full appearance-none rounded-sm bg-transparent py-0 pr-8 pl-2 text-sm font-semibold text-blue-ink focus:ring-2 focus:ring-ink focus:outline-none"
+                className="text-blue-ink focus:ring-ink h-9 w-full appearance-none rounded-sm bg-transparent py-0 pr-8 pl-2 text-sm font-semibold focus:ring-2 focus:outline-none"
             >
                 {filterOptions.map((item: any, index: number) => (
                     <option key={uniqueKey(`filter-option-${index}`)} value={item.name}>
@@ -39,7 +39,7 @@ export const FilterDropdown = ({ filterOptions, handleFilterClick }: any) => {
                     </option>
                 ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2 size-4 text-blue-ink" />
+            <ChevronDown className="text-blue-ink pointer-events-none absolute right-2 size-4" />
         </div>
     );
 };

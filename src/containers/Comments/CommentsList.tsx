@@ -1,6 +1,5 @@
 "use client";
 
-import { isEmpty } from "../../utils/object";
 import { useContext, useEffect, useMemo, useState } from "react";
 
 import { DataColumn, DataTable, SortState } from "@/components/ui/DataTable";
@@ -16,14 +15,9 @@ import {
 } from "../../hooks";
 import { EcDrawer } from "../../stories/components";
 import { Loader } from "../../stories/components/Loader/Loader";
-import {
-    CommentActionType,
-    CommentRowType,
-    IFileUser,
-    IUserFile,
-    ReactionActionType,
-} from "../../types";
+import { CommentActionType, CommentRowType, IFileUser, IUserFile, ReactionActionType } from "../../types";
 import { getLoadingImage, getLoadingMessage, processCommentsData } from "../../utils";
+import { isEmpty } from "../../utils/object";
 import { PageNotFound } from "../Common";
 import { ActionCell, CommentCell, CreatedByCell, DateCell, StatusCell } from "./Cells";
 import { NoCommentsFound } from "./NoCommentsFound";
@@ -51,8 +45,7 @@ export const CommentsList = () => {
     const [sortColumns, setSortColumns] = useState<readonly SortState[]>([]);
     const branchKey = selectedBranch?.key || "";
 
-    const { data: projectUsersData, isFetched: isFetchedProjectUsers } =
-        useFetchProjectUsers(projectId);
+    const { data: projectUsersData, isFetched: isFetchedProjectUsers } = useFetchProjectUsers(projectId);
 
     useEffect(() => {
         if (isFetchedProjectUsers && projectUsersData) {
@@ -78,8 +71,7 @@ export const CommentsList = () => {
         }
     }, [searchInput, sortedComments]);
 
-    const { isFetching: isFetchingFigmaUser, isError: isFetchFigmaUserError } =
-        useFetchFigmaUserData();
+    const { isFetching: isFetchingFigmaUser, isError: isFetchFigmaUserError } = useFetchFigmaUserData();
     const {
         data: commentsData,
         isLoading: isFetchingComments,
@@ -88,8 +80,11 @@ export const CommentsList = () => {
 
     useEffect(() => {
         if (commentsData && commentfilter && !isEmpty(user)) {
-            const { sortedResponse, originalResponse, projectCommentInfo, projectCommentCount } =
-                processCommentsData(commentfilter, user, commentsData);
+            const { sortedResponse, originalResponse, projectCommentInfo, projectCommentCount } = processCommentsData(
+                commentfilter,
+                user,
+                commentsData,
+            );
             setComments(sortedResponse);
             setSortedComments(sortedResponse);
             setOriginalComments(originalResponse);
@@ -143,15 +138,11 @@ export const CommentsList = () => {
                     data={row}
                     onCancel={() => setDrawer(null)}
                 />
-            </EcDrawer>
+            </EcDrawer>,
         );
     };
 
-    const handleCommentActions = (
-        action: CommentActionType,
-        row: CommentRowType,
-        callback?: () => void
-    ) => {
+    const handleCommentActions = (action: CommentActionType, row: CommentRowType, callback?: () => void) => {
         if (action === "delete" && projectId) {
             mutateDeleteComment({
                 projectId,
@@ -166,11 +157,7 @@ export const CommentsList = () => {
         }
     };
 
-    const handleAddOrRemoveReaction = (
-        reaction: string,
-        action: ReactionActionType,
-        commentId: string
-    ) => {
+    const handleAddOrRemoveReaction = (reaction: string, action: ReactionActionType, commentId: string) => {
         switch (action) {
             case "add":
                 if (projectId) {
@@ -256,10 +243,25 @@ export const CommentsList = () => {
                 />
             ),
         },
-        { key: "userName", name: "Created By", width: 165, render: (row) => <CreatedByCell value={cell(row, "userName")} /> },
-        { key: "createdAt", name: "Created at", width: 110, render: (row) => <DateCell value={cell(row, "createdAt")} /> },
+        {
+            key: "userName",
+            name: "Created By",
+            width: 165,
+            render: (row) => <CreatedByCell value={cell(row, "userName")} />,
+        },
+        {
+            key: "createdAt",
+            name: "Created at",
+            width: 110,
+            render: (row) => <DateCell value={cell(row, "createdAt")} />,
+        },
         { key: "status", name: "Status", width: 110, render: (row) => <StatusCell value={cell(row, "status")} /> },
-        { key: "resolvedAt", name: "Resolved at", width: 150, render: (row) => <DateCell value={cell(row, "resolvedAt")} /> },
+        {
+            key: "resolvedAt",
+            name: "Resolved at",
+            width: 150,
+            render: (row) => <DateCell value={cell(row, "resolvedAt")} />,
+        },
         {
             key: "action",
             name: "Actions",
@@ -274,9 +276,7 @@ export const CommentsList = () => {
     }
 
     if (isFetchingComments || isFetchingFigmaUser) {
-        return (
-            <Loader message={getLoadingMessage("comments")} image={getLoadingImage("comments")} />
-        );
+        return <Loader message={getLoadingMessage("comments")} image={getLoadingImage("comments")} />;
     }
 
     return (

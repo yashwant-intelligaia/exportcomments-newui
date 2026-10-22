@@ -8,17 +8,12 @@ import { Combobox } from "@/components/ui/Combobox";
 import { Avatar } from "@/components/ui/Display";
 import { Checkbox } from "@/components/ui/Form";
 
-import { get } from "../../utils/object";
 import { ToasterContext } from "../../contexts";
-import {
-    useAddUserToProject,
-    useFetchFiles,
-    useFetchInviteeUsers,
-    useProcessInviteesData,
-} from "../../hooks";
+import { useAddUserToProject, useFetchFiles, useFetchInviteeUsers, useProcessInviteesData } from "../../hooks";
 import { EcDrawer } from "../../stories/components";
 import { AddUserFormDataType, IUserFile, ProcessedInviteesDataType } from "../../types";
 import { emailValidation, uniqueKey } from "../../utils";
+import { get } from "../../utils/object";
 
 const AddUserDrawer = (props: { onClose: () => void }) => {
     const [error, setError] = useState("");
@@ -177,7 +172,9 @@ const AddUserDrawer = (props: { onClose: () => void }) => {
                     onChange={handlePick}
                     filterOptions={(pool, inputValue) => {
                         const q = inputValue.trim().toLowerCase();
-                        const filtered = q ? pool.filter((o) => `${o.name} ${o.email}`.toLowerCase().includes(q)) : [...pool];
+                        const filtered = q
+                            ? pool.filter((o) => `${o.name} ${o.email}`.toLowerCase().includes(q))
+                            : [...pool];
                         // Suggest the creation of a new value
                         const isExisting = pool.some((option) => option.email.includes(inputValue));
                         if (inputValue !== "" && !isExisting) {
@@ -198,29 +195,32 @@ const AddUserDrawer = (props: { onClose: () => void }) => {
                                 <Avatar src={option.avatar} name={option.name || option.email} size={36} />
                                 <div className="min-w-0 grow">
                                     <div className="text-base">{option.name}</div>
-                                    <div className="truncate text-sm text-muted">{option.email}</div>
+                                    <div className="text-muted truncate text-sm">{option.email}</div>
                                 </div>
                             </div>
                             {getSelectedUser(option) ? <CheckCircle2 className="size-5 text-[#65b168]" /> : null}
                         </div>
                     )}
                 />
-                {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+                {error && <p className="text-danger mt-1 text-xs">{error}</p>}
             </div>
             <div className="h-[calc(100vh-190px)] w-[350px] max-w-full overflow-x-hidden overflow-y-scroll pr-2">
                 <p className="mt-6 text-base font-bold">Selected User(s)</p>
-                {!selectedUsers && <p className="mt-4 text-sm text-muted">No users have been selected</p>}
+                {!selectedUsers && <p className="text-muted mt-4 text-sm">No users have been selected</p>}
                 {selectedUsers.map(({ name, email, avatar, selectedProjectIds, showProject }, userIndex) => (
-                    <div key={`selected-user-${uniqueKey(userIndex)}`} className="mt-4 rounded-md border border-line p-4 pb-2">
+                    <div
+                        key={`selected-user-${uniqueKey(userIndex)}`}
+                        className="border-line mt-4 rounded-md border p-4 pb-2"
+                    >
                         <div className="flex items-center">
                             <Avatar src={avatar} name={name || email} size={36} />
                             <div className="relative ml-2 w-full">
                                 <div className="text-base">{name}</div>
-                                <div className="w-[90%] truncate text-sm text-muted">{email}</div>
+                                <div className="text-muted w-[90%] truncate text-sm">{email}</div>
                                 <IconButton
                                     aria-label="remove user"
                                     size="small"
-                                    className="absolute top-1/2 right-0 -translate-y-1/2 text-muted"
+                                    className="text-muted absolute top-1/2 right-0 -translate-y-1/2"
                                     onClick={() => handleRemoveSelectedUser(userIndex)}
                                 >
                                     <X className="size-5" />
@@ -228,9 +228,9 @@ const AddUserDrawer = (props: { onClose: () => void }) => {
                             </div>
                         </div>
 
-                        <div className="mt-4 border-t border-line pt-2">
+                        <div className="border-line mt-4 border-t pt-2">
                             <div className="flex items-center">
-                                <div className="grow hover:bg-blue-soft">
+                                <div className="hover:bg-blue-soft grow">
                                     <Checkbox
                                         checked={allSelected(selectedProjectIds)}
                                         onChange={() => handleCheckAllProjects(userIndex)}
@@ -250,7 +250,7 @@ const AddUserDrawer = (props: { onClose: () => void }) => {
                                 processedProjectsData.map(({ fileName: projectName, projectId }, projectIndex) => (
                                     <div
                                         key={`user-${uniqueKey(userIndex)}-project-${uniqueKey(projectIndex)}`}
-                                        className="flex flex-col border-t border-dashed border-line hover:bg-blue-soft"
+                                        className="border-line hover:bg-blue-soft flex flex-col border-t border-dashed"
                                     >
                                         <Checkbox
                                             checked={selectedProjectIds.includes(projectId)}

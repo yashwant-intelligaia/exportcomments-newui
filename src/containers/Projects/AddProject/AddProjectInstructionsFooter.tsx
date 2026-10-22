@@ -19,7 +19,7 @@ const AddProjectInstructionsFooter = () => {
         onChangeStep(2);
     };
     return (
-        <div className="flex w-full shrink items-center justify-between bg-surface pb-4">
+        <div className="bg-surface flex w-full shrink items-center justify-between pb-4">
             <Checkbox checked={isChecked} onChange={setChecked} label="Don't show this again" />
             <Button onClick={handleContinueClick}>Continue</Button>
         </div>

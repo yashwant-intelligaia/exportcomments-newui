@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { useHistory } from "@/utils/navigation";
 
 import { useProjectMutations } from "../../hooks";
@@ -33,8 +34,7 @@ const InviteProject = () => {
     }, [data, error]);
 
     if (!token) return <PageNotFound />;
-    if (isLoading)
-        return <Loader message={getLoadingMessage("project")} image={getLoadingImage("project")} />;
+    if (isLoading) return <Loader message={getLoadingMessage("project")} image={getLoadingImage("project")} />;
     return <></>;
 };
 export { InviteProject };

@@ -1,8 +1,9 @@
 "use client";
 
+import { useContext, useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/Button";
 import { Popover } from "@/components/ui/Popover";
-import { useContext, useEffect, useState } from "react";
 
 import sortIcon from "../../assets/sort-by.svg";
 import { ProjectFilterContext } from "../../contexts/ProjectFilterContext";
@@ -13,11 +14,7 @@ import { CustomRangeFilter } from "./CustomRangeFilter";
 export const FilterProjects = ({ data }: { data?: IUserFile[] }) => {
     const [isOpenCustomRange, setOpenCustomRange] = useState(false);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const {
-        filter,
-        setFilter: setFilterCtxValue,
-        setRange: setRangeCtxValue,
-    } = useContext(ProjectFilterContext);
+    const { filter, setFilter: setFilterCtxValue, setRange: setRangeCtxValue } = useContext(ProjectFilterContext);
 
     const handleClosePopover = () => {
         setAnchorEl(null);
@@ -48,13 +45,7 @@ export const FilterProjects = ({ data }: { data?: IUserFile[] }) => {
         }
     };
 
-    const handleApplyCustomRange = ({
-        startDate,
-        endDate,
-    }: {
-        startDate: string;
-        endDate: string;
-    }) => {
+    const handleApplyCustomRange = ({ startDate, endDate }: { startDate: string; endDate: string }) => {
         setRangeCtxValue({ startDate, endDate });
         setFilterCtxValue("Custom Range");
         saveFilter("Custom Range");
@@ -106,7 +97,7 @@ export const FilterProjects = ({ data }: { data?: IUserFile[] }) => {
                                     <button
                                         type="button"
                                         onClick={() => handleSelectFilter(value)}
-                                        className="w-full px-4 py-2 text-left text-sm text-ink hover:bg-surface-sunk"
+                                        className="text-ink hover:bg-surface-sunk w-full px-4 py-2 text-left text-sm"
                                     >
                                         {label}
                                     </button>

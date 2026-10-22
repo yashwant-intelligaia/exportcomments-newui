@@ -2,8 +2,9 @@
 
 // TODO: remove this HOC once ToasterContext implemented at all places.
 // We need to use EcSnackbar component in future
-import type { Severity as AlertColor } from "@/components/ui/Snackbar";
 import { useState } from "react";
+
+import type { Severity as AlertColor } from "@/components/ui/Snackbar";
 
 import { SnackBar } from "../stories/components/snackbar/SnackBar";
 
@@ -13,8 +14,7 @@ export const snackbar =
         const [open, setOpen] = useState(false);
         const [message, setMessage] = useState("I'm a custom snackbar");
         const [duration, setDuration] = useState(5000);
-        const [severity, setSeverity] =
-            useState<AlertColor>("success"); /** error | warning | info */
+        const [severity, setSeverity] = useState<AlertColor>("success"); /** error | warning | info */
 
         const showMessage = (msg: string, SeverityType: AlertColor = "success", d = 5000) => {
             setMessage(msg);

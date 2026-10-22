@@ -2,6 +2,7 @@
 
 import { Star } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/components/ui/cn";
 import { Popover } from "@/components/ui/Popover";
@@ -60,9 +61,7 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
     const [nonFavouriteProjects, setNonFavouriteProjects] = useState<IUserFile[]>([]);
     const [selectedFilter, setSelectedFilter] = useState<ProjectFilterType>("all");
 
-    const [projectFilterAnchorEl, setProjectFilterAnchorEl] = useState<HTMLButtonElement | null>(
-        null
-    );
+    const [projectFilterAnchorEl, setProjectFilterAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [projectFilter, setProjectFilter] = useState<ProjectFilterType>("all");
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -105,10 +104,7 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
     const { mutate: mutateDeleteProject } = deleteProject;
 
     useEffect(() => {
-        if (
-            user.acceptTermsOfUseAndPrivacyPolicy !== undefined &&
-            user.acceptTermsOfUseAndPrivacyPolicy === false
-        ) {
+        if (user.acceptTermsOfUseAndPrivacyPolicy !== undefined && user.acceptTermsOfUseAndPrivacyPolicy === false) {
             setopenConsentModal(true);
         } else {
             setopenConsentModal(false);
@@ -117,12 +113,7 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
 
     useEffect(() => {
         if (isFetchCommentDataSuccess) {
-            exportCommentsToExcel(
-                commentsData?.data?.data?.comments,
-                "all",
-                user,
-                commentsData?.data?.data?.fileInfo
-            );
+            exportCommentsToExcel(commentsData?.data?.data?.comments, "all", user, commentsData?.data?.data?.fileInfo);
         }
     }, [isFetchCommentDataSuccess, commentsData]);
 
@@ -158,7 +149,7 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
                 onClose={() => {
                     setConfirmDialog(undefined);
                 }}
-            />
+            />,
         );
     };
 
@@ -205,8 +196,8 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
         if (projectList)
             setProjects(
                 projectList.filter((file: IUserFile) =>
-                    file.fileName.toString().toLowerCase().includes(searchText.trim().toLowerCase())
-                )
+                    file.fileName.toString().toLowerCase().includes(searchText.trim().toLowerCase()),
+                ),
             );
     }, 1000);
 
@@ -244,7 +235,7 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
     }, [projectList]);
     useEffect(() => {
         const searchFilteredProjects = projects.filter((file) =>
-            file.fileName.toLowerCase().includes(searchText.trim().toLowerCase())
+            file.fileName.toLowerCase().includes(searchText.trim().toLowerCase()),
         );
 
         const filteredData =
@@ -265,7 +256,9 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
                 item={item}
                 isFavorite={item.isFavorite}
                 onShareProject={() => {
-                    setOpenShareModal(<ManageTeamModal projectId={item.projectId} onClose={() => setOpenShareModal(undefined)} />);
+                    setOpenShareModal(
+                        <ManageTeamModal projectId={item.projectId} onClose={() => setOpenShareModal(undefined)} />,
+                    );
                 }}
                 handleMarkAsFavourite={() => handleMarkAsFavourite(item.projectId, item.isFavorite)}
                 onDeleteProject={() => handleRemoveProject(item.projectId)}
@@ -302,13 +295,17 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
             {projectList && !fetchingComments && (
                 <div className="flex w-full flex-col items-start justify-start py-5 max-[1440px]:px-6 max-[1024px]:px-2.5 max-[768px]:bg-transparent max-[425px]:p-0">
                     {/* Project title on the first line */}
-                    <h4 className="pb-3.5 font-sans text-3xl font-medium tracking-normal text-ink">Projects</h4>
+                    <h4 className="text-ink pb-3.5 font-sans text-3xl font-medium tracking-normal">Projects</h4>
 
                     <div className="mt-4 flex w-full flex-col">
                         <div className="flex w-full flex-col items-start justify-between gap-4 md:flex-row md:items-center">
                             {/* Left-aligned Search and Filter */}
                             <div className="flex w-full flex-col items-start gap-8 md:flex-row md:items-center">
-                                <ProjectSearch placeholder="Search..." value={searchText} searchChange={handleProjectSearch} />
+                                <ProjectSearch
+                                    placeholder="Search..."
+                                    value={searchText}
+                                    searchChange={handleProjectSearch}
+                                />
                                 <Button
                                     variant="text"
                                     onClick={handleClick}
@@ -326,19 +323,26 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
                         <div className="flex flex-1 flex-row items-center gap-4 pt-4">
                             <span className="text-base">Total {projects.length} project(s)</span>
                             <FilterProjects data={userAllProjects} />
-                            <Popover open={Boolean(projectFilterAnchorEl)} anchorEl={projectFilterAnchorEl} onClose={handleClose}>
-                                <div className="p-4 pr-24 text-xl font-medium text-ink">Filter</div>
+                            <Popover
+                                open={Boolean(projectFilterAnchorEl)}
+                                anchorEl={projectFilterAnchorEl}
+                                onClose={handleClose}
+                            >
+                                <div className="text-ink p-4 pr-24 text-xl font-medium">Filter</div>
                                 <fieldset className="flex flex-col gap-2 p-4 pt-0">
                                     <legend className="sr-only">Project type</legend>
                                     {filterOptions.map(({ value, label }) => (
-                                        <label key={value} className="flex cursor-pointer items-center gap-2 text-sm text-ink">
+                                        <label
+                                            key={value}
+                                            className="text-ink flex cursor-pointer items-center gap-2 text-sm"
+                                        >
                                             <input
                                                 type="radio"
                                                 name="project-filter"
                                                 value={value}
                                                 checked={selectedFilter === value}
                                                 onChange={(e) => setSelectedFilter(e.target.value as ProjectFilterType)}
-                                                className="size-4 accent-ink"
+                                                className="accent-ink size-4"
                                             />
                                             {label}
                                         </label>
@@ -376,7 +380,7 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
                         {favouriteProjects.length > 0 && (
                             <>
                                 <div className="mt-6 mb-6 flex items-center sm:mb-0">
-                                    <Star className="mr-1 size-7 fill-yellow text-ink" />
+                                    <Star className="fill-yellow text-ink mr-1 size-7" />
                                     <span className="text-xl">Favourite ({favouriteProjects.length})</span>
                                 </div>
                                 <div className={cn(cardGrid, "mt-4")}>{favouriteProjects.map(renderCard)}</div>
@@ -401,7 +405,11 @@ export const ProjectListPage = snackbar((props: ISnackBarMessage) => {
             {confirmDialog}
             {openShareModal}
             {openConsentModal && (
-                <ConsentFormModal open={openConsentModal} onClose={() => setopenConsentModal(!openConsentModal)} showCloseIcon={false} />
+                <ConsentFormModal
+                    open={openConsentModal}
+                    onClose={() => setopenConsentModal(!openConsentModal)}
+                    showCloseIcon={false}
+                />
             )}
         </div>
     );

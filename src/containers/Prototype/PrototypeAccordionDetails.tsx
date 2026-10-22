@@ -56,14 +56,10 @@ const PrototypeAccordionDetails = (props: { data: PrototypeAccordionDetailsProps
                 subTitle={name}
                 onClose={() => setDrawerContent(undefined)}
                 data={prototypeComments}
-            />
+            />,
         );
     };
-    const handleCreateNewVersion = (
-        prototypeId: number,
-        nodeId: string,
-        prototypeTitle: string
-    ) => {
+    const handleCreateNewVersion = (prototypeId: number, nodeId: string, prototypeTitle: string) => {
         setDrawerContent(
             <NewCreateVersionDrawer
                 title="Create New Version"
@@ -72,7 +68,7 @@ const PrototypeAccordionDetails = (props: { data: PrototypeAccordionDetailsProps
                 prototypeTitle={prototypeTitle}
                 open
                 onClose={() => setDrawerContent(undefined)}
-            />
+            />,
         );
     };
     const handleViewVersionList = (prototypeId: number, nodeId: string, prototypeTitle: string) => {
@@ -86,7 +82,7 @@ const PrototypeAccordionDetails = (props: { data: PrototypeAccordionDetailsProps
                     pageId,
                 }}
                 onClose={() => setDrawerContent(undefined)}
-            />
+            />,
         );
     };
 
@@ -94,54 +90,70 @@ const PrototypeAccordionDetails = (props: { data: PrototypeAccordionDetailsProps
 
     return (
         <div className="mt-6 pr-4 pb-4 pl-4 sm:pl-10 md:pl-[62px]">
-            <div className="grid max-h-[220px] grid-cols-12 items-center gap-x-2 gap-y-8 overflow-y-auto border-t border-dashed border-line pt-4">
-                {prototypes.map(({ prototypeId, prototypeTitle, versions = [], prototypeLink, prototypeComments = [], nodeId }) => (
-                    <div key={uniqueKey(`prototype-detail-${prototypeId}`)} className="col-span-12 grid grid-cols-12 items-center gap-x-2 gap-y-4">
-                        <div className="col-span-12 md:col-span-3" />
-                        <div className="col-span-12 flex items-center gap-0.5 text-sm font-medium text-ink md:col-span-4">
-                            <IconButton
-                                aria-label="Open prototype"
-                                onClick={() => prototypeLink && openLink({ url: prototypeLink, target: "_blank" })}
-                            >
-                                <PlayIcon />
-                            </IconButton>
-                            <span>{prototypeTitle}</span>
-                            {copiedPrototype[prototypeId] ? (
-                                <EcTooltip title="Link Copied" placement="top" arrow>
-                                    <IconButton aria-label="Link copied">
-                                        <Check className="size-5" />
-                                    </IconButton>
-                                </EcTooltip>
-                            ) : (
-                                <IconButton aria-label="Copy link" onClick={() => handleCopyLink(prototypeId, prototypeLink)}>
-                                    <CopyIcon />
+            <div className="border-line grid max-h-[220px] grid-cols-12 items-center gap-x-2 gap-y-8 overflow-y-auto border-t border-dashed pt-4">
+                {prototypes.map(
+                    ({ prototypeId, prototypeTitle, versions = [], prototypeLink, prototypeComments = [], nodeId }) => (
+                        <div
+                            key={uniqueKey(`prototype-detail-${prototypeId}`)}
+                            className="col-span-12 grid grid-cols-12 items-center gap-x-2 gap-y-4"
+                        >
+                            <div className="col-span-12 md:col-span-3" />
+                            <div className="text-ink col-span-12 flex items-center gap-0.5 text-sm font-medium md:col-span-4">
+                                <IconButton
+                                    aria-label="Open prototype"
+                                    onClick={() => prototypeLink && openLink({ url: prototypeLink, target: "_blank" })}
+                                >
+                                    <PlayIcon />
                                 </IconButton>
-                            )}
+                                <span>{prototypeTitle}</span>
+                                {copiedPrototype[prototypeId] ? (
+                                    <EcTooltip title="Link Copied" placement="top" arrow>
+                                        <IconButton aria-label="Link copied">
+                                            <Check className="size-5" />
+                                        </IconButton>
+                                    </EcTooltip>
+                                ) : (
+                                    <IconButton
+                                        aria-label="Copy link"
+                                        onClick={() => handleCopyLink(prototypeId, prototypeLink)}
+                                    >
+                                        <CopyIcon />
+                                    </IconButton>
+                                )}
+                            </div>
+                            <div className="text-ink col-span-12 flex items-center gap-0.5 text-sm font-medium md:col-span-2">
+                                <IconButton
+                                    aria-label="View comments"
+                                    onClick={() => handleViewPrototypeComments(prototypeComments, prototypeTitle)}
+                                >
+                                    <CommentIcon />
+                                </IconButton>
+                                {prototypeComments.length}
+                            </div>
+                            <div className="text-ink col-span-12 flex items-center gap-0.5 text-sm font-medium md:col-span-3">
+                                <button
+                                    type="button"
+                                    className="hover:text-blue-ink flex items-center gap-1"
+                                    onClick={() => handleViewVersionList(prototypeId, nodeId, prototypeTitle)}
+                                >
+                                    <span className="p-2">
+                                        <VersionIcon />
+                                    </span>
+                                    {versions.length}
+                                </button>
+                                <span className="bg-line mx-1.5 h-4 w-px" />
+                                <Button
+                                    variant="text"
+                                    size="small"
+                                    className="text-body hover:text-blue-ink text-xs"
+                                    onClick={() => handleCreateNewVersion(prototypeId, nodeId, prototypeTitle)}
+                                >
+                                    <PlusIcon /> Create new version
+                                </Button>
+                            </div>
                         </div>
-                        <div className="col-span-12 flex items-center gap-0.5 text-sm font-medium text-ink md:col-span-2">
-                            <IconButton aria-label="View comments" onClick={() => handleViewPrototypeComments(prototypeComments, prototypeTitle)}>
-                                <CommentIcon />
-                            </IconButton>
-                            {prototypeComments.length}
-                        </div>
-                        <div className="col-span-12 flex items-center gap-0.5 text-sm font-medium text-ink md:col-span-3">
-                            <button
-                                type="button"
-                                className="flex items-center gap-1 hover:text-blue-ink"
-                                onClick={() => handleViewVersionList(prototypeId, nodeId, prototypeTitle)}
-                            >
-                                <span className="p-2">
-                                    <VersionIcon />
-                                </span>
-                                {versions.length}
-                            </button>
-                            <span className="mx-1.5 h-4 w-px bg-line" />
-                            <Button variant="text" size="small" className="text-xs text-body hover:text-blue-ink" onClick={() => handleCreateNewVersion(prototypeId, nodeId, prototypeTitle)}>
-                                <PlusIcon /> Create new version
-                            </Button>
-                        </div>
-                    </div>
-                ))}
+                    ),
+                )}
             </div>
         </div>
     );

@@ -18,7 +18,7 @@ export const EcBreadcrumb = ({ data }: EcBreadcrumbPropsType) => (
             {data.map(({ title, active, onClick }, index) => (
                 <li key={uniqueKey(`${title}-breadcrumb-${index}`)} className="flex items-center">
                     {index > 0 && (
-                        <span aria-hidden="true" className="mx-1.5 text-sm text-muted">
+                        <span aria-hidden="true" className="text-muted mx-1.5 text-sm">
                             /
                         </span>
                     )}

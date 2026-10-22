@@ -23,14 +23,8 @@ export const CommentsFilter = () => {
     const searchInputValue = useDebounce(value, 1000);
     const [openMobileInput, setOpenMobileInput] = useState(false);
     const [isMarkAsReadDisabled, setMarkAsReadDisabled] = useState<boolean>(true);
-    const {
-        projectId,
-        projectData,
-        setSearchInput,
-        commentfilter,
-        setCommentFilter,
-        selectedBranch,
-    } = useContext(ProjectDetailsContext);
+    const { projectId, projectData, setSearchInput, commentfilter, setCommentFilter, selectedBranch } =
+        useContext(ProjectDetailsContext);
     const {
         markAsRead: { mutate: mutateMarkAsRead },
     } = useCommentMutation();
@@ -92,8 +86,8 @@ export const CommentsFilter = () => {
     }, [projectData]);
 
     const searchInput = (id: string, extraClass = "") => (
-        <div className={`flex w-full items-center border-b border-ink/60 focus-within:border-ink ${extraClass}`}>
-            <Search className="mr-2 size-5 shrink-0 text-muted" />
+        <div className={`border-ink/60 focus-within:border-ink flex w-full items-center border-b ${extraClass}`}>
+            <Search className="text-muted mr-2 size-5 shrink-0" />
             <input
                 id={id}
                 value={value}
@@ -101,7 +95,7 @@ export const CommentsFilter = () => {
                 aria-label="Search comments"
                 autoComplete="off"
                 onChange={handleInputOnChange}
-                className="w-full bg-transparent py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none"
+                className="text-ink placeholder:text-muted w-full bg-transparent py-1.5 text-sm focus:outline-none"
             />
         </div>
     );
@@ -118,7 +112,7 @@ export const CommentsFilter = () => {
                                 aria-label="Select Comments Filter"
                                 value={commentfilter}
                                 onChange={(e) => handleSelectFilterOption(e.target.value as CommentFilterType)}
-                                className="h-9 w-full appearance-none rounded-sm bg-transparent py-0 pr-8 pl-1.5 text-sm font-semibold text-blue-ink focus:ring-2 focus:ring-ink focus:outline-none"
+                                className="text-blue-ink focus:ring-ink h-9 w-full appearance-none rounded-sm bg-transparent py-0 pr-8 pl-1.5 text-sm font-semibold focus:ring-2 focus:outline-none"
                             >
                                 {filterOptions.map((item, index: number) => (
                                     <option key={uniqueKey(`filter-option-${index}`)} value={item.id}>
@@ -126,7 +120,7 @@ export const CommentsFilter = () => {
                                     </option>
                                 ))}
                             </select>
-                            <ChevronDown className="pointer-events-none absolute right-2 size-4 text-blue-ink" />
+                            <ChevronDown className="text-blue-ink pointer-events-none absolute right-2 size-4" />
                         </div>
                     </div>
                     {/* TODO: fix alignment for desktop view */}
@@ -135,18 +129,25 @@ export const CommentsFilter = () => {
                             Mark as Read
                         </Button>
                         <div className="block sm:hidden">
-                            <IconButton aria-label={openMobileInput ? "close search" : "open search"} onClick={() => setOpenMobileInput(!openMobileInput)}>
+                            <IconButton
+                                aria-label={openMobileInput ? "close search" : "open search"}
+                                onClick={() => setOpenMobileInput(!openMobileInput)}
+                            >
                                 {openMobileInput ? <X className="size-5" /> : <Search className="size-5" />}
                             </IconButton>
                         </div>
                     </div>
                     {/* Separator */}
-                    <span className="mx-3 hidden h-[23px] w-px bg-muted lg:inline-block" />
-                    <div className="hidden w-full sm:block sm:w-80 md:w-[330px]">{searchInput("input-with-icon-adornment")}</div>
+                    <span className="bg-muted mx-3 hidden h-[23px] w-px lg:inline-block" />
+                    <div className="hidden w-full sm:block sm:w-80 md:w-[330px]">
+                        {searchInput("input-with-icon-adornment")}
+                    </div>
                 </div>
             </div>
             {/* Search Box for Mobile Screens */}
-            {openMobileInput && <div className="block w-full sm:hidden">{searchInput("mobile-input-with-icon-adornment")}</div>}
+            {openMobileInput && (
+                <div className="block w-full sm:hidden">{searchInput("mobile-input-with-icon-adornment")}</div>
+            )}
         </>
     );
 };

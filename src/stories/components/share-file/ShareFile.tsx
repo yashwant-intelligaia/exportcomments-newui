@@ -56,17 +56,11 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
             setFilterOption(
                 options.filter((option: IFileUser) => {
                     if (option.name) {
-                        return option?.name
-                            ?.toString()
-                            .toLowerCase()
-                            .startsWith(userInput.toString().toLowerCase());
+                        return option?.name?.toString().toLowerCase().startsWith(userInput.toString().toLowerCase());
                     }
 
-                    return option?.email
-                        ?.toString()
-                        .toLowerCase()
-                        .startsWith(userInput.toString().toLowerCase());
-                })
+                    return option?.email?.toString().toLowerCase().startsWith(userInput.toString().toLowerCase());
+                }),
             );
             setSelectedOption(options.filter((user: IFileUser) => user.selected));
         } else {
@@ -88,11 +82,8 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
                             .startsWith(e.target.value.toString().toLowerCase());
                     }
 
-                    return option?.name
-                        ?.toString()
-                        .toLowerCase()
-                        .startsWith(e.target.value.toString().toLowerCase());
-                })
+                    return option?.name?.toString().toLowerCase().startsWith(e.target.value.toString().toLowerCase());
+                }),
             );
         } else {
             setFilterOption(cloneDeep(options));
@@ -264,7 +255,11 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
                     <h2 id="parent-modal-title" className="mb-2.5 font-sans text-lg font-semibold tracking-normal">
                         Share with people
                     </h2>
-                    <button aria-label="close" onClick={close} className="absolute top-0 right-0 rounded-full p-1 text-muted hover:text-ink">
+                    <button
+                        aria-label="close"
+                        onClick={close}
+                        className="text-muted hover:text-ink absolute top-0 right-0 rounded-full p-1"
+                    >
                         <X className="size-5" />
                     </button>
                 </div>
@@ -291,10 +286,15 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
                                         className="mr-2"
                                         aria-label={`select-${index}`}
                                     />
-                                    <Avatar src={option.avatar} name={option.name || option.email} size={40} className="mr-2" />
+                                    <Avatar
+                                        src={option.avatar}
+                                        name={option.name || option.email}
+                                        size={40}
+                                        className="mr-2"
+                                    />
                                     <div className="flex flex-wrap leading-5">
-                                        <span className="w-full text-sm font-medium text-ink">{option.name}</span>
-                                        <span className="w-full text-xs text-muted">
+                                        <span className="text-ink w-full text-sm font-medium">{option.name}</span>
+                                        <span className="text-muted w-full text-xs">
                                             <div className="flex w-full items-center">
                                                 {option.iseditable && option.editValue && (
                                                     <div className="relative flex w-full flex-wrap items-center">
@@ -307,14 +307,14 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
                                                             className={emailInputClass}
                                                         />
                                                         {option.validEmail === "invalid" ? (
-                                                            <span className="ml-1 flex w-full text-[10px] text-danger capitalize">
+                                                            <span className="text-danger ml-1 flex w-full text-[10px] capitalize">
                                                                 invalid email.
                                                             </span>
                                                         ) : (
                                                             <button
                                                                 type="button"
                                                                 aria-label="confirm email"
-                                                                className="absolute right-1 text-blue-ink"
+                                                                className="text-blue-ink absolute right-1"
                                                                 onClick={doneEmail(option)}
                                                             >
                                                                 <Check className="size-4" />
@@ -324,14 +324,22 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
                                                 )}
                                                 {option.email && !option.editValue && <span>{option.email}</span>}
                                                 {!option.email && !option.editValue && (
-                                                    <button type="button" className="flex items-center" onClick={editValueChange(option)}>
+                                                    <button
+                                                        type="button"
+                                                        className="flex items-center"
+                                                        onClick={editValueChange(option)}
+                                                    >
                                                         Add an email
-                                                        <Pencil className="relative top-0.5 ml-1 size-4 text-blue-ink" />
+                                                        <Pencil className="text-blue-ink relative top-0.5 ml-1 size-4" />
                                                     </button>
                                                 )}
                                                 {option.email && option.iseditable && !option.editValue && (
-                                                    <button type="button" aria-label="edit email" onClick={editValueChange(option)}>
-                                                        <Pencil className="ml-1 size-4 text-blue-ink" />
+                                                    <button
+                                                        type="button"
+                                                        aria-label="edit email"
+                                                        onClick={editValueChange(option)}
+                                                    >
+                                                        <Pencil className="text-blue-ink ml-1 size-4" />
                                                     </button>
                                                 )}
                                             </div>
@@ -343,9 +351,13 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
                     </div>
                 )}
                 {filteredOption && filteredOption.length === 0 && (
-                    <button type="button" className="flex w-full items-center gap-2 bg-surface p-4 text-left hover:bg-blue-soft" onClick={addNewUser}>
+                    <button
+                        type="button"
+                        className="bg-surface hover:bg-blue-soft flex w-full items-center gap-2 p-4 text-left"
+                        onClick={addNewUser}
+                    >
                         <Avatar name="" size={36} />
-                        <span className="text-sm text-muted">{`Add ${userInput}`}</span>
+                        <span className="text-muted text-sm">{`Add ${userInput}`}</span>
                     </button>
                 )}
 

@@ -52,11 +52,4 @@ interface IUserInfo {
     user: IUserToken;
 }
 
-export {
-    IUserInfo,
-    IUserResponse,
-    IUserToken,
-    IUserTokenResponse,
-    RequestTokenType,
-    RequestUserType,
-};
+export { IUserInfo, IUserResponse, IUserToken, IUserTokenResponse, RequestTokenType, RequestUserType };

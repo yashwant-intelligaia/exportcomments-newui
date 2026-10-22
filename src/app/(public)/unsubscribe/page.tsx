@@ -1,4 +1,4 @@
-import { UnsubscribePage } from "@/pages/UnsubscribePage";
+import { UnsubscribePage } from "@/screens/UnsubscribePage";
 import { GlobalHeader } from "@/stories/components/global-header/GlobalHeader";
 
 export default function Page() {

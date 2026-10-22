@@ -22,12 +22,12 @@ export const ProjectSearch = ({ placeholder, searchChange, value }: ProjectSearc
                 ref={inputRef}
                 value={value}
                 onChange={searchChange}
-                className="h-12 w-full rounded-md border border-ink/60 bg-surface py-2 pr-11 pl-3 text-lg text-ink placeholder:text-muted hover:border-ink focus:border-ink focus:ring-2 focus:ring-ink focus:outline-none"
+                className="border-ink/60 bg-surface text-ink placeholder:text-muted hover:border-ink focus:border-ink focus:ring-ink h-12 w-full rounded-md border py-2 pr-11 pl-3 text-lg focus:ring-2 focus:outline-none"
                 placeholder={placeholder}
                 aria-label={placeholder}
                 type="text"
             />
-            <Search className="pointer-events-none absolute right-3 size-5 text-muted" />
+            <Search className="text-muted pointer-events-none absolute right-3 size-5" />
         </div>
     );
 };

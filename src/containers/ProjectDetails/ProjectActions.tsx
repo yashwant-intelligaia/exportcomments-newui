@@ -76,7 +76,8 @@ export const ProjectActions = () => {
         }
     };
     const favouriteLabel = isFavourite ? "Remove from Favourite" : "Add to Favourite";
-    const separator = "relative after:absolute after:top-1/2 after:right-0 after:-mt-[7px] after:h-3.5 after:w-px after:bg-muted last:after:hidden";
+    const separator =
+        "relative after:absolute after:top-1/2 after:right-0 after:-mt-[7px] after:h-3.5 after:w-px after:bg-muted last:after:hidden";
     const downloadDisabled = projectData?.allComments === 0;
 
     return (
@@ -171,7 +172,7 @@ export const ProjectActions = () => {
                                 aria-label="Branch"
                                 aria-expanded={anchorElBranch ? "true" : undefined}
                                 onClick={(event) => setAnchorElBranch(event.currentTarget)}
-                                className="flex h-[30px] items-center text-sm font-medium text-blue-ink"
+                                className="text-blue-ink flex h-[30px] items-center text-sm font-medium"
                             >
                                 <span className="mt-1">
                                     {selectedBranch?.name || "Main"}
@@ -179,11 +180,17 @@ export const ProjectActions = () => {
                                 </span>
                                 <ChevronDown className="mt-1 size-4" />
                             </button>
-                            <Menu open={!!anchorElBranch} onClose={() => setAnchorElBranch(null)} anchorEl={anchorElBranch} placement="bottom-start" className="mt-2.5">
+                            <Menu
+                                open={!!anchorElBranch}
+                                onClose={() => setAnchorElBranch(null)}
+                                anchorEl={anchorElBranch}
+                                placement="bottom-start"
+                                className="mt-2.5"
+                            >
                                 {/* Default Menu Item */}
                                 <MenuItem
                                     selected={!selectedBranch?.key}
-                                    className="h-[45px] min-w-[180px] border-b border-line bg-surface-sunk px-2.5 py-1 text-sm"
+                                    className="border-line bg-surface-sunk h-[45px] min-w-[180px] border-b px-2.5 py-1 text-sm"
                                     onClick={() => handleSelectMenuOption("")}
                                 >
                                     <span className="pr-2 text-sm font-medium">{projectData?.fileName}</span>
@@ -196,7 +203,7 @@ export const ProjectActions = () => {
                                         key={`project-branch-${id}`}
                                         onClick={() => handleSelectMenuOption(id)}
                                         selected={selectedBranch?.key === id}
-                                        className="relative h-10 hover:bg-blue-soft"
+                                        className="hover:bg-blue-soft relative h-10"
                                     >
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={branchIcons.src} alt="prototypeIcon" className="pr-2.5" />

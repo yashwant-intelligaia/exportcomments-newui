@@ -58,11 +58,11 @@ export const Popover = ({ open, anchorEl, onClose, placement = "bottom-start", c
         <div
             ref={ref}
             style={{ top: pos?.top ?? 0, left: pos?.left ?? 0, visibility: pos ? "visible" : "hidden" }}
-            className={cn("fixed z-[60] min-w-40 rounded-md border border-line bg-surface shadow-card", className)}
+            className={cn("border-line bg-surface shadow-card fixed z-[60] min-w-40 rounded-md border", className)}
         >
             {children}
         </div>,
-        document.body
+        document.body,
     );
 };
 
@@ -91,9 +91,9 @@ export const MenuItem = ({
             disabled={disabled}
             onClick={onClick}
             className={cn(
-                "flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-ink hover:bg-surface-sunk disabled:opacity-50",
+                "text-ink hover:bg-surface-sunk flex w-full items-center gap-2 px-4 py-2 text-left text-sm disabled:opacity-50",
                 selected && "bg-surface-sunk font-semibold",
-                className
+                className,
             )}
         >
             {children}

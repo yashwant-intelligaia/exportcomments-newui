@@ -1,4 +1,4 @@
-import { ProjectDetailsPage } from "@/pages/ProjectDetailsPage";
+import { ProjectDetailsPage } from "@/screens/ProjectDetailsPage";
 import { GlobalHeader } from "@/stories/components/global-header/GlobalHeader";
 
 export default function Page() {

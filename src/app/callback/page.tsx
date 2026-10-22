@@ -1,4 +1,4 @@
-import { FigmaAuth } from "@/pages/FigmaAuth";
+import { FigmaAuth } from "@/screens/FigmaAuth";
 
 export default function CallbackPage() {
     return <FigmaAuth />;

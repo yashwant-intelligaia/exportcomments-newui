@@ -16,14 +16,18 @@ export const CommentBox = ({ onAction }: any) => {
                 <h2 id="parent-modal-title" className="font-sans text-lg font-semibold tracking-normal">
                     Reply
                 </h2>
-                <p className="mb-5 text-sm text-muted">Your reply will also be added in the Figma file.</p>
-                <button aria-label="close" onClick={handleAction("cancel-pop")} className="absolute top-0 right-0 rounded-full p-1 text-muted hover:text-ink">
+                <p className="text-muted mb-5 text-sm">Your reply will also be added in the Figma file.</p>
+                <button
+                    aria-label="close"
+                    onClick={handleAction("cancel-pop")}
+                    className="text-muted hover:text-ink absolute top-0 right-0 rounded-full p-1"
+                >
                     <X className="size-5" />
                 </button>
             </div>
 
             <div className="relative">
-                <label htmlFor="reply" className="absolute top-2.5 left-3 text-xs text-blue-ink">
+                <label htmlFor="reply" className="text-blue-ink absolute top-2.5 left-3 text-xs">
                     Add your reply here
                 </label>
                 <textarea
@@ -32,7 +36,7 @@ export const CommentBox = ({ onAction }: any) => {
                     placeholder="Reply here.."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    className="max-h-[145px] w-full resize-none rounded-sm border border-ink/60 bg-surface-sunk px-3 pt-7 pb-2 text-sm text-ink placeholder:text-muted focus:ring-2 focus:ring-ink focus:outline-none"
+                    className="border-ink/60 bg-surface-sunk text-ink placeholder:text-muted focus:ring-ink max-h-[145px] w-full resize-none rounded-sm border px-3 pt-7 pb-2 text-sm focus:ring-2 focus:outline-none"
                 />
             </div>
 

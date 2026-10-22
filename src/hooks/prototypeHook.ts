@@ -1,12 +1,12 @@
 "use client";
 
-import { get } from "../utils/object";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { UserContext } from "../contexts";
 import { ProcessedPageDataType } from "../types";
 import { api, messages } from "../utils";
+import { get } from "../utils/object";
 
 const FIGMA_IMG = "figma-image";
 

@@ -22,7 +22,11 @@ export function Segmented<T extends string>({
     ariaLabel?: string;
 }) {
     return (
-        <div role="group" aria-label={ariaLabel} className="inline-flex h-8 overflow-hidden rounded-pill border border-ink">
+        <div
+            role="group"
+            aria-label={ariaLabel}
+            className="rounded-pill border-ink inline-flex h-8 overflow-hidden border"
+        >
             {options.map((o) => (
                 <button
                     key={o.value}
@@ -32,7 +36,7 @@ export function Segmented<T extends string>({
                     onClick={() => onChange(o.value)}
                     className={cn(
                         "px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60",
-                        o.value === value ? "bg-ink text-white" : "bg-transparent text-ink hover:bg-surface-sunk"
+                        o.value === value ? "bg-ink text-white" : "text-ink hover:bg-surface-sunk bg-transparent",
                     )}
                 >
                     {o.label}

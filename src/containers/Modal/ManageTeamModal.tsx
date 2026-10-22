@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import { UserEmailSelect } from "@/components/UserEmailSelect";
 import { Button } from "@/components/ui/Button";
+import { UserEmailSelect } from "@/components/UserEmailSelect";
 
 import { UserContext } from "../../contexts";
 import {
@@ -27,8 +27,7 @@ const ManageTeamModal = (props: ManageTeamModalPropsType) => {
     const { projectId, onClose } = props;
     const [values, setValues] = useState<FilteredUserResponseType[]>([]);
     const [confirmDialog, setConfirmDialog] = useState<JSX.Element>();
-    const { data: projectUsers = [], refetch: refetchProjectUsers } =
-        useFetchProjectUsers(projectId);
+    const { data: projectUsers = [], refetch: refetchProjectUsers } = useFetchProjectUsers(projectId);
     const projectOwnerData = projectUsers.find((value) => value.projectOwner);
 
     const { deleteProjectMember } = useDeleteProjectMember(refetchProjectUsers);
@@ -41,7 +40,7 @@ const ManageTeamModal = (props: ManageTeamModalPropsType) => {
     const processedInvitees = useFilterInviteesData(invitees);
 
     const filteredInvitees = processedInvitees.filter(
-        (invitee) => projectUsers.findIndex((users) => users.email === invitee.email) === -1
+        (invitee) => projectUsers.findIndex((users) => users.email === invitee.email) === -1,
     );
 
     const handleSendInvite = () => {
@@ -72,7 +71,7 @@ const ManageTeamModal = (props: ManageTeamModalPropsType) => {
                     },
                 ]}
                 onClose={() => setConfirmDialog(undefined)}
-            />
+            />,
         );
 
     return (
@@ -105,7 +104,11 @@ const ManageTeamModal = (props: ManageTeamModalPropsType) => {
                                 projectOwner ? (
                                     "Project Owner"
                                 ) : projectOwnerData?.userId === user.userId ? (
-                                    <button type="button" className="text-blue-ink hover:underline" onClick={() => confirmRemove(userId)}>
+                                    <button
+                                        type="button"
+                                        className="text-blue-ink hover:underline"
+                                        onClick={() => confirmRemove(userId)}
+                                    >
                                         Remove User
                                     </button>
                                 ) : undefined

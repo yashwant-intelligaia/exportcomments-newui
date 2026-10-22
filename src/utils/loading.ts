@@ -37,7 +37,7 @@ if (typeof window !== "undefined") {
         hydrated = true;
     }, 1500);
 }
-const pick = <T,>(list: T[]) => (hydrated ? list[Math.floor(Math.random() * list.length)] : list[0]);
+const pick = <T>(list: T[]) => (hydrated ? list[Math.floor(Math.random() * list.length)] : list[0]);
 
 const getLoadingMessage = (type: string) => {
     let message: string[] = [""];

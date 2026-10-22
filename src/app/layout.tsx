@@ -28,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const token = (await cookies()).get("userToken")?.value ?? "";
     return (
         <html lang="en" className={`${oswald.variable} ${geist.variable}`}>
-            <body className="bg-paper pt-[60px] text-body font-sans antialiased max-sm:pt-[50px]">
+            <body className="bg-paper text-body pt-[60px] font-sans antialiased max-sm:pt-[50px]">
                 <Providers initialToken={token}>{children}</Providers>
             </body>
         </html>

@@ -61,7 +61,7 @@ function PrototypeDrawer({ open, onClose, title, row, onShare }: PrototypeDrawer
         >
             <div>
                 {updatedRow?.flows.map((prototype: any) => (
-                    <div key={prototype.flow_id} className="mb-4 rounded-sm border border-line px-2.5">
+                    <div key={prototype.flow_id} className="border-line mb-4 rounded-sm border px-2.5">
                         <div className="flex items-start p-5 max-sm:flex-col">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={prototypeIcon.src} alt="Prototype Icon" className="mt-0.5 mr-0.5 w-[18px]" />
@@ -76,18 +76,22 @@ function PrototypeDrawer({ open, onClose, title, row, onShare }: PrototypeDrawer
                                 <button
                                     type="button"
                                     onClick={() => onShare(prototype?.flow_id, prototype?.flow_users)}
-                                    className="mr-[2%] flex items-center gap-1.5 text-sm font-medium text-blue-ink"
+                                    className="text-blue-ink mr-[2%] flex items-center gap-1.5 text-sm font-medium"
                                 >
                                     <Share2 className="size-[18px]" />
                                     Share
                                 </button>
                             </div>
-                            <span className="mt-0.5 mr-2.5 h-6 w-px self-stretch bg-line max-sm:hidden" />
+                            <span className="bg-line mt-0.5 mr-2.5 h-6 w-px self-stretch max-sm:hidden" />
                             {prototype.flow_users.length ? (
                                 <>
                                     <AvatarGroup max={4}>
                                         {prototype.flow_users.map((user: any) => (
-                                            <button key={user.user_id} type="button" onClick={(e) => handleClick(e, prototype.flow_id)}>
+                                            <button
+                                                key={user.user_id}
+                                                type="button"
+                                                onClick={(e) => handleClick(e, prototype.flow_id)}
+                                            >
                                                 <Avatar src={user.avatar} name={user.name} size={24} />
                                             </button>
                                         ))}
@@ -107,7 +111,7 @@ function PrototypeDrawer({ open, onClose, title, row, onShare }: PrototypeDrawer
                                     </Menu>
                                 </>
                             ) : (
-                                <span className="pt-0.5 text-xs text-muted">There are no users</span>
+                                <span className="text-muted pt-0.5 text-xs">There are no users</span>
                             )}
                         </div>
                     </div>

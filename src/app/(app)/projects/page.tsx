@@ -1,6 +1,6 @@
 import { ScrollToTop } from "@/containers/Common";
 import { ResponsiveDrawer } from "@/containers/Navigation";
-import { ProjectDashboard } from "@/pages/ProjectDashboard";
+import { ProjectDashboard } from "@/screens/ProjectDashboard";
 
 export default function ProjectsPage() {
     return (

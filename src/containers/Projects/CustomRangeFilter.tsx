@@ -18,19 +18,26 @@ interface CustomRangeFilterProps {
 const DATE_FORMAT = "yyyy-MM-dd";
 
 const DateField = ({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) => (
-    <label className="mb-5 block text-sm font-semibold text-ink last:mb-0">
+    <label className="text-ink mb-5 block text-sm font-semibold last:mb-0">
         {label}
         <input
             type="date"
             value={value}
             max={format(new Date(), DATE_FORMAT)}
             onChange={(e) => onChange(e.target.value)}
-            className="mt-1 block h-10 w-full rounded-sm border border-ink/60 bg-surface px-2.5 text-sm font-normal text-ink focus:ring-2 focus:ring-ink focus:outline-none"
+            className="border-ink/60 bg-surface text-ink focus:ring-ink mt-1 block h-10 w-full rounded-sm border px-2.5 text-sm font-normal focus:ring-2 focus:outline-none"
         />
     </label>
 );
 
-export const CustomRangeFilter = ({ anchorEl, open, onClose, onApply, onCancel, handleClosePopover }: CustomRangeFilterProps) => {
+export const CustomRangeFilter = ({
+    anchorEl,
+    open,
+    onClose,
+    onApply,
+    onCancel,
+    handleClosePopover,
+}: CustomRangeFilterProps) => {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
@@ -54,7 +61,7 @@ export const CustomRangeFilter = ({ anchorEl, open, onClose, onApply, onCancel, 
     return (
         <Popover open={open} anchorEl={anchorEl} onClose={onClose} className="mt-2">
             <div className="w-72 p-4">
-                <h6 className="pb-4 text-lg font-medium text-ink">Select Date</h6>
+                <h6 className="text-ink pb-4 text-lg font-medium">Select Date</h6>
                 <DateField label="From" value={startDate} onChange={setStartDate} />
                 <DateField label="To" value={endDate} onChange={setEndDate} />
                 <div className="mt-8 flex justify-end gap-2">

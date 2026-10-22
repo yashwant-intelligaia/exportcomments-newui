@@ -2,9 +2,9 @@
 
 import { ReactNode } from "react";
 
-import { Modal } from "@/components/ui/Modal";
-import { Avatar } from "@/components/ui/Display";
 import { cn } from "@/components/ui/cn";
+import { Avatar } from "@/components/ui/Display";
+import { Modal } from "@/components/ui/Modal";
 
 interface ShareModalPropsType {
     title: string | JSX.Element;
@@ -14,7 +14,9 @@ interface ShareModalPropsType {
 
 export const ShareModal = ({ title, children, actionButtons }: ShareModalPropsType) => (
     <Modal open size="sm" className="share-modal">
-        <div className="pr-4 [&_h2]:mb-2.5 [&_h2]:font-sans [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:tracking-normal">{title}</div>
+        <div className="pr-4 [&_h2]:mb-2.5 [&_h2]:font-sans [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:tracking-normal">
+            {title}
+        </div>
         {children}
         <div className="flex justify-end gap-2.5">{actionButtons}</div>
     </Modal>
@@ -31,7 +33,7 @@ export const ShareInviteRow = ({ field, action }: { field: ReactNode; action: Re
 /** "People with access" list shell. */
 export const PeopleList = ({ children }: { children: ReactNode }) => (
     <div className="my-5 mb-2.5 max-h-[250px] min-h-[150px] overflow-y-auto">
-        <p className="mb-2 font-medium text-ink">People with access</p>
+        <p className="text-ink mb-2 font-medium">People with access</p>
         {children}
     </div>
 );
@@ -49,15 +51,15 @@ export const PersonRow = ({
     trailing?: ReactNode;
     divider?: boolean;
 }) => (
-    <div className={cn("flex items-center pt-4", divider && "mb-3 border-b border-line pb-3")}>
+    <div className={cn("flex items-center pt-4", divider && "border-line mb-3 border-b pb-3")}>
         <div className="flex w-full items-center">
             <Avatar src={avatar} name={name || email} size={40} className="mr-2" />
             <div className="flex grow flex-wrap items-center leading-5">
                 <div className="flex grow flex-col">
-                    <span className="text-sm font-medium text-ink">{name}</span>
-                    {email && <span className="text-xs text-muted">{email}</span>}
+                    <span className="text-ink text-sm font-medium">{name}</span>
+                    {email && <span className="text-muted text-xs">{email}</span>}
                 </div>
-                {trailing && <div className="flex min-w-24 items-center text-xs text-muted">{trailing}</div>}
+                {trailing && <div className="text-muted flex min-w-24 items-center text-xs">{trailing}</div>}
             </div>
         </div>
     </div>

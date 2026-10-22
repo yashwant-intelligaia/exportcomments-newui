@@ -35,7 +35,12 @@ const EcModal = (props: EcModalPropsType) => {
         textAlign,
     } = props;
     return (
-        <Modal open={open} onClose={closeOnClickOutside ? onClose : undefined} size={size} showCloseIcon={showCloseIcon}>
+        <Modal
+            open={open}
+            onClose={closeOnClickOutside ? onClose : undefined}
+            size={size}
+            showCloseIcon={showCloseIcon}
+        >
             <div style={{ textAlign }}>
                 {icon && <div className="my-2 flex h-[85px] justify-center">{icon}</div>}
                 {title}

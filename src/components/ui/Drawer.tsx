@@ -22,10 +22,17 @@ const anchors = {
 /** Slide-in panel (side or bottom sheet). */
 export const Drawer = ({ open, onClose, anchor = "right", className, children }: DrawerProps) => (
     <Dialog open={open} onClose={onClose} className="relative z-50">
-        <DialogBackdrop transition className="fixed inset-0 bg-ink/40 transition-opacity duration-200 data-[closed]:opacity-0" />
+        <DialogBackdrop
+            transition
+            className="bg-ink/40 fixed inset-0 transition-opacity duration-200 data-[closed]:opacity-0"
+        />
         <DialogPanel
             transition
-            className={cn("fixed overflow-y-auto bg-surface shadow-card transition-transform duration-200", anchors[anchor], className)}
+            className={cn(
+                "bg-surface shadow-card fixed overflow-y-auto transition-transform duration-200",
+                anchors[anchor],
+                className,
+            )}
         >
             {children}
         </DialogPanel>

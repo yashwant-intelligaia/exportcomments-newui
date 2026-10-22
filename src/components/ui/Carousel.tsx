@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, ReactNode, useCallback, useEffect, useRef, useState, KeyboardEvent } from "react";
+import { Children, KeyboardEvent, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "./cn";
 
@@ -60,9 +60,19 @@ export const Carousel = ({
             }}
             className={cn("relative overflow-hidden", className)}
         >
-            <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${index * 100}%)` }}>
+            <div
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${index * 100}%)` }}
+            >
                 {slides.map((slide, i) => (
-                    <div key={i} className="w-full shrink-0" role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} aria-hidden={i !== index}>
+                    <div
+                        key={i}
+                        className="w-full shrink-0"
+                        role="group"
+                        aria-roledescription="slide"
+                        aria-label={`${i + 1} of ${count}`}
+                        aria-hidden={i !== index}
+                    >
                         {slide}
                     </div>
                 ))}
@@ -76,7 +86,10 @@ export const Carousel = ({
                             aria-label={`Go to slide ${i + 1}`}
                             aria-current={i === index}
                             onClick={() => go(i)}
-                            className={cn("size-2 rounded-full transition-colors", i === index ? "bg-ink" : "bg-ink/25")}
+                            className={cn(
+                                "size-2 rounded-full transition-colors",
+                                i === index ? "bg-ink" : "bg-ink/25",
+                            )}
                         />
                     ))}
                 </div>

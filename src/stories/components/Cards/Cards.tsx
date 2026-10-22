@@ -4,9 +4,9 @@ import { format } from "date-fns";
 import { Download, MoreVertical, Play, Share2, Star, Trash2, X } from "lucide-react";
 import { useState } from "react";
 
-import { Card } from "@/components/ui/Display";
 import { IconButton } from "@/components/ui/Button";
 import { cn } from "@/components/ui/cn";
+import { Card } from "@/components/ui/Display";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 import figJamIcon from "../../../assets/figjamIcon.svg";
@@ -39,20 +39,20 @@ const CommentStat = ({
     side: boolean;
     onClick: () => void;
 }) => (
-    <li className="group inline-flex min-w-[46px] flex-col items-center rounded-md p-2 transition-colors hover:bg-blue-soft max-sm:px-1.5">
+    <li className="group hover:bg-blue-soft inline-flex min-w-[46px] flex-col items-center rounded-md p-2 transition-colors max-sm:px-1.5">
         <button
             type="button"
             onClick={onClick}
             aria-label={`${label} comments`}
             className={cn(
-                "inline-flex items-center justify-center rounded-full font-bold text-ink",
+                "text-ink inline-flex items-center justify-center rounded-full font-bold",
                 side ? "size-[45px] text-xs font-normal" : "size-12 text-base font-semibold",
-                bubbleTone[tone]
+                bubbleTone[tone],
             )}
         >
             {count}
         </button>
-        <span className="mt-3 text-xs text-muted group-hover:font-medium">{label}</span>
+        <span className="text-muted mt-3 text-xs group-hover:font-medium">{label}</span>
     </li>
 );
 
@@ -152,13 +152,19 @@ export const Cards = ({
                             />
                         ) : (
                             <Tooltip title={projectTitle} placement="top">
-                                <h6 className="truncate text-base leading-6 font-medium text-navy max-sm:max-w-[134px]">{projectTitle}</h6>
+                                <h6 className="text-navy truncate text-base leading-6 font-medium max-sm:max-w-[134px]">
+                                    {projectTitle}
+                                </h6>
                             </Tooltip>
                         )}
                     </div>
                     {usedIn === "projectList" && (
                         <>
-                            <EcTooltip title={isFavorite ? "Remove From Favourite" : "Add To Favourite"} placement="top" arrow>
+                            <EcTooltip
+                                title={isFavorite ? "Remove From Favourite" : "Add To Favourite"}
+                                placement="top"
+                                arrow
+                            >
                                 <IconButton size="small" aria-label="favourite" onClick={handleMarkAsFavourite}>
                                     <Star className={cn("size-[22px]", isFavorite && "fill-yellow text-ink")} />
                                 </IconButton>
@@ -189,26 +195,48 @@ export const Cards = ({
                         </div>
                     )}
                 </div>
-                <p className="mb-6 text-xs leading-4 text-muted">Last updated on {format(new Date(createdAt), "MMM d, yyyy")}</p>
-                <p className="mb-1.5 text-xs text-muted">Comments</p>
+                <p className="text-muted mb-6 text-xs leading-4">
+                    Last updated on {format(new Date(createdAt), "MMM d, yyyy")}
+                </p>
+                <p className="text-muted mb-1.5 text-xs">Comments</p>
                 <ul className="m-0 flex justify-between p-0">
                     <CommentStat tone="all" label="All" count={allComments} side={side} onClick={openAllComments} />
-                    <CommentStat tone="new" label="Unread" count={newComments} side={side} onClick={openUnreadComments} />
+                    <CommentStat
+                        tone="new"
+                        label="Unread"
+                        count={newComments}
+                        side={side}
+                        onClick={openUnreadComments}
+                    />
                     <CommentStat tone="my" label="My" count={myComments} side={side} onClick={openOwnComments} />
-                    <CommentStat tone="resolved" label="Resolved" count={resolvedComments} side={side} onClick={openResolvedComments} />
-                    <CommentStat tone="unresolved" label="Unresolved" count={unresolvedComments} side={side} onClick={openUnresolvedComments} />
+                    <CommentStat
+                        tone="resolved"
+                        label="Resolved"
+                        count={resolvedComments}
+                        side={side}
+                        onClick={openResolvedComments}
+                    />
+                    <CommentStat
+                        tone="unresolved"
+                        label="Unresolved"
+                        count={unresolvedComments}
+                        side={side}
+                        onClick={openUnresolvedComments}
+                    />
                 </ul>
                 {usedIn === "projectList" && (
                     <>
-                        <hr className="mt-6 border-0 border-t-2 border-dashed border-line" />
+                        <hr className="border-line mt-6 border-0 border-t-2 border-dashed" />
                         <div className="mt-4 flex items-start whitespace-nowrap">
                             <button
                                 type="button"
-                                className="flex items-center text-sm font-medium text-blue-ink"
+                                className="text-blue-ink flex items-center text-sm font-medium"
                                 onClick={item.editorType === "figma" ? handleViewPrototypeLink : handleViewFigjamLink}
                             >
                                 <Play className="size-5" />
-                                <span className="underline">{item.editorType === "figma" ? "View Prototypes" : "View FigJam"}</span>
+                                <span className="underline">
+                                    {item.editorType === "figma" ? "View Prototypes" : "View FigJam"}
+                                </span>
                                 {item.editorType === "figma" && <span className="pl-1">({prototypeCount})</span>}
                             </button>
                         </div>

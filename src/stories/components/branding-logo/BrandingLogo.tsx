@@ -7,7 +7,11 @@ export const SbLogo = () => {
 
     return (
         <div>
-            <button type="button" onClick={() => history.push("/")} className="flex items-center leading-none max-sm:[&_img]:w-[140px]">
+            <button
+                type="button"
+                onClick={() => history.push("/")}
+                className="flex items-center leading-none max-sm:[&_img]:w-[140px]"
+            >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/export-comment.svg" alt="Export Comment" />
             </button>

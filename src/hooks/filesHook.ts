@@ -1,16 +1,16 @@
 "use client";
 
-import { useQueryWithSettled } from "./queryUtils";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { get } from "../utils/object";
-import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { useContext } from "react";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext } from "../contexts";
 import { UserContext } from "../contexts/UserContext";
 import { ISnackBarMessage, IUserFile, IUserFileResponse, PluginCountResponseType } from "../types";
 import { api, messages } from "../utils";
+import { get } from "../utils/object";
+import { useQueryWithSettled } from "./queryUtils";
 
 interface CommonPostPropsType {
     title?: string;
@@ -105,7 +105,9 @@ const useFetchFiles = (props: ISnackBarMessage & { isEnabled?: boolean }) => {
                     file.unresolvedComments = file.unresolvedComments === null ? 0 : file.unresolvedComments;
                     file.checkedProject = true;
                 });
-                (response as any)?.data?.data?.sort((fileA: IUserFile, fileB: IUserFile) => fileB.isFavorite - fileA.isFavorite);
+                (response as any)?.data?.data?.sort(
+                    (fileA: IUserFile, fileB: IUserFile) => fileB.isFavorite - fileA.isFavorite,
+                );
                 return response as any;
             },
             retry: 3,

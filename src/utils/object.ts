@@ -1,7 +1,12 @@
 /* Tiny native replacements for the few lodash helpers the app used. */
 
 export const get = (obj: any, path: string | string[], defaultValue?: any) => {
-    const keys = Array.isArray(path) ? path : path.replace(/\[(\d+)\]/g, ".$1").split(".").filter(Boolean);
+    const keys = Array.isArray(path)
+        ? path
+        : path
+              .replace(/\[(\d+)\]/g, ".$1")
+              .split(".")
+              .filter(Boolean);
     let cur = obj;
     for (const key of keys) {
         if (cur === null || cur === undefined) return defaultValue;
@@ -17,7 +22,7 @@ export const isEmpty = (value: unknown) => {
     return true;
 };
 
-export const cloneDeep = <T,>(value: T): T => structuredClone(value);
+export const cloneDeep = <T>(value: T): T => structuredClone(value);
 
 export const debounce = <A extends unknown[]>(fn: (...args: A) => void, wait: number) => {
     let timer: ReturnType<typeof setTimeout> | undefined;

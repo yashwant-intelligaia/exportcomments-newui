@@ -118,19 +118,22 @@ export function Combobox<T>({
     return (
         <div ref={wrapRef} className={cn("relative w-full", className)}>
             {label && (
-                <label htmlFor={inputId} className="mb-1 block text-xs font-semibold text-ink">
+                <label htmlFor={inputId} className="text-ink mb-1 block text-xs font-semibold">
                     {label}
                 </label>
             )}
             <div
                 className={cn(
-                    "flex min-h-10 flex-wrap items-center gap-1.5 rounded-sm border border-ink/60 bg-surface px-2 py-1 focus-within:ring-2 focus-within:ring-ink",
-                    disabled && "opacity-50"
+                    "border-ink/60 bg-surface focus-within:ring-ink flex min-h-10 flex-wrap items-center gap-1.5 rounded-sm border px-2 py-1 focus-within:ring-2",
+                    disabled && "opacity-50",
                 )}
                 onClick={() => !disabled && setOpen(true)}
             >
                 {chips.map((option) => (
-                    <span key={getKey(option)} className="inline-flex max-w-full items-center gap-1 rounded-pill bg-surface-sunk py-0.5 pr-1 pl-3 text-xs text-ink">
+                    <span
+                        key={getKey(option)}
+                        className="rounded-pill bg-surface-sunk text-ink inline-flex max-w-full items-center gap-1 py-0.5 pr-1 pl-3 text-xs"
+                    >
                         <span className="truncate">{getLabel(option)}</span>
                         <button
                             type="button"
@@ -140,13 +143,13 @@ export function Combobox<T>({
                                 e.stopPropagation();
                                 onChange(value.filter((v) => getKey(v) !== getKey(option)));
                             }}
-                            className="rounded-full px-1.5 text-muted hover:text-ink"
+                            className="text-muted hover:text-ink rounded-full px-1.5"
                         >
                             ×
                         </button>
                     </span>
                 ))}
-                {hidden > 0 && <span className="text-xs text-muted">+{hidden}</span>}
+                {hidden > 0 && <span className="text-muted text-xs">+{hidden}</span>}
                 <input
                     id={inputId}
                     role="combobox"
@@ -164,15 +167,15 @@ export function Combobox<T>({
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                     onKeyDown={onKeyDown}
-                    className="min-w-24 flex-1 bg-transparent py-1 text-sm text-ink placeholder:text-muted focus:outline-none"
+                    className="text-ink placeholder:text-muted min-w-24 flex-1 bg-transparent py-1 text-sm focus:outline-none"
                 />
-                <ChevronDown className="size-4 shrink-0 text-muted" aria-hidden="true" />
+                <ChevronDown className="text-muted size-4 shrink-0" aria-hidden="true" />
             </div>
             {open && visible.length > 0 && (
                 <ul
                     id={listId}
                     role="listbox"
-                    className="absolute z-[70] mt-1 max-h-60 w-full overflow-auto rounded-md border border-line bg-surface py-1 shadow-card"
+                    className="border-line bg-surface shadow-card absolute z-[70] mt-1 max-h-60 w-full overflow-auto rounded-md border py-1"
                 >
                     {visible.map((option, index) => {
                         const isDisabled = getOptionDisabled?.(option);
@@ -188,10 +191,12 @@ export function Combobox<T>({
                                 className={cn(
                                     "cursor-pointer px-3 py-2 text-sm",
                                     index === active && "bg-blue-soft",
-                                    isDisabled && "cursor-not-allowed opacity-50"
+                                    isDisabled && "cursor-not-allowed opacity-50",
                                 )}
                             >
-                                {renderOption ? renderOption(option, { highlighted: index === active }) : getLabel(option)}
+                                {renderOption
+                                    ? renderOption(option, { highlighted: index === active })
+                                    : getLabel(option)}
                             </li>
                         );
                     })}

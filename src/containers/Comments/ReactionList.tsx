@@ -56,7 +56,7 @@ export const ReactionList = ({ onClick, data }: ReactionListPropsType) => {
                     <button
                         type="button"
                         onClick={() => onClick(`:${emoji}:`)}
-                        className="m-1 inline-flex min-h-[2.125rem] items-center gap-2 rounded-sm border border-ink/50 px-2.5 text-base leading-none text-ink hover:bg-surface-sunk"
+                        className="border-ink/50 text-ink hover:bg-surface-sunk m-1 inline-flex min-h-[2.125rem] items-center gap-2 rounded-sm border px-2.5 text-base leading-none"
                     >
                         {emoji && getReactionImage(emoji)}
                         {users.length}

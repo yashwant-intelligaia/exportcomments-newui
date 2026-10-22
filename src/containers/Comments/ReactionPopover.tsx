@@ -27,7 +27,7 @@ const ReactionPopover = ({ onClickReaction }: ReactionPopoverPropsType) => {
                             <button
                                 type="button"
                                 aria-label={name}
-                                className="inline-flex items-center rounded-sm px-1.5 py-1 text-lg hover:bg-surface-sunk"
+                                className="hover:bg-surface-sunk inline-flex items-center rounded-sm px-1.5 py-1 text-lg"
                                 onClick={() => {
                                     onClickReaction(`:${key}:`);
                                     setAnchorEl(null);

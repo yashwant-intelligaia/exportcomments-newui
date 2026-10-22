@@ -3,9 +3,9 @@
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { UserEmailSelect } from "@/components/UserEmailSelect";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/Form";
+import { UserEmailSelect } from "@/components/UserEmailSelect";
 import { useParams } from "@/utils/navigation";
 
 import { ProjectDetailsContext, PrototypePageContext } from "../../contexts";
@@ -42,7 +42,7 @@ export const NewCreateVersionDrawer = (props: CreateVersionDrawerType) => {
     const processedInvitees = useFilterInviteesData(invitees);
 
     const filteredInvitees = processedInvitees.filter(
-        (invitee) => projectUsers.findIndex((users) => users.email === invitee.email) === -1
+        (invitee) => projectUsers.findIndex((users) => users.email === invitee.email) === -1,
     );
 
     const { register, handleSubmit, formState, reset, watch } = useForm();
@@ -67,7 +67,12 @@ export const NewCreateVersionDrawer = (props: CreateVersionDrawerType) => {
     };
 
     return (
-        <EcDrawer title={<span className="text-xl font-medium">{title}</span>} open={open} direction="right" onClose={onClose}>
+        <EcDrawer
+            title={<span className="text-xl font-medium">{title}</span>}
+            open={open}
+            direction="right"
+            onClose={onClose}
+        >
             <div className="mt-5 mb-9 w-[330px] max-w-[750px] sm:w-[500px]">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div>

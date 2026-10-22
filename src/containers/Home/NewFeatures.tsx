@@ -45,7 +45,7 @@ const NewFeatures = () => {
                 handleClose={() => setModal(undefined)}
                 title={NEW_FEATURES[index].videoTitle}
                 mediaInfo={{ src: NEW_FEATURES[index].videoSrc, controls: true }}
-            />
+            />,
         );
     };
 
@@ -68,24 +68,47 @@ const NewFeatures = () => {
                                     <div className={cn("absolute right-1 z-10", width > 768 ? "-top-[30px]" : "top-1")}>
                                         {feature.tag && (
                                             // eslint-disable-next-line @next/next/no-img-element
-                                            <img src="/images/new-button.svg" width={width > 768 ? 70 : 50} alt="New Button" />
+                                            <img
+                                                src="/images/new-button.svg"
+                                                width={width > 768 ? 70 : 50}
+                                                alt="New Button"
+                                            />
                                         )}
                                     </div>
                                     <div className={cn("flex items-start justify-start", width <= 600 && "mt-4")}>
-                                        <div className="flex size-[35px] items-center justify-center rounded-full bg-blue p-2 md:size-[45px]">
+                                        <div className="bg-blue flex size-[35px] items-center justify-center rounded-full p-2 md:size-[45px]">
                                             <ExportCommentLightIcon style={{ width: 25, height: 25 }} />
                                         </div>
                                         <div className="flex h-[35px] items-center justify-center gap-1 p-1 md:h-[45px] md:p-2">
                                             {[0, 1, 2].map((dot) => (
-                                                <span key={dot} className="size-[7px] rounded-full bg-ink" />
+                                                <span key={dot} className="bg-ink size-[7px] rounded-full" />
                                             ))}
                                         </div>
-                                        <div className="flex size-[35px] items-center justify-center md:size-[45px]">{feature.icon}</div>
+                                        <div className="flex size-[35px] items-center justify-center md:size-[45px]">
+                                            {feature.icon}
+                                        </div>
                                     </div>
-                                    <div className={cn("mt-3 flex flex-col items-start justify-center gap-3 text-left", width <= 600 && "pr-8")}>
-                                        <h3 className={cn("font-sans font-bold tracking-normal text-ink", width > 820 ? "text-2xl" : "text-base")}>{feature.title}</h3>
-                                        <p className={cn("font-medium", width > 820 ? "text-base" : "text-sm")}>{feature.subtitle}</p>
-                                        <Button id={`LP-learn-more-button-${index}`} onClick={() => handleOpenModal(index)}>
+                                    <div
+                                        className={cn(
+                                            "mt-3 flex flex-col items-start justify-center gap-3 text-left",
+                                            width <= 600 && "pr-8",
+                                        )}
+                                    >
+                                        <h3
+                                            className={cn(
+                                                "text-ink font-sans font-bold tracking-normal",
+                                                width > 820 ? "text-2xl" : "text-base",
+                                            )}
+                                        >
+                                            {feature.title}
+                                        </h3>
+                                        <p className={cn("font-medium", width > 820 ? "text-base" : "text-sm")}>
+                                            {feature.subtitle}
+                                        </p>
+                                        <Button
+                                            id={`LP-learn-more-button-${index}`}
+                                            onClick={() => handleOpenModal(index)}
+                                        >
                                             Learn More
                                         </Button>
                                     </div>

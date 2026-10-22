@@ -3,15 +3,10 @@
 import { Send } from "lucide-react";
 import { useState } from "react";
 
-import { UserEmailSelect } from "@/components/UserEmailSelect";
 import { Button } from "@/components/ui/Button";
+import { UserEmailSelect } from "@/components/UserEmailSelect";
 
-import {
-    useFetchInviteeUsers,
-    useFetchProjectUsers,
-    useFilterInviteesData,
-    useProjectMutations,
-} from "../../hooks";
+import { useFetchInviteeUsers, useFetchProjectUsers, useFilterInviteesData, useProjectMutations } from "../../hooks";
 import { FilteredUserResponseType, UserType } from "../../types";
 import { PeopleList, PersonRow, ShareInviteRow, ShareModal } from "../Modal/ShareModal";
 
@@ -34,7 +29,7 @@ const ShareFlowLinkModel = (props: ShareFlowLinkModalPropsType) => {
     const processedInvitees = useFilterInviteesData(invitees);
 
     const filteredInvitees = processedInvitees.filter(
-        (invitee) => projectUsers.findIndex((users) => users.email === invitee.email) === -1
+        (invitee) => projectUsers.findIndex((users) => users.email === invitee.email) === -1,
     );
 
     const handleSendInvite = () => {

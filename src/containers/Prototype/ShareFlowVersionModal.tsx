@@ -3,15 +3,10 @@
 import { Send } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { UserEmailSelect } from "@/components/UserEmailSelect";
 import { Button } from "@/components/ui/Button";
+import { UserEmailSelect } from "@/components/UserEmailSelect";
 
-import {
-    useFetchInviteeUsers,
-    useFetchProjectUsers,
-    useFilterInviteesData,
-    useProjectMutations,
-} from "../../hooks";
+import { useFetchInviteeUsers, useFetchProjectUsers, useFilterInviteesData, useProjectMutations } from "../../hooks";
 import { FilteredUserResponseType, UserType } from "../../types";
 import { PeopleList, PersonRow, ShareInviteRow, ShareModal } from "../Modal/ShareModal";
 
@@ -27,23 +22,18 @@ interface ShareVersionLinkModalPropsType {
 }
 
 const ShareFlowVersionModal = (props: ShareVersionLinkModalPropsType) => {
-    const { projectId, onClose, pageId, flowId, versionId, versionUsers, branchName, flowNodeId } =
-        props;
+    const { projectId, onClose, pageId, flowId, versionId, versionUsers, branchName, flowNodeId } = props;
     const [values, setValues] = useState<FilteredUserResponseType[]>([]);
 
     const { data: projectUsers = [] } = useFetchProjectUsers(projectId);
 
     const { inviteVersion } = useProjectMutations();
-    const {
-        mutate: mutateInviteVersion,
-        isPending: isLoadingFlow,
-        data: inviteData,
-    } = inviteVersion;
+    const { mutate: mutateInviteVersion, isPending: isLoadingFlow, data: inviteData } = inviteVersion;
     const { data: invitees = [] } = useFetchInviteeUsers();
     const processedInvitees = useFilterInviteesData(invitees);
 
     const filteredInvitees = processedInvitees.filter(
-        (invitee) => projectUsers.findIndex((users) => users.email === invitee.email) === -1
+        (invitee) => projectUsers.findIndex((users) => users.email === invitee.email) === -1,
     );
     const handleSendInvite = () => {
         if (projectId) {

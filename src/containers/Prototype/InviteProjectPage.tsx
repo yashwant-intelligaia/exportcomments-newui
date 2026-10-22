@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { useHistory } from "@/utils/navigation";
 
 import { usePageMutations } from "../../hooks";

@@ -18,7 +18,12 @@ interface IVideoModalType {
 
 const VideoModal = ({ isMenuOpen, handleClose, title, mediaInfo: { src, controls } }: IVideoModalType) => (
     <Modal open={isMenuOpen} onClose={() => handleClose(false)} size="xl" className="max-w-[950px] overflow-y-auto p-0">
-        <button type="button" aria-label="close" onClick={() => handleClose(false)} className="absolute top-5 right-5 z-10 rounded-full p-1.5 hover:bg-surface-sunk">
+        <button
+            type="button"
+            aria-label="close"
+            onClick={() => handleClose(false)}
+            className="hover:bg-surface-sunk absolute top-5 right-5 z-10 rounded-full p-1.5"
+        >
             <X className="size-5" />
         </button>
         {title && (

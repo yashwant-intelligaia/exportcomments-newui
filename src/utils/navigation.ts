@@ -15,7 +15,8 @@ export const useHistory = () => {
     };
 };
 
-export const useParams = <T extends Record<string, string> = Record<string, string>>() => useNextParams() as unknown as T;
+export const useParams = <T extends Record<string, string> = Record<string, string>>() =>
+    useNextParams() as unknown as T;
 
 export const useLocation = () => {
     const pathname = usePathname();

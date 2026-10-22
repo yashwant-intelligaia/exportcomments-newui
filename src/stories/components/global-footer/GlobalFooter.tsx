@@ -10,7 +10,8 @@ import MediumIcon from "../../../assets/medium.svg";
 import XIcon from "../../../assets/x-social.svg";
 import { APP_CONSTANT } from "../../../constants/AppConstant";
 
-const socialClass = "inline-flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-sunk hover:text-ink";
+const socialClass =
+    "inline-flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-sunk hover:text-ink";
 
 export const GlobalFooter = () => (
     <footer id="footer" className="mx-auto mt-11 w-[1128px] max-w-[95%] max-sm:mt-2.5">
@@ -19,31 +20,66 @@ export const GlobalFooter = () => (
                 <div className="w-1/3 max-w-[280px] text-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={Intelligaia.src} alt="Intelligaia" className="inline-block h-[30px] w-[119px]" />
-                    <span className="mt-2 block text-sm font-medium text-muted">Get to know us!</span>
+                    <span className="text-muted mt-2 block text-sm font-medium">Get to know us!</span>
                     <div className="mt-5 flex justify-center gap-2">
-                        <a target="_blank" rel="noreferrer" href={APP_CONSTANT.social.twitter} className={socialClass} id="LP-twitter-link" aria-label="X">
+                        <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={APP_CONSTANT.social.twitter}
+                            className={socialClass}
+                            id="LP-twitter-link"
+                            aria-label="X"
+                        >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={XIcon.src} alt="" width={14} height={14} />
                         </a>
-                        <a target="_blank" rel="noreferrer" href={APP_CONSTANT.social.dribble} className={socialClass} id="LP-dribble-link" aria-label="Dribbble">
+                        <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={APP_CONSTANT.social.dribble}
+                            className={socialClass}
+                            id="LP-dribble-link"
+                            aria-label="Dribbble"
+                        >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={DribbleIcon.src} alt="" width={20} height={20} />
                         </a>
-                        <a target="_blank" rel="noreferrer" href={APP_CONSTANT.social.medium} className={socialClass} id="LP-medium-link" aria-label="Medium">
+                        <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={APP_CONSTANT.social.medium}
+                            className={socialClass}
+                            id="LP-medium-link"
+                            aria-label="Medium"
+                        >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={MediumIcon.src} alt="" width={20} height={20} />
                         </a>
-                        <a target="_blank" rel="noreferrer" href={APP_CONSTANT.social.instagram} className={socialClass} id="LP-instagram-link" aria-label="Instagram">
+                        <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={APP_CONSTANT.social.instagram}
+                            className={socialClass}
+                            id="LP-instagram-link"
+                            aria-label="Instagram"
+                        >
                             <InstagramIcon />
                         </a>
-                        <a target="_blank" rel="noreferrer" href={APP_CONSTANT.social.linkedIn} className={socialClass} id="LP-linkedin-link" aria-label="LinkedIn">
+                        <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={APP_CONSTANT.social.linkedIn}
+                            className={socialClass}
+                            id="LP-linkedin-link"
+                            aria-label="LinkedIn"
+                        >
                             <LinkedInIcon />
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        <div className="mx-auto my-4 flex max-w-[1536px] flex-col items-center gap-2 pt-3 text-sm font-medium text-muted sm:flex-row sm:justify-between">
+        <div className="text-muted mx-auto my-4 flex max-w-[1536px] flex-col items-center gap-2 pt-3 text-sm font-medium sm:flex-row sm:justify-between">
             <span>&copy; 2024 Intelligaia. All rights reserved.</span>
             <span>
                 <Link href="/privacy-policy" className="hover:underline">

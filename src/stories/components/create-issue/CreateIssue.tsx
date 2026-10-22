@@ -40,7 +40,11 @@ export const CreateIssue = snackbar((props: ICreateGitTicketSnackBarMessage) => 
                 <h2 id="parent-modal-title" className="mb-2.5 font-sans text-lg font-semibold tracking-normal">
                     Create a git issue.
                 </h2>
-                <button aria-label="close" onClick={handleAction("cancel-pop")} className="absolute top-0 right-0 rounded-full p-1 text-muted hover:text-ink">
+                <button
+                    aria-label="close"
+                    onClick={handleAction("cancel-pop")}
+                    className="text-muted hover:text-ink absolute top-0 right-0 rounded-full p-1"
+                >
                     <X className="size-5" />
                 </button>
             </div>
@@ -51,7 +55,7 @@ export const CreateIssue = snackbar((props: ICreateGitTicketSnackBarMessage) => 
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter Issue Title"
-                className="h-11 w-full rounded-sm border border-ink/60 bg-surface px-3 text-sm text-ink placeholder:text-muted focus:ring-2 focus:ring-ink focus:outline-none"
+                className="border-ink/60 bg-surface text-ink placeholder:text-muted focus:ring-ink h-11 w-full rounded-sm border px-3 text-sm focus:ring-2 focus:outline-none"
             />
 
             <div className="mt-3 flex justify-end gap-2.5">

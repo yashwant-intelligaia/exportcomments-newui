@@ -1,4 +1,4 @@
-import { InvitePage } from "@/pages/InvitePage";
+import { InvitePage } from "@/screens/InvitePage";
 import { GlobalHeader } from "@/stories/components/global-header/GlobalHeader";
 
 export default function Page() {

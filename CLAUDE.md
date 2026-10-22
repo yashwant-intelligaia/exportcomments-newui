@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**ExportComments Frontend** is a React TypeScript web application for managing design comments, feedback, and prototypes exported from Figma. It provides a dashboard for viewing projects, filtering comments, managing team members, and viewing flow versions. Built with React 17, TypeScript, Material-UI, and react-router.
+**ExportComments Frontend** is a Next.js (App Router, SSR) TypeScript web application for managing design comments, feedback, and prototypes exported from Figma. It provides a dashboard for viewing projects, filtering comments, managing team members, and viewing flow versions. Built with Next.js 16, React 19, TypeScript and Tailwind CSS v4 using the Intelligaia design tokens.
 
 ## Quick Start
 
@@ -16,27 +16,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Setup & Running
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server (runs on http://localhost:3000)
-npm start
-
-# Run tests
-npm test
-
-# Build for production
-npm run build
-
-# Run Storybook for component development
-npm run storybook
-
-# Lint and fix code
-npm run eslint
-
-# Type check
-npm run tslint
+npm run dev        # http://localhost:3000
+npm run build      # production build
+npm start          # serve the production build
+npm run lint       # eslint (next + prettier + import sort)
+npm run typecheck  # tsc --noEmit
 ```
+
+Environment variables (see `src/constants/AppConstant.ts`): `NEXT_PUBLIC_BASE_URL`, `NEXT_PUBLIC_KOA2_BASE_URL`, `NEXT_PUBLIC_USE_DEV_ENV`.
+
+## Stack notes
+
+- **Routing**: Next.js App Router under `src/app/` (same URLs as before). Route guards live in `src/proxy.ts` (cookie `userToken`), not in components. Legacy views are in `src/screens/` (not `pages/`, which Next reserves).
+- **Auth**: JWT is stored in localStorage *and* mirrored to the `userToken` cookie (`AuthService`) so the server can redirect and render.
+- **Styling**: Tailwind v4, tokens in `src/app/globals.css` (`@theme`). No MUI, no styled-components. Reusable primitives are in `src/components/ui/` (Button, Modal, Drawer, Popover/Menu, Tooltip, Combobox, DataTable, Carousel, ...). Headless UI is used for Dialog behaviour.
+- **Data**: `@tanstack/react-query` v5; per-query `onSettled` is provided by `useQueryWithSettled` (`src/hooks/queryUtils.ts`).
+- **Client-only**: components touching browser APIs are `"use client"`; Lottie is loaded with `next/dynamic({ ssr: false })`, exceljs with a dynamic `import()`.
 
 ## Architecture
 
@@ -62,17 +58,14 @@ Routes defined in [App.tsx](src/App.tsx#L26):
 - `/project/:projectId/details` - Project details page (private route)
 - `/invite/:type` - Invite page (private route)
 - `/users` - User information (private route)
-- `/callback` - Figma OAuth callback (auth route)
+- `/callback` - Figma OAuth callback
 - `/terms-of-use` - Public page
 - `/privacy-policy` - Public page
 - `/unsubscribe` - Unsubscribe page
 - `/feedback-form` - Feedback form page
 - `*` - 404 page
 
-**Route Types:**
-- `AuthRoute` - Accessible before login, redirects to Main if already authenticated
-- `PrivateRoute` - Requires user authentication
-- `Route` - Public routes
+**Guards:** `src/proxy.ts` redirects unauthenticated users from private paths to `/`, and authenticated users from `/` and `/callback` to `/projects`.
 
 ### State Management
 

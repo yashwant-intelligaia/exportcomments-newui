@@ -3,8 +3,7 @@ const isBrowser = typeof window !== "undefined";
 const protocol = isBrowser ? window.location.protocol : "http:";
 const hostname = isBrowser ? window.location.hostname : process.env.NEXT_PUBLIC_HOSTNAME || "localhost";
 const port = isBrowser ? window.location.port : process.env.PORT || "3000";
-export const frontendUrl =
-    hostname === "localhost" ? `${protocol}//${hostname}:${port}` : `${protocol}//${hostname}`;
+export const frontendUrl = hostname === "localhost" ? `${protocol}//${hostname}:${port}` : `${protocol}//${hostname}`;
 
 let baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:4000/";
 let koa2BaseUrl = process.env.NEXT_PUBLIC_KOA2_BASE_URL || "http://localhost:8000/";
@@ -17,10 +16,7 @@ if (hostname === "exportcomments.io") {
     /* For Development Server */
     baseUrl = "https://dev-api.exportcomments.io/";
     koa2BaseUrl = "https://dev-api.exportcomments.io/v2/";
-} else if (
-    hostname === "staging.exportcomments.io" ||
-    process.env.NEXT_PUBLIC_USE_DEV_ENV === "true"
-) {
+} else if (hostname === "staging.exportcomments.io" || process.env.NEXT_PUBLIC_USE_DEV_ENV === "true") {
     /* For Staging Server */
     baseUrl = "https://staging-api.exportcomments.io/";
     koa2BaseUrl = "https://staging-api.exportcomments.io/v2/";
