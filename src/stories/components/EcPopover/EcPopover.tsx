@@ -1,10 +1,7 @@
 "use client";
 
-import { Box, Stack } from "@mui/material";
-import Button from "@mui/material/Button";
-import Popover, { PopoverOrigin } from "@mui/material/Popover";
-import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
+import { Button } from "@/components/ui/Button";
+import { Popover } from "@/components/ui/Popover";
 
 import { ActionButtonType } from "../../../types";
 import { uniqueKey } from "../../../utils";
@@ -15,76 +12,33 @@ interface EcPopoverPropsType {
     open: boolean;
     handleClose: () => void;
     anchorEl?: HTMLButtonElement;
-    anchorOrigin?: PopoverOrigin;
-    transformOrigin?: PopoverOrigin;
+    /** Kept for call-site compatibility; placement is derived from horizontal origin. */
+    anchorOrigin?: { vertical: string; horizontal: string };
+    transformOrigin?: { vertical: string; horizontal: string };
     actionButtons?: ActionButtonType[];
 }
 
-const StyledButton = styled(Button)(`
-    text-transform: none;
-    justify-content: flex-start;
-`);
-
-const EcPopover = (props: EcPopoverPropsType) => {
-    const {
-        title,
-        description,
-        open,
-        anchorEl,
-        anchorOrigin,
-        transformOrigin,
-        actionButtons,
-        handleClose,
-    } = props;
-    return (
-        <Popover
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={anchorOrigin}
-            transformOrigin={transformOrigin}
-        >
-            <Box sx={{ p: 2, maxWidth: 296 }}>
-                <Typography variant="subtitle1" fontWeight={500} sx={{ pb: 0.5 }}>
-                    {title}
-                </Typography>
-                <Typography variant="subtitle2" fontWeight={400} sx={{ pb: 1 }}>
-                    {description}
-                </Typography>
-                {actionButtons && actionButtons.length > 0 && (
-                    <Stack
-                        direction={{ xs: "column", sm: "row" }}
-                        spacing={{ xs: 1, sm: 2, md: 2 }}
-                        sx={{ pt: 1 }}
-                    >
-                        {actionButtons.map(({ label, onClick, size, variant }, index) => (
-                            <StyledButton
-                                variant={variant}
-                                size={size || "small"}
-                                key={uniqueKey(index)}
-                                onClick={onClick}
-                            >
-                                {label}
-                            </StyledButton>
-                        ))}
-                    </Stack>
-                )}
-            </Box>
-        </Popover>
-    );
-};
-
-EcPopover.defaultProps = {
-    anchorEl: undefined,
-    anchorOrigin: {
-        vertical: "bottom",
-        horizontal: "right",
-    },
-    transformOrigin: {
-        vertical: "top",
-        horizontal: "right",
-    },
-    actionButtons: [],
-};
+const EcPopover = ({ title, description, open, anchorEl, anchorOrigin, actionButtons = [], handleClose }: EcPopoverPropsType) => (
+    <Popover
+        open={open}
+        anchorEl={anchorEl ?? null}
+        onClose={handleClose}
+        placement={anchorOrigin?.horizontal === "left" ? "bottom-start" : "bottom-end"}
+    >
+        <div className="max-w-[296px] p-4">
+            <p className="pb-1 text-base font-medium text-ink">{title}</p>
+            <p className="pb-2 text-sm text-muted">{description}</p>
+            {actionButtons.length > 0 && (
+                <div className="flex flex-col gap-2 pt-2 sm:flex-row">
+                    {actionButtons.map(({ label, onClick, size, variant }, index) => (
+                        <Button key={uniqueKey(index)} variant={variant} size={size || "small"} onClick={onClick}>
+                            {label}
+                        </Button>
+                    ))}
+                </div>
+            )}
+        </div>
+    </Popover>
+);
 
 export { EcPopover };

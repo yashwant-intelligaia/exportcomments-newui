@@ -1,22 +1,13 @@
 "use client";
 
-import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
-import ShareIcon from "@mui/icons-material/Share";
-import StarIcon from "@mui/icons-material/Star";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import { IconButton, Link } from "@mui/material";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
-import moment from "moment";
+import { format } from "date-fns";
+import { Download, MoreVertical, Play, Share2, Star, Trash2, X } from "lucide-react";
 import { useState } from "react";
-import styled from "styled-components";
+
+import { Card } from "@/components/ui/Display";
+import { IconButton } from "@/components/ui/Button";
+import { cn } from "@/components/ui/cn";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 import figJamIcon from "../../../assets/figjamIcon.svg";
 import figmaIcon from "../../../assets/figmaIcon.svg";
@@ -27,261 +18,43 @@ import { EcActionMenu } from "../EcActionMenu/EcActionMenu";
 import { EcEditMode } from "../EcEditMode";
 import { EcTooltip } from "../EcTooltip";
 
-const CardsStyled = styled.div`
-    .card-wrap {
-        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
-        border-radius: 4px;
-        background: #ffffff;
-        display: inline-flex;
-        .card-header {
-            .card-header-left {
-                max-width: calc(100% - 80px);
-                flex-grow: 1;
-                form {
-                    width: 100%;
-                }
-            }
-            h6 {
-                font-size: 1rem;
-                color: #383874;
-                line-height: 24px;
-                font-weight: 500;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                @media (max-width: 600px) {
-                    max-width: 134px;
-                }
-            }
-            .share-detail {
-                svg {
-                    font-size: 1.25rem;
-                }
-            }
-            a {
-                cursor: pointer;
-            }
-            .bookmarkIconWrap {
-                svg {
-                    font-size: 1.425rem;
-                    color: #2979ff;
-                }
-            }
-        }
-        .disable {
-            color: #9e9e9e;
-            cursor: not-allowed !important;
-        }
-        .dateUpdate {
-            font-size: 0.75rem;
-            color: #383874;
-            line-height: 16px;
-            opacity: 0.6;
-        }
-        .MuiTypography-body2 {
-            color: #818181;
-            font-size: 0.75rem;
-            margin-bottom: 0.375rem;
-        }
-    }
-    .comment-wrap {
-        padding: 0;
-        margin: 0;
-        display: flex;
-        justify-content: space-between;
-        li {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            margin-right: 0;
-            min-width: 46px;
-            padding: 0.5rem;
-            transition: background 0.5s;
-            border-radius: 0.5rem;
-            @media (max-width: 600px) {
-                padding: 0.5rem 0.325rem;
-                min-width: inherit;
-            }
-            &:hover {
-                background: #d8e6ff;
-            }
-            .comment-list {
-                width: 48px;
-                height: 48px;
-                display: inline-flex;
-                font-size: 12px;
-                font-weight: 700;
-                font-family: arial;
-                position: relative;
-                color: #fff;
-                border-radius: 50%;
-                transform: rotate(-45deg);
-                justify-content: center;
-                align-items: center;
-                // border: solid 1px #ffff;
-                cursor: pointer;
-                &:hover {
-                    // box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
-                    // transition: 0.5s;
-                    // scale: 1.15;
-                }
-                &-number {
-                    transform: rotate(45deg);
-                    font-size: 1rem;
-                    font-weight: 600;
-                    color: #000;
-                }
-                &-text {
-                    position: static;
-                    color: #3b457b;
-                    font-size: 0.75rem;
-                    line-height: 18px;
-                    margin-top: 0.75rem;
-                    transition: all 0.05s ease 0s;
-                    font-weight: 500;
-                }
-                &.all-comment {
-                    background: #ebf2ff;
-                }
-                &.new-comment {
-                    background: #f0f0f1;
-                    color: #18b7fb;
-                }
-                &.my-comment {
-                    background: #f0f1f9;
-                }
-                &.resolved-comment {
-                    background: #edf6ee;
-                }
-                &.unresolved-comment {
-                    background: #feedec;
-                }
-            }
-            .comment-list-side {
-                width: 45px;
-                height: 45px;
-                display: inline-flex;
-                font-size: 12px;
-                font-weight: 700;
-                font-family: arial;
-                position: relative;
-                color: #fff;
-                border-radius: 50%;
-                //border-radius: 50% 50% 50% 0;
-                transform: rotate(-45deg);
-                justify-content: center;
-                align-items: center;
-                //border: solid 1px #ffff;
-                // cursor: pointer;
-                &:hover {
-                    // box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
-                    // transition: 0.5s;
-                    // scale: 1.15;
-                }
-                &-number {
-                    transform: rotate(45deg);
-                    font-size: 0.75rem;
-                    font-weight: 400;
-                }
-                &-text {
-                    position: static;
-                    color: #818181;
-                    font-size: 0.75rem;
-                    line-height: 18px;
-                    margin-top: 0.75rem;
-                    transition: all 0.05s ease 0s;
-                }
-                // &.all-comment {
-                //     background: #18b7fb;
-                // }
-                // &.new-comment {
-                //     background: #fff;
-                //     color: #18b7fb;
-                // }
-                // &.my-comment {
-                //     background: #70d8e6;
-                // }
-                // &.resolved-comment {
-                //     background: #00ca5f;
-                // }
-                // &.unresolved-comment {
-                //     background: #f4b511;
-                // }
-                &.all-comment {
-                    background: #ebf2ff;
-                }
-                &.new-comment {
-                    background: #f0f0f1;
-                    color: #18b7fb;
-                }
-                &.my-comment {
-                    background: #f0f1f9;
-                }
-                &.resolved-comment {
-                    background: #edf6ee;
-                }
-                &.unresolved-comment {
-                    background: #feedec;
-                }
-            }
-            &:hover {
-                .comment-list-text {
-                    font-weight: 500;
-                }
-            }
-            &:nth-last-child(2) {
-                min-width: 50px;
-            }
-            &:last-child {
-                margin-right: 0;
-                min-width: 62px;
-            }
-        }
-    }
-    .line-divider {
-        margin-top: 25px;
-        border: none;
-        border-top: 2px dashed #ccc;
-    }
-    .associated-prototypes {
-        display: flex;
-        align-items: flex-start;
-        margin-top: 15px;
-    }
+const bubbleTone = {
+    all: "bg-blue-soft",
+    new: "bg-surface-sunk text-blue-ink",
+    my: "bg-purple-soft",
+    resolved: "bg-mint",
+    unresolved: "bg-danger-soft",
+};
 
-    .vertical-line {
-        width: 1px;
-        height: 14px;
-        background-color: #ccc;
-        margin: 0 10px;
-        display: inline-block;
-    }
-
-    .view-all-link {
-        display: flex;
-        align-items: center;
-    }
-
-    .view-all-link a {
-        color: blue;
-        font-size: 12px;
-        margin-left: 10px;
-    }
-`;
-
-const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(() => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: "#fff",
-        color: "#212121",
-        fontSize: 12,
-        boxShadow: "0 2px 8px 0 rgba(0,0,0,0.25)",
-        padding: "10px",
-        lineHeight: "16px",
-        letterSpacing: "0.5px",
-    },
-}));
+const CommentStat = ({
+    tone,
+    count,
+    label,
+    side,
+    onClick,
+}: {
+    tone: keyof typeof bubbleTone;
+    count: number;
+    label: string;
+    side: boolean;
+    onClick: () => void;
+}) => (
+    <li className="group inline-flex min-w-[46px] flex-col items-center rounded-md p-2 transition-colors hover:bg-blue-soft max-sm:px-1.5">
+        <button
+            type="button"
+            onClick={onClick}
+            aria-label={`${label} comments`}
+            className={cn(
+                "inline-flex items-center justify-center rounded-full font-bold text-ink",
+                side ? "size-[45px] text-xs font-normal" : "size-12 text-base font-semibold",
+                bubbleTone[tone]
+            )}
+        >
+            {count}
+        </button>
+        <span className="mt-3 text-xs text-muted group-hover:font-medium">{label}</span>
+    </li>
+);
 
 export const Cards = ({
     item,
@@ -311,6 +84,7 @@ export const Cards = ({
     const [anchorEl, setAnchorEl] = useState<HTMLElement>();
     const [projectTitle, setProjectTitle] = useState(decodeURIComponent(filterType));
     const isMenuOpen = Boolean(anchorEl);
+    const side = usedIn === "sideDrawer";
     const items: ActionMenuItemType[] = [
         {
             label: "Share",
@@ -318,14 +92,14 @@ export const Cards = ({
                 onShareProject();
                 setAnchorEl(undefined);
             },
-            icon: <ShareIcon fontSize="small" />,
+            icon: <Share2 className="size-4" />,
         },
         {
             label: "Download",
             onClick: () => {
                 if (allComments) handleDownloadExcel();
             },
-            icon: <FileDownloadOutlinedIcon fontSize="small" />,
+            icon: <Download className="size-4" />,
             disabled: allComments === 0,
         },
         {
@@ -334,18 +108,15 @@ export const Cards = ({
                 onDeleteProject();
                 setAnchorEl(undefined);
             },
-            icon: <DeleteIcon fontSize="small" />,
+            icon: <Trash2 className="size-4" />,
         },
     ];
     const { updateProject } = useProjectMutations();
-    const { mutate: mutateUpdateProject, isLoading: isUpdatingTitle } = updateProject;
+    const { mutateAsync: mutateUpdateProject, isPending: isUpdatingTitle } = updateProject;
     const handleUpdateTitle = async (value: string) => {
         try {
             setProjectTitle(value);
-            await mutateUpdateProject({
-                name: value,
-                projectId: item.projectId,
-            });
+            await mutateUpdateProject({ name: value, projectId: item.projectId });
             return true;
         } catch (err) {
             return false;
@@ -357,270 +128,93 @@ export const Cards = ({
         openLink({ url, target: "_blank" });
     };
 
+    const typeIcon = (
+        <EcTooltip title={editorType === "figma" ? "Design file" : "FigJam board"} arrow placement="top">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={(editorType === "figma" ? figmaIcon : figJamIcon).src} alt="Figma" className="mr-2.5 size-5" />
+        </EcTooltip>
+    );
+
     return (
-        <CardsStyled>
-            <Card className="card-wrap">
-                <CardContent component="div" style={{ paddingBottom: "10px" }}>
-                    <Box
-                        className="card-header"
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Box
-                            className="card-header-left"
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                        >
-                            {usedIn === "sideDrawer" && (
-                                <EcTooltip
-                                    title={editorType === "figma" ? "Design file" : "FigJam board"}
-                                    arrow
-                                    placement="top"
-                                >
-                                    <img
-                                        src={editorType === "figma" ? figmaIcon : figJamIcon}
-                                        alt="Figma"
-                                        style={{
-                                            marginRight: "10px",
-                                            height: "20px",
-                                            width: "20px",
-                                        }}
-                                    />
-                                </EcTooltip>
-                            )}
-                            {usedIn === "projectList" && (
-                                <EcTooltip
-                                    title={editorType === "figma" ? "Design file" : "FigJam board"}
-                                    arrow
-                                    placement="top"
-                                >
-                                    <img
-                                        src={editorType === "figma" ? figmaIcon : figJamIcon}
-                                        alt="Figma"
-                                        style={{
-                                            marginRight: "10px",
-                                            height: "20px",
-                                            width: "20px",
-                                        }}
-                                    />
-                                </EcTooltip>
-                            )}
-
-                            {usedIn === "projectList" ? (
-                                <EcEditMode
-                                    placeholder="Enter project title"
-                                    title={projectTitle}
-                                    onSubmit={handleUpdateTitle}
-                                    name="project"
-                                    showTooltip
-                                    isLoading={isUpdatingTitle}
-                                />
-                            ) : (
-                                <LightTooltip title={projectTitle} placement="top" arrow>
-                                    <Typography variant="h6">{projectTitle}</Typography>
-                                </LightTooltip>
-                            )}
-                        </Box>
-                        {usedIn === "projectList" && (
-                            <>
-                                {isFavorite ? (
-                                    <EcTooltip title="Remove From Favourite" placement="top" arrow>
-                                        <IconButton
-                                            sx={{
-                                                padding: "4px",
-                                            }}
-                                            onClick={handleMarkAsFavourite}
-                                        >
-                                            <StarIcon color="primary" />
-                                        </IconButton>
-                                    </EcTooltip>
-                                ) : (
-                                    <EcTooltip title="Add To Favourite" placement="top" arrow>
-                                        <IconButton
-                                            sx={{
-                                                padding: "4px",
-                                            }}
-                                            onClick={handleMarkAsFavourite}
-                                        >
-                                            <StarOutlineIcon />
-                                        </IconButton>
-                                    </EcTooltip>
-                                )}
-                                <Box
-                                    className="card-header-right"
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "flex-end",
-                                        maxWidth: "1.5rem",
-                                    }}
-                                >
-                                    <IconButton
-                                        component="a"
-                                        aria-label="expand-feature"
-                                        style={isMenuOpen ? { color: "#2979ff" } : {}}
-                                        sx={{
-                                            padding: "0px",
-                                        }}
-                                        onClick={(event: React.MouseEvent<HTMLElement>) =>
-                                            setAnchorEl(event.currentTarget)
-                                        }
-                                    >
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                    <EcActionMenu
-                                        open={isMenuOpen}
-                                        anchorEl={anchorEl}
-                                        items={items}
-                                        onClose={() => setAnchorEl(undefined)}
-                                    />
-                                </Box>
-                            </>
+        <Card className="inline-flex">
+            <div className="p-4 pb-2.5">
+                <div className="flex items-center justify-between">
+                    <div className="flex max-w-[calc(100%-80px)] grow items-center [&_form]:w-full">
+                        {(usedIn === "sideDrawer" || usedIn === "projectList") && typeIcon}
+                        {usedIn === "projectList" ? (
+                            <EcEditMode
+                                placeholder="Enter project title"
+                                title={projectTitle}
+                                onSubmit={handleUpdateTitle}
+                                name="project"
+                                showTooltip
+                                isLoading={isUpdatingTitle}
+                            />
+                        ) : (
+                            <Tooltip title={projectTitle} placement="top">
+                                <h6 className="truncate text-base leading-6 font-medium text-navy max-sm:max-w-[134px]">{projectTitle}</h6>
+                            </Tooltip>
                         )}
-
-                        {usedIn === "sideDrawer" && (
-                            <Box
-                                className="card-header-right"
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "flex-end",
-                                    flex: "0 0 50px",
-                                }}
-                            >
-                                <CloseIcon cursor="pointer" onClick={handleCardClose} />
-                            </Box>
-                        )}
-                    </Box>
-                    <Typography sx={{ mb: 3 }} className="dateUpdate" color="text.secondary">
-                        Last updated on {moment(new Date(createdAt)).format("ll")}
-                    </Typography>
-                    <Typography variant="body2">Comments</Typography>
-                    <ul className="comment-wrap">
-                        <li>
-                            <Box
-                                className={`all-comment comment-list${
-                                    usedIn === "sideDrawer" ? "-side" : ""
-                                }`}
-                                onClick={openAllComments}
-                            >
-                                <span className="comment-list-number">{allComments}</span>
-                            </Box>
-                            <span className="comment-list-text">All</span>
-                        </li>
-                        <li>
-                            <Box
-                                className={`new-comment comment-list${
-                                    usedIn === "sideDrawer" ? "-side" : ""
-                                }`}
-                                onClick={openUnreadComments}
-                            >
-                                <span className="comment-list-number">{newComments}</span>
-                            </Box>
-
-                            <span className="comment-list-text">Unread</span>
-                        </li>
-                        <li>
-                            <Box
-                                className={`my-comment comment-list${
-                                    usedIn === "sideDrawer" ? "-side" : ""
-                                }`}
-                                onClick={openOwnComments}
-                            >
-                                <span className="comment-list-number">{myComments}</span>
-                            </Box>
-
-                            <span className="comment-list-text">My</span>
-                        </li>
-                        <li>
-                            <Box
-                                className={`resolved-comment comment-list${
-                                    usedIn === "sideDrawer" ? "-side" : ""
-                                }`}
-                                onClick={openResolvedComments}
-                            >
-                                <span className="comment-list-number">{resolvedComments}</span>
-                            </Box>
-
-                            <span className="comment-list-text">Resolved</span>
-                        </li>
-                        <li>
-                            <Box
-                                className={`unresolved-comment comment-list${
-                                    usedIn === "sideDrawer" ? "-side" : ""
-                                }`}
-                                onClick={openUnresolvedComments}
-                            >
-                                <span className="comment-list-number">{unresolvedComments}</span>
-                            </Box>
-
-                            <span className="comment-list-text">Unresolved</span>
-                        </li>
-                    </ul>
-                    {usedIn === "projectList" && <div className="line-divider" />}
-
+                    </div>
                     {usedIn === "projectList" && (
-                        <div className="associated-prototypes" style={{ whiteSpace: "nowrap" }}>
-                            <Link
-                                style={{
-                                    cursor: "pointer",
-                                    textDecoration: "none",
-                                    display: "flex",
-                                    alignItems: "center",
-                                }}
-                                onClick={
-                                    item.editorType === "figma"
-                                        ? handleViewPrototypeLink
-                                        : handleViewFigjamLink
-                                }
-                            >
-                                <PlayArrowRoundedIcon
-                                    style={{
-                                        color: "var(--Blue-60, #2979FF)",
-                                    }}
-                                />
-                                <Typography
-                                    sx={{
-                                        color: "var(--Blue-60, #2979FF)",
-                                        fontFamily: "Roboto",
-                                        fontSize: "14px",
-                                        fontStyle: "normal",
-                                        fontWeight: 500,
-                                        lineHeight: "21px",
-                                        letterSpacing: "0.035px",
-                                        textDecoration: "underline",
-                                    }}
+                        <>
+                            <EcTooltip title={isFavorite ? "Remove From Favourite" : "Add To Favourite"} placement="top" arrow>
+                                <IconButton size="small" aria-label="favourite" onClick={handleMarkAsFavourite}>
+                                    <Star className={cn("size-[22px]", isFavorite && "fill-yellow text-ink")} />
+                                </IconButton>
+                            </EcTooltip>
+                            <div className="flex max-w-6 items-center justify-end">
+                                <IconButton
+                                    size="small"
+                                    aria-label="expand-feature"
+                                    className={cn("size-6", isMenuOpen && "text-blue-ink")}
+                                    onClick={(event) => setAnchorEl(event.currentTarget)}
                                 >
-                                    {item.editorType === "figma"
-                                        ? "View Prototypes"
-                                        : "View FigJam"}
-                                </Typography>
-                                {item.editorType === "figma" && (
-                                    <Typography
-                                        sx={{
-                                            color: "var(--Blue-60, #2979FF)",
-                                            fontFamily: "Roboto",
-                                            fontSize: "14px",
-                                            fontStyle: "normal",
-                                            fontWeight: 500,
-                                            lineHeight: "21px",
-                                            letterSpacing: "0.035px",
-                                            paddingLeft: "4px",
-                                        }}
-                                    >
-                                        ({prototypeCount})
-                                    </Typography>
-                                )}
-                            </Link>
+                                    <MoreVertical className="size-5" />
+                                </IconButton>
+                                <EcActionMenu
+                                    open={isMenuOpen}
+                                    anchorEl={anchorEl}
+                                    items={items}
+                                    onClose={() => setAnchorEl(undefined)}
+                                />
+                            </div>
+                        </>
+                    )}
+                    {side && (
+                        <div className="flex flex-[0_0_50px] items-center justify-end">
+                            <button type="button" aria-label="close" onClick={handleCardClose}>
+                                <X className="size-5" />
+                            </button>
                         </div>
                     )}
-                </CardContent>
-            </Card>
-        </CardsStyled>
+                </div>
+                <p className="mb-6 text-xs leading-4 text-muted">Last updated on {format(new Date(createdAt), "MMM d, yyyy")}</p>
+                <p className="mb-1.5 text-xs text-muted">Comments</p>
+                <ul className="m-0 flex justify-between p-0">
+                    <CommentStat tone="all" label="All" count={allComments} side={side} onClick={openAllComments} />
+                    <CommentStat tone="new" label="Unread" count={newComments} side={side} onClick={openUnreadComments} />
+                    <CommentStat tone="my" label="My" count={myComments} side={side} onClick={openOwnComments} />
+                    <CommentStat tone="resolved" label="Resolved" count={resolvedComments} side={side} onClick={openResolvedComments} />
+                    <CommentStat tone="unresolved" label="Unresolved" count={unresolvedComments} side={side} onClick={openUnresolvedComments} />
+                </ul>
+                {usedIn === "projectList" && (
+                    <>
+                        <hr className="mt-6 border-0 border-t-2 border-dashed border-line" />
+                        <div className="mt-4 flex items-start whitespace-nowrap">
+                            <button
+                                type="button"
+                                className="flex items-center text-sm font-medium text-blue-ink"
+                                onClick={item.editorType === "figma" ? handleViewPrototypeLink : handleViewFigjamLink}
+                            >
+                                <Play className="size-5" />
+                                <span className="underline">{item.editorType === "figma" ? "View Prototypes" : "View FigJam"}</span>
+                                {item.editorType === "figma" && <span className="pl-1">({prototypeCount})</span>}
+                            </button>
+                        </div>
+                    </>
+                )}
+            </div>
+        </Card>
     );
 };

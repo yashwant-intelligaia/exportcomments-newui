@@ -1,7 +1,7 @@
 "use client";
 
 import { AxiosError } from "axios";
-import { get } from "lodash";
+import { get } from "../utils/object";
 import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

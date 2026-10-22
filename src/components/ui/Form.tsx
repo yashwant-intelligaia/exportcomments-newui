@@ -56,13 +56,14 @@ export const Checkbox = ({
     label,
     disabled,
     className,
+    ...rest
 }: {
     checked?: boolean;
     onChange?: (checked: boolean) => void;
     label?: ReactNode;
     disabled?: boolean;
     className?: string;
-}) => (
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "checked" | "disabled" | "className">) => (
     <label className={cn("inline-flex cursor-pointer items-center gap-2 text-sm text-ink", disabled && "cursor-not-allowed opacity-50", className)}>
         <input
             type="checkbox"
@@ -70,6 +71,7 @@ export const Checkbox = ({
             disabled={disabled}
             onChange={(e) => onChange?.(e.target.checked)}
             className="size-4 rounded-[4px] border-ink accent-ink"
+            {...rest}
         />
         {label}
     </label>

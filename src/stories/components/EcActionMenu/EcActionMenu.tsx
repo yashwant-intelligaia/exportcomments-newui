@@ -1,10 +1,6 @@
 "use client";
 
-import { ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { PopoverOrigin } from "@mui/material/Popover";
-import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-
+import { Menu, MenuItem } from "@/components/ui/Popover";
 import { ActionMenuItemType } from "../../../types";
 import { uniqueKey } from "../../../utils";
 import { EcTooltip } from "../EcTooltip";
@@ -13,78 +9,31 @@ interface EcActionMenuPropsType {
     open: boolean;
     onClose?: () => void;
     anchorEl?: HTMLElement;
-    anchorOrigin?: PopoverOrigin;
-    transformOrigin?: PopoverOrigin;
+    /** Kept for call-site compatibility; the menu opens beside its anchor. */
+    anchorOrigin?: unknown;
+    transformOrigin?: unknown;
     items?: ActionMenuItemType[];
     closeOnClickOutside?: boolean;
 }
 
-const StyledMenu = styled((props: EcActionMenuPropsType) => <Menu {...props} />)(() => ({
-    "& .MuiPaper-root": {
-        padding: "8px 0",
-    },
-}));
-
-const EcActionMenu = (props: EcActionMenuPropsType) => {
-    const { open, anchorEl, anchorOrigin, transformOrigin, items, closeOnClickOutside, onClose } =
-        props;
-    return (
-        <StyledMenu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={closeOnClickOutside ? onClose : undefined}
-            transformOrigin={transformOrigin}
-            anchorOrigin={anchorOrigin}
-        >
-            {items &&
-                items.map(({ label, onClick, icon, disabled, tooltipTitle }, index) => {
-                    if (tooltipTitle) {
-                        return (
-                            <EcTooltip
-                                key={uniqueKey(index)}
-                                title={tooltipTitle}
-                                arrow
-                                placement="right-start"
-                                titleFontWeight="normal"
-                            >
-                                <MenuItem
-                                    onClick={disabled ? undefined : onClick}
-                                    disabled={disabled}
-                                    sx={{
-                                        "&.Mui-disabled": {
-                                            pointerEvents: "all",
-                                        },
-                                    }}
-                                >
-                                    {icon && <ListItemIcon>{icon}</ListItemIcon>}
-                                    <Typography variant="body2">{label}</Typography>
-                                </MenuItem>
-                            </EcTooltip>
-                        );
-                    }
-                    return (
-                        <MenuItem key={uniqueKey(index)} onClick={onClick} disabled={disabled}>
-                            {icon && <ListItemIcon>{icon}</ListItemIcon>}
-                            <Typography variant="body2">{label}</Typography>
-                        </MenuItem>
-                    );
-                })}
-        </StyledMenu>
-    );
-};
-
-EcActionMenu.defaultProps = {
-    anchorEl: undefined,
-    anchorOrigin: {
-        vertical: "center",
-        horizontal: "right",
-    },
-    transformOrigin: {
-        vertical: "top",
-        horizontal: "left",
-    },
-    items: [],
-    closeOnClickOutside: true,
-};
+const EcActionMenu = ({ open, anchorEl, items = [], closeOnClickOutside = true, onClose }: EcActionMenuPropsType) => (
+    <Menu open={open} anchorEl={anchorEl ?? null} onClose={closeOnClickOutside && onClose ? onClose : () => undefined} placement="right-start">
+        {items.map(({ label, onClick, icon, disabled, tooltipTitle }, index) => {
+            const item = (
+                <MenuItem key={uniqueKey(index)} onClick={disabled ? undefined : onClick} disabled={disabled}>
+                    {icon && <span className="flex size-5 items-center">{icon}</span>}
+                    <span className="text-sm">{label}</span>
+                </MenuItem>
+            );
+            return tooltipTitle ? (
+                <EcTooltip key={uniqueKey(index)} title={tooltipTitle} placement="right-start" titleFontWeight="normal">
+                    {item}
+                </EcTooltip>
+            ) : (
+                item
+            );
+        })}
+    </Menu>
+);
 
 export { EcActionMenu };

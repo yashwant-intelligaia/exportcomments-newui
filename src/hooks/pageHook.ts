@@ -1,6 +1,6 @@
 "use client";
 
-import { get } from "lodash";
+import { get } from "../utils/object";
 import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { debounce } from "lodash";
+import { debounce } from "../utils/object";
 import { useEffect, useMemo, useRef } from "react";
 
 const useDebounce = (callback: any, time?: number) => {

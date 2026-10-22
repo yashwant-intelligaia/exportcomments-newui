@@ -2,7 +2,7 @@
 
 // TODO: remove this HOC once ToasterContext implemented at all places.
 // We need to use EcSnackbar component in future
-import { AlertColor } from "@mui/material";
+import type { Severity as AlertColor } from "@/components/ui/Snackbar";
 import { useState } from "react";
 
 import { SnackBar } from "../stories/components/snackbar/SnackBar";

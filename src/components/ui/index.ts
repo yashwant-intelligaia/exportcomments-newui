@@ -8,3 +8,5 @@ export * from "./Popover";
 export * from "./Snackbar";
 export * from "./Spinner";
 export * from "./Tooltip";
+export * from "./SvgIcon";
+export * from "./BrandIcons";

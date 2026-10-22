@@ -1,10 +1,7 @@
 "use client";
 
-import ExcelJS from "exceljs";
-import saveAs from "file-saver";
-import { cloneDeep, sortBy as sort } from "lodash";
-import moment from "moment";
-import { SortColumn } from "react-data-grid";
+import { cloneDeep, downloadBlob } from "./object";
+import { format } from "date-fns";
 
 import { APP_CONSTANT } from "../constants/AppConstant";
 import {
@@ -21,7 +18,7 @@ import {
 } from "../types";
 import { EMOJIS_MAP } from "./emojis";
 
-const exportCommentsToExcel = (
+const exportCommentsToExcel = async (
     originalComments: ExportCommentRowType[],
     filterType: CommentFilterType,
     user: IUserToken,
@@ -163,6 +160,8 @@ const exportCommentsToExcel = (
     }
 
     // Export to xlsx using exceljs
+    /* exceljs is large; load it only when an export is requested. */
+    const ExcelJS = (await import("exceljs")).default;
     const ExcelJSWorkbook = new ExcelJS.Workbook();
     const filename =
         fileInfoData.createdAt === undefined || fileInfoData.createdAt === null
@@ -265,10 +264,10 @@ const exportCommentsToExcel = (
                 }
             } else if (key === "resolvedAt") {
                 if (!object[key]) valueArray.push("");
-                else valueArray.push(moment(object[key]).format("MM/D/YYYY"));
+                else valueArray.push(format(new Date(object[key]), "MM/d/yyyy"));
             } else if (key === "createdAt") {
                 if (!object[key]) valueArray.push("");
-                else valueArray.push(moment(object[key]).format("MM/D/YYYY"));
+                else valueArray.push(format(new Date(object[key]), "MM/d/yyyy"));
             } else if (key === "unreadComment") {
                 isUnreadComment = !!object[key];
                 valueArray.push(isUnreadComment ? "Y" : "");
@@ -383,7 +382,7 @@ const exportCommentsToExcel = (
 
     worksheet.views = [{ state: "frozen", ySplit: 2, activeCell: "A3" }];
     ExcelJSWorkbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(new Blob([buffer], { type: "application/octet-stream" }), `${filename}.xlsx`);
+        downloadBlob(new Blob([buffer], { type: "application/octet-stream" }), `${filename}.xlsx`);
     });
 };
 
@@ -430,7 +429,7 @@ function toggleSubRow(rows: ITreeRowType[], id: string): ITreeRowType[] {
 
 const sortingTreeData = (
     rows: ITreeRowType[],
-    sortColumn: readonly SortColumn[],
+    sortColumn: readonly { columnKey: string; direction: "ASC" | "DESC" }[],
     expandId: any[],
     filterText: string
 ) => {
@@ -662,7 +661,7 @@ const processCommentsData = (
                     new Date(data.fileInfo.lastViewedAt) < new Date(comment.createdAt);
         }
     });
-    comments = sort(comments, [(comment) => comment.createdAt]);
+    comments = [...comments].sort((a, b) => (a.createdAt > b.createdAt ? 1 : a.createdAt < b.createdAt ? -1 : 0));
 
     // Group children by parentId once (O(n)) instead of filtering the whole
     // list for every parent comment (O(n^2)).

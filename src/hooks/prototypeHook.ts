@@ -1,6 +1,6 @@
 "use client";
 
-import { get } from "lodash";
+import { get } from "../utils/object";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";

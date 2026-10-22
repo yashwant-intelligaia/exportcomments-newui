@@ -17,7 +17,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { get } from "lodash";
+import { get } from "../../utils/object";
 import { useContext, useEffect, useState } from "react";
 
 import { ToasterContext } from "../../contexts";

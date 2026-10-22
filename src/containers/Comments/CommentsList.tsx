@@ -1,7 +1,7 @@
 "use client";
 
 import { Typography } from "@mui/material";
-import { isEmpty } from "lodash";
+import { isEmpty } from "../../utils/object";
 import { useContext, useEffect, useMemo, useState } from "react";
 import DataGrid, { Column, FormatterProps, SortColumn } from "react-data-grid";
 import styled from "styled-components";

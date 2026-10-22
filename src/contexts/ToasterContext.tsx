@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertColor } from "@mui/material";
+import type { Severity as AlertColor } from "@/components/ui/Snackbar";
 import { createContext, useState } from "react";
 
 import { EcSnackbar } from "../stories/components";

@@ -1,4 +1,4 @@
-import { ButtonProps } from "@mui/material";
+import type { ButtonProps } from "../components/ui/Button";
 
 interface ActionMenuItemType {
     label: string;

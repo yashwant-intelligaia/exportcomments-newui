@@ -46,3 +46,27 @@ export const Divider = ({ className }: { className?: string }) => <hr className=
 export const Card = ({ className, ...rest }: HTMLAttributes<HTMLDivElement>) => (
     <div className={cn("rounded-lg bg-surface shadow-card", className)} {...rest} />
 );
+
+/** Overlapping avatars; extra children beyond `max` collapse to a "+N" bubble. */
+export const AvatarGroup = ({ max = 4, size = 24, children }: { max?: number; size?: number; children: ReactNode }) => {
+    const items = Array.isArray(children) ? children : [children];
+    const shown = items.slice(0, max);
+    const extra = items.length - shown.length;
+    return (
+        <div className="inline-flex -space-x-2">
+            {shown.map((child, i) => (
+                <span key={i} className="inline-flex rounded-full ring-2 ring-surface">
+                    {child}
+                </span>
+            ))}
+            {extra > 0 && (
+                <span
+                    style={{ width: size, height: size, fontSize: size * 0.4 }}
+                    className="inline-flex items-center justify-center rounded-full bg-surface-sunk text-ink ring-2 ring-surface"
+                >
+                    +{extra}
+                </span>
+            )}
+        </div>
+    );
+};
