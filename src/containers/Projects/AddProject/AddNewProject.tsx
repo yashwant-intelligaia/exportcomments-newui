@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import { TextField } from "@/components/ui/Form";
+
 import { useContext, useEffect, useState } from "react";
 
 import { AddProjectContext } from "../../../contexts";
@@ -24,7 +25,7 @@ const AddNewProject = ({ onClose }: AddNewProjectPropsType) => {
     const {
         mutate: mutateProjectDetails,
         data: projectDetailsResponse,
-        isLoading: isLoadingProjectDetails,
+        isPending: isLoadingProjectDetails,
         isSuccess: isProjectDetailsFetched,
         isError: isFetchProjectDetailsError,
         error: projectDetailsError,
@@ -139,103 +140,51 @@ const AddNewProject = ({ onClose }: AddNewProjectPropsType) => {
     }, [isProjectDetailsFetched]);
 
     return (
-        <>
-            <Box
-                sx={{
-                    width: {
-                        xl: "400px",
-                        lg: "400px",
-                        md: "400px",
-                        sm: "400px",
-                        xs: "360px",
-                    },
-                }}
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-                height="100%"
-            >
-                <Box my={1} sx={{ flexShrink: "1" }}>
-                    <TextField
-                        label="Add Figma File URL"
-                        variant="standard"
-                        sx={{ width: "100%" }}
-                        onChange={(event) => handleAddProjectUrl(event.target.value)}
-                        value={projectUrl}
-                        id="NB-add-figma-file-url"
-                        error={!!urlError}
-                        helperText={urlError}
-                        disabled={isLoadingProjectDetails}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <FigmaIcon style={{ marginRight: 8 }} />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        overflowX: "visible",
-                        overflowY: "auto",
-                        height: "100%",
-                        maxHeight: "100%",
-                        flexDirection: "column",
-                    }}
-                >
-                    <Box>
-                        {isLoadingProjectDetails && <ProjectLoader />}
-                        {projectData && projectData.length > 0 && (
-                            <>
-                                <Box mt={1} fontSize={16} fontWeight={700} mb={2}>
-                                    <Typography variant="inherit">Added Projects</Typography>
-                                </Box>
-                                <Grid
-                                    container
-                                    rowSpacing={3}
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    paddingLeft={0.6}
-                                >
-                                    {projectData.map((file, index) => (
-                                        <Grid
-                                            width="100%"
-                                            item
-                                            xs={12}
-                                            sx={{
-                                                paddingBottom: "0.25rem",
-                                                ".card-wrap": {
-                                                    width: "97%",
-                                                    "&>div": {
-                                                        width: "100%",
-                                                    },
-                                                },
-                                            }}
-                                            key={`add-project-card-${uniqueKey(file.projectId)}`}
-                                        >
-                                            <Cards
-                                                filterType={file?.fileName}
-                                                editorType={file?.editorType}
-                                                createdAt="Last updated on Dec 14, 2022"
-                                                allComments={file.allComments}
-                                                myComments={file.myComments}
-                                                newComments={file.newComments}
-                                                resolvedComments={file.resolvedComments}
-                                                unresolvedComments={file.unresolvedComments}
-                                                usedIn="sideDrawer"
-                                                handleCardClose={() => handleRemoveProject(index)}
-                                            />
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            </>
-                        )}
-                    </Box>
-                </Box>
-            </Box>
-        </>
+        <div className="flex h-full w-[360px] flex-col justify-between sm:w-[400px]">
+            <div className="my-2 shrink">
+                <TextField
+                    id="NB-add-figma-file-url"
+                    label="Add Figma File URL"
+                    onChange={(event) => handleAddProjectUrl(event.target.value)}
+                    value={projectUrl}
+                    error={!!urlError}
+                    helperText={urlError}
+                    disabled={isLoadingProjectDetails}
+                    startAdornment={<FigmaIcon fontSize="small" />}
+                />
+            </div>
+            <div className="flex h-full max-h-full flex-col overflow-y-auto overflow-x-visible">
+                <div>
+                    {isLoadingProjectDetails && <ProjectLoader />}
+                    {projectData && projectData.length > 0 && (
+                        <>
+                            <p className="mt-2 mb-4 text-base font-bold">Added Projects</p>
+                            <div className="flex flex-col items-center justify-center gap-6 pl-1">
+                                {projectData.map((file, index) => (
+                                    <div
+                                        key={`add-project-card-${uniqueKey(file.projectId)}`}
+                                        className="w-full pb-1 [&>div]:w-[97%] [&>div>div]:w-full"
+                                    >
+                                        <Cards
+                                            filterType={file?.fileName}
+                                            editorType={file?.editorType}
+                                            createdAt="Last updated on Dec 14, 2022"
+                                            allComments={file.allComments}
+                                            myComments={file.myComments}
+                                            newComments={file.newComments}
+                                            resolvedComments={file.resolvedComments}
+                                            unresolvedComments={file.unresolvedComments}
+                                            usedIn="sideDrawer"
+                                            handleCardClose={() => handleRemoveProject(index)}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        </div>
     );
 };
 

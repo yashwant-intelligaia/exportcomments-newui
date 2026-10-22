@@ -1,8 +1,7 @@
 "use client";
 
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import { ChangeEventHandler } from "react";
-import styled from "styled-components";
+import { Search } from "lucide-react";
+import { ChangeEventHandler, useEffect, useRef } from "react";
 
 interface ProjectSearchType {
     placeholder: string;
@@ -10,93 +9,25 @@ interface ProjectSearchType {
     value: string;
 }
 
-const SearchWrap = styled.div`
-    position: relative;
-    display: flex;
-    align-items: center;
-    min-height: 50px;
-    &.w-287 {
-        width: 400px;
-        @media (max-width: 600px) {
-            width: 100%;
-        }
-    }
-    .search-inline-ic {
-        position: absolute;
-        z-index: 1;
-        top: 50%;
-        margin-top: -11px;
-        color: #616161;
-    }
-    &.icon-left {
-        .search-inline-ic {
-            left: 0;
-        }
-        .search-input {
-            padding-left: 24px;
-        }
-    }
+export const ProjectSearch = ({ placeholder, searchChange, value }: ProjectSearchType) => {
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    &.icon-right {
-        .search-inline-ic {
-            right: 12px;
-        }
-        .search-input {
-            padding-right: 44px;
-        }
-    }
-    .search-input {
-        border: none;
-        background-color: white;
-        border: 1px solid #616161;
-        border-radius: 10px;
-        box-shadow: none;
-        padding: 8px 12px;
-        line-height: 1;
-        position: absolute;
-        left: 0;
-        width: 100%;
-        height: 48px;
-        box-sizing: border-box;
-        font-size: 18px;
+    useEffect(() => {
+        inputRef.current?.focus();
+    });
 
-        &:hover {
-            border: 1px solid #616161;
-        }
-        &:active,
-        &:focus {
-            border-color: grey;
-        }
-
-        &::placeholder {
-            color: #b0b0b0;
-            font-size: 20px;
-        }
-        &::-webkit-input-placeholder {
-            color: #9e9e9e;
-        }
-        &:-ms-input-placeholder {
-            color: #9e9e9e;
-        }
-    }
-`;
-
-export const ProjectSearch = (props: ProjectSearchType) => {
-    const { placeholder, searchChange, value } = props;
     return (
-        <SearchWrap className="icon-right w-287">
-            {" "}
+        <div className="relative flex min-h-[50px] w-full items-center sm:w-[400px]">
             <input
-                ref={(input) => {
-                    if (input) input.focus();
-                }}
+                ref={inputRef}
                 value={value}
                 onChange={searchChange}
-                className="search-input"
+                className="h-12 w-full rounded-md border border-ink/60 bg-surface py-2 pr-11 pl-3 text-lg text-ink placeholder:text-muted hover:border-ink focus:border-ink focus:ring-2 focus:ring-ink focus:outline-none"
                 placeholder={placeholder}
+                aria-label={placeholder}
                 type="text"
             />
-            <SearchRoundedIcon className="search-inline-ic" />
-        </SearchWrap>
+            <Search className="pointer-events-none absolute right-3 size-5 text-muted" />
+        </div>
     );
 };

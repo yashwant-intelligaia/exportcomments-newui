@@ -1,12 +1,12 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
 import { useContext, useEffect } from "react";
 
-// import playtutorial from "../../../assets/play-tutorial.png";
 import { AddProjectContext } from "../../../contexts";
 import { fetchDoNotShowAddProjectInstruction } from "../../../services/AuthService";
 import { ConnectIcon, Downloadplugin, Generatetoken } from "../../../utils";
+
+const STEP_COPY = "Download export comments plug-in from the figma community and run the plug-in";
 
 const AddProjectInstructions = () => {
     const { onChangeStep } = useContext(AddProjectContext);
@@ -17,74 +17,25 @@ const AddProjectInstructions = () => {
         }
     }, []);
 
+    const steps = [
+        { icon: <Downloadplugin className="mr-2 min-w-6" />, title: "Download Export comments plug-in" },
+        { icon: <ConnectIcon className="mr-2 min-w-6" />, title: "Connect your Figma account with Export comments" },
+        { icon: <Generatetoken className="mr-2 min-w-6" />, title: "Generate access token" },
+    ];
+
     return (
-        <Box maxWidth="400px" margin="0rem 0">
-            <Typography variant="h6">Steps to connect your Figma project</Typography>
-            <Box sx={{ my: 3, display: "flex", alignItems: "flex-start" }}>
-                <Downloadplugin style={{ minWidth: "1.5rem", marginRight: "0.5rem" }} />
-                <Box>
-                    <Typography
-                        sx={{
-                            fontFamily: "Roboto",
-                            fontWeight: 500,
-                            fontSize: "18px",
-                            lineHeight: "21px",
-                            letterSpacing: "0.25px",
-                        }}
-                    >
-                        Download Export comments plug-in
-                    </Typography>
-                    <Typography variant="body1">
-                        Download export comments plug-in from the figma community and run the
-                        plug-in
-                    </Typography>
-                </Box>
-            </Box>
-            <Box sx={{ mt: 2, display: "flex", alignItems: "flex-start" }}>
-                <ConnectIcon style={{ minWidth: "1.5rem", marginRight: "0.5rem" }} />
-                <Box>
-                    <Typography
-                        sx={{
-                            fontFamily: "Roboto",
-                            fontWeight: 500,
-                            fontSize: "18px",
-                            lineHeight: "21px",
-                            letterSpacing: "0.25px",
-                        }}
-                    >
-                        Connect your Figma account with Export comments
-                    </Typography>
-                    <Typography variant="body1">
-                        Download export comments plug-in from the figma community and run the
-                        plug-in
-                    </Typography>
-                </Box>
-            </Box>
-            <Box sx={{ mt: 2, display: "flex", alignItems: "flex-start" }}>
-                <Generatetoken style={{ minWidth: "1.5rem", marginRight: "0.5rem" }} />
-                <Box>
-                    <Typography
-                        sx={{
-                            fontFamily: "Roboto",
-                            fontWeight: 500,
-                            fontSize: "18px",
-                            lineHeight: "21px",
-                            letterSpacing: "0.25px",
-                        }}
-                    >
-                        Generate access token
-                    </Typography>
-                    <Typography variant="body1">
-                        Download export comments plug-in from the figma community and run the
-                        plug-in
-                    </Typography>
-                </Box>
-            </Box>
-            {/* TODO: uncomment below code once demo video will be available. */}
-            {/* <Box sx={{ mt: 2 }} display="flex" justifyContent="center">
-                    <img src={playtutorial} alt="icon" style={{ marginRight: 8 }} />
-                </Box> */}
-        </Box>
+        <div className="max-w-[400px]">
+            <h6 className="text-xl font-medium text-ink">Steps to connect your Figma project</h6>
+            {steps.map(({ icon, title }, i) => (
+                <div key={title} className={`flex items-start ${i === 0 ? "my-6" : "mt-4"}`}>
+                    {icon}
+                    <div>
+                        <p className="text-lg leading-[21px] font-medium tracking-[0.25px] text-ink">{title}</p>
+                        <p>{STEP_COPY}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
     );
 };
 

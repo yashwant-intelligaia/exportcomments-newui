@@ -1,9 +1,25 @@
-import { SearchRounded as SearchRoundedIcon } from "@mui/icons-material";
-import { Box, Input, InputAdornment } from "@mui/material";
+"use client";
+
+import { Search } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 
 import { ProjectDetailsContext } from "../../contexts";
 import { useDebounce } from "../../utils";
+
+const SearchField = ({ id, value, onChange }: { id: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => (
+    <div className="flex w-full items-center border-b border-ink/60 focus-within:border-ink">
+        <Search className="mr-2 size-5 shrink-0 text-muted" />
+        <input
+            id={id}
+            value={value}
+            placeholder="Search"
+            aria-label="Search prototypes"
+            autoComplete="off"
+            onChange={onChange}
+            className="w-full bg-transparent py-1.5 text-sm text-ink placeholder:text-muted focus:outline-none"
+        />
+    </div>
+);
 
 export const PrototypesFilter = () => {
     const [value, setValue] = useState("");
@@ -14,97 +30,21 @@ export const PrototypesFilter = () => {
         setSearchInput(searchInputValue);
     }, [searchInputValue]);
 
-    const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value);
-    };
+    const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => setValue(event.target.value);
 
     return (
         <>
-            <Box>
-                <Box
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexWrap: "wrap",
-                        justifyContent: "end",
-                        minWidth: "55%",
-                        maxWidth: "100%",
-                        gap: "0.5rem",
-                    }}
-                    sx={{
-                        marginTop: {
-                            xs: "15px",
-                            sm: "0px",
-                            md: "0px",
-                            lg: "0px",
-                            xl: "-10px",
-                        },
-                        marginBottom: {
-                            xs: "5px",
-                            sm: "0px",
-                            md: "0px",
-                            lg: "0px",
-                            xl: "0px",
-                        },
-                    }}
-                >
-                    <Box
-                        sx={{
-                            width: {
-                                xs: "100%", // 0px - 600px
-                                sm: "320px", // 600px - 960px
-                                md: "330px", // 960px - 1280px
-                            },
-                        }}
-                        display={{
-                            xs: "none",
-                            sm: "block",
-                        }}
-                    >
-                        <Input
-                            value={value}
-                            style={{ width: "100%" }}
-                            id="input-with-icon-adornment"
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <SearchRoundedIcon />
-                                </InputAdornment>
-                            }
-                            autoComplete="off"
-                            placeholder="Search"
-                            onChange={handleInputOnChange}
-                        />
-                    </Box>
-                </Box>
-            </Box>
-
+            <div>
+                <div className="mt-[15px] mb-[5px] flex max-w-full min-w-[55%] flex-wrap items-center justify-end gap-2 sm:my-0 xl:-mt-2.5">
+                    <div className="hidden w-full sm:block sm:w-80 md:w-[330px]">
+                        <SearchField id="input-with-icon-adornment" value={value} onChange={handleInputOnChange} />
+                    </div>
+                </div>
+            </div>
             {/* Search Box for Mobile Screens */}
-            <Box
-                sx={{
-                    width: {
-                        xs: "100%", // 0px - 600px
-                    },
-                }}
-                display={{
-                    xs: "block",
-                    sm: "none",
-                }}
-            >
-                <Input
-                    value={value}
-                    style={{ width: "100%" }}
-                    id="mobile-input-with-icon-adornment"
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <SearchRoundedIcon />
-                        </InputAdornment>
-                    }
-                    placeholder="Search"
-                    autoComplete="off"
-                    onChange={handleInputOnChange}
-                />
-            </Box>
-            {/* Search Box for Mobile Screens Ends */}
+            <div className="block w-full sm:hidden">
+                <SearchField id="mobile-input-with-icon-adornment" value={value} onChange={handleInputOnChange} />
+            </div>
         </>
     );
 };

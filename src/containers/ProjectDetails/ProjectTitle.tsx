@@ -1,10 +1,11 @@
 "use client";
 
-import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
-import { Box, List, ListItemButton, Menu, MenuItem } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import moment from "moment";
+import { format } from "date-fns";
+import { ChevronDown } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
+
+import { cn } from "@/components/ui/cn";
+import { Menu, MenuItem } from "@/components/ui/Popover";
 import { useHistory } from "@/utils/navigation";
 
 import checkCircle from "../../assets/check_circle.svg";
@@ -12,35 +13,18 @@ import figJamIcon from "../../assets/figjamIcon.svg";
 import figmaIcon from "../../assets/figmaIcon.svg";
 import { ProjectDetailsContext } from "../../contexts";
 
-const useStyles: any = makeStyles({
-    selectProject: {
-        margin: "0",
-        padding: "0",
-    },
-});
-
 export const ProjectTitle = () => {
-    const { projectId, projectData, projectList, setSelectedBranch } =
-        useContext(ProjectDetailsContext);
-    const projectMenuOptions = projectList.map(({ projectId: id, fileName }) => ({
-        id,
-        title: fileName,
-    }));
+    const { projectId, projectData, projectList, setSelectedBranch } = useContext(ProjectDetailsContext);
+    const projectMenuOptions = projectList.map(({ projectId: id, fileName }) => ({ id, title: fileName }));
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [openMenu, setOpenMenu] = useState(false);
     const [activeProject, setActiveProject] = useState<number>();
-    const classes: any = useStyles();
     const history = useHistory();
-
-    const handleCloseMenu = () => {
-        setOpenMenu(false);
-        setAnchorEl(null);
-    };
+    const openMenu = Boolean(anchorEl);
 
     const handleSelectProject = (id: number) => {
         setSelectedBranch(undefined);
-        handleCloseMenu();
+        setAnchorEl(null);
         history.push(`/project/${id}/details`);
     };
 
@@ -52,121 +36,49 @@ export const ProjectTitle = () => {
 
     return (
         <>
-            <List style={{ display: "flex", alignItems: "flex-start" }} disablePadding>
+            <div className="flex items-start">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                    src={projectData?.editorType === "figjam" ? figJamIcon : figmaIcon}
+                    src={(projectData?.editorType === "figjam" ? figJamIcon : figmaIcon).src}
                     alt="icon"
-                    style={{
-                        marginRight: "10px",
-                        height: "24px",
-                        width: "24px",
-                    }}
+                    className="mr-2.5 size-6"
                 />
-                <Box display="flex" flexDirection="column" gap={1}>
-                    <ListItemButton
+                <div className="flex flex-col gap-2">
+                    <button
                         id="Select-Project"
+                        type="button"
                         aria-haspopup="listbox"
                         aria-controls="project-menu"
                         aria-label="Project"
-                        aria-expanded={openMenu ? "true" : undefined}
-                        onClick={(event: any) => {
-                            setAnchorEl(event.currentTarget);
-                            setOpenMenu(!openMenu);
-                        }}
-                        className={classes.selectProject}
-                        alignItems="flex-start"
-                        sx={{
-                            background: "none",
-                            "&:hover,&:active,&:focus,&.Mui-focusVisible,&[aria-expanded='true']": {
-                                background: "none",
-                                boxShadow: "none",
-                            },
-                            "&:hover": {
-                                background: "none",
-                                svg: {
-                                    color: "#2979ff",
-                                },
-                            },
-                            "&[aria-expanded='true']": {
-                                svg: {
-                                    transform: "rotate(180deg)",
-                                    color: "#2979ff",
-                                },
-                            },
-                            ".MuiTouchRipple-root": {
-                                display: "none",
-                            },
-                        }}
+                        aria-expanded={openMenu}
+                        onClick={(event) => setAnchorEl(openMenu ? null : event.currentTarget)}
+                        className="group flex items-start text-left"
                     >
-                        <Box display="flex" flexDirection="column" gap={1}>
-                            <h4
-                                className="heading--h4"
-                                style={{
-                                    maxWidth: "300px",
-                                    height: "30px",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                    wordWrap: "break-word",
-                                }}
-                            >
-                                {projectData?.fileName}
-                            </h4>
-                        </Box>
-                        <ExpandMoreIcon />
-                    </ListItemButton>
-                    <Box
-                        sx={{
-                            display: "block",
-                            width: "100%",
-                            fontSize: "14px",
-                            fontWeight: 500,
-                            color: "#616161",
-                            paddingLeft: {
-                                xl: 0,
-                                lg: 0,
-                                md: 0,
-                                sm: "5px",
-                                xs: "5px",
-                            },
-                        }}
-                    >
-                        Last updated on {moment(projectData?.createdAt).format("ll")}
-                    </Box>
-                </Box>
-                {/* <Box className="lastdate">Last updated on {moment(fileInfo?.createdAt).format("ll")}</Box> */}
-            </List>
-            <Menu
-                id="ProjectName"
-                open={openMenu}
-                onClose={() => handleCloseMenu()}
-                anchorEl={anchorEl}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                transformOrigin={{ vertical: "top", horizontal: "left" }}
-            >
+                        <h4 className="m-0 h-[30px] max-w-[300px] truncate font-sans text-xl font-medium tracking-normal text-ink md:text-[26px]">
+                            {projectData?.fileName}
+                        </h4>
+                        <ChevronDown className={cn("mt-1 size-5 transition-transform group-hover:text-blue-ink", openMenu && "rotate-180 text-blue-ink")} />
+                    </button>
+                    <div className="block w-full pl-[5px] text-sm font-medium text-muted md:pl-0">
+                        Last updated on {projectData?.createdAt ? format(new Date(projectData.createdAt), "MMM d, yyyy") : "-"}
+                    </div>
+                </div>
+            </div>
+            <Menu open={openMenu} onClose={() => setAnchorEl(null)} anchorEl={anchorEl} placement="bottom-start">
                 {projectMenuOptions.map(({ id, title }) => (
                     <MenuItem
                         key={`project-menu-option-${id}`}
-                        onClick={() => {
-                            handleSelectProject(id);
-                        }}
+                        onClick={() => handleSelectProject(id)}
                         disabled={activeProject === id}
                         selected={activeProject === id}
                     >
-                        <h4
-                            style={{
-                                margin: "0px 40px 0px 0px",
-                                padding: "0px",
-                                flexGrow: 1,
-                                fontWeight: "normal",
-                                maxWidth: "300px",
-                                whiteSpace: "normal",
-                                wordWrap: "break-word",
-                            }}
-                        >
+                        <h4 className="m-0 mr-10 max-w-[300px] grow font-sans text-base font-normal tracking-normal break-words whitespace-normal">
                             {title}
                         </h4>
-                        {activeProject === id && <img src={checkCircle} alt="checkCircle" />}
+                        {activeProject === id && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={checkCircle.src} alt="checkCircle" />
+                        )}
                     </MenuItem>
                 ))}
             </Menu>

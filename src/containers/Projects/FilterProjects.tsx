@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Button, List, ListItem, ListItemButton, Popover, Typography } from "@mui/material";
+import { Button } from "@/components/ui/Button";
+import { Popover } from "@/components/ui/Popover";
 import { useContext, useEffect, useState } from "react";
 
 import sortIcon from "../../assets/sort-by.svg";
@@ -11,7 +12,7 @@ import { CustomRangeFilter } from "./CustomRangeFilter";
 
 export const FilterProjects = ({ data }: { data?: IUserFile[] }) => {
     const [isOpenCustomRange, setOpenCustomRange] = useState(false);
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const {
         filter,
         setFilter: setFilterCtxValue,
@@ -70,143 +71,48 @@ export const FilterProjects = ({ data }: { data?: IUserFile[] }) => {
             setFilterCtxValue("View All");
         }
     }, []);
-    return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                paddingRight: {
-                    xl: "30px",
-                    lg: "30px",
-                    md: "30px",
-                    sm: "0px",
-                    xs: "0px",
-                },
+    const year = new Date().getFullYear();
+    const options: { value: FilterType; label: string }[] = data?.length
+        ? [
+              { value: "View All", label: "View All" },
+              { value: "This Week", label: "This Week" },
+              { value: "Last 30 Days", label: "Last 30 Days" },
+              { value: "Last 6 Months", label: "Last 6 Months" },
+              { value: "This Year", label: `This Year (${year})` },
+              { value: "Last Year", label: `Last Year (${year - 1})` },
+              { value: "Custom Range", label: "Custom Range" },
+          ]
+        : [{ value: "View All", label: "View All" }];
 
-                marginLeft: "auto",
-            }}
-        >
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: {
-                        xl: "row",
-                        lg: "row",
-                        md: "row",
-                        sm: "column",
-                        xs: "column",
-                    },
-                    alignItems: {
-                        xl: "center",
-                        lg: "center",
-                        md: "center",
-                        sm: "flex-start",
-                        xs: "flex-start",
-                    },
-                }}
-            >
+    return (
+        <div className="ml-auto flex flex-col items-end pr-0 md:pr-[30px]">
+            <div className="flex flex-col items-start md:flex-row md:items-center">
                 <Button
-                    endIcon={<img src={sortIcon} alt="sortIcon" />}
-                    sx={{ textTransform: "none", color: "inherit" }}
+                    variant="text"
                     onClick={handleOpenPopover}
+                    endIcon={
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={sortIcon.src} alt="sortIcon" />
+                    }
                 >
-                    <Typography
-                        sx={{
-                            fontFamily: "Roboto",
-                            fontSize: "1rem",
-                            fontWeight: 500,
-                            lineHeight: "18px",
-                            letterSpacing: "0.0025em",
-                            textAlign: "center",
-                        }}
-                    >
-                        Sort By : {filter || "Select Date Range"}
-                    </Typography>
+                    Sort By : {filter || "Select Date Range"}
                 </Button>
 
                 {!isOpenCustomRange && (
-                    // TODO: Use EcPopover instead
-                    <Popover
-                        open={Boolean(anchorEl)}
-                        anchorEl={anchorEl}
-                        onClose={handleClosePopover}
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                        }}
-                        transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                        }}
-                    >
-                        {data?.length ? (
-                            <List
-                                sx={{
-                                    width: {
-                                        xl: "170px",
-                                        lg: "170px",
-                                        md: "170px",
-                                        sm: "370px",
-                                        xs: "370px",
-                                    },
-                                }}
-                            >
-                                <ListItem disablePadding>
-                                    <ListItemButton onClick={() => handleSelectFilter("View All")}>
-                                        View All
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem disablePadding>
-                                    <ListItemButton onClick={() => handleSelectFilter("This Week")}>
-                                        This Week
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem disablePadding>
-                                    <ListItemButton
-                                        onClick={() => handleSelectFilter("Last 30 Days")}
+                    <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClosePopover}>
+                        <ul className={data?.length ? "w-[170px] py-2 max-md:w-[370px]" : "w-[170px] py-2"}>
+                            {options.map(({ value, label }) => (
+                                <li key={value}>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleSelectFilter(value)}
+                                        className="w-full px-4 py-2 text-left text-sm text-ink hover:bg-surface-sunk"
                                     >
-                                        Last 30 Days
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem disablePadding>
-                                    <ListItemButton
-                                        onClick={() => handleSelectFilter("Last 6 Months")}
-                                    >
-                                        Last 6 Months
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem disablePadding>
-                                    <ListItemButton onClick={() => handleSelectFilter("This Year")}>
-                                        This Year ({new Date().getFullYear()})
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem disablePadding>
-                                    <ListItemButton onClick={() => handleSelectFilter("Last Year")}>
-                                        Last Year ({new Date().getFullYear() - 1})
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem disablePadding>
-                                    <ListItemButton
-                                        onClick={() => handleSelectFilter("Custom Range")}
-                                    >
-                                        Custom Range
-                                    </ListItemButton>
-                                </ListItem>
-                            </List>
-                        ) : (
-                            <List
-                                sx={{
-                                    width: "170px",
-                                }}
-                            >
-                                <ListItem disablePadding>
-                                    <ListItemButton onClick={() => handleSelectFilter("View All")}>
-                                        View All
-                                    </ListItemButton>
-                                </ListItem>
-                            </List>
-                        )}
+                                        {label}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
                     </Popover>
                 )}
                 {isOpenCustomRange && (
@@ -219,7 +125,7 @@ export const FilterProjects = ({ data }: { data?: IUserFile[] }) => {
                         handleClosePopover={handleClosePopover}
                     />
                 )}
-            </Box>
-        </Box>
+            </div>
+        </div>
     );
 };

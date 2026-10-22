@@ -10,3 +10,5 @@ export * from "./Spinner";
 export * from "./Tooltip";
 export * from "./SvgIcon";
 export * from "./BrandIcons";
+export * from "./Combobox";
+export * from "./Segmented";
