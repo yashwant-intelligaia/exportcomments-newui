@@ -15,7 +15,7 @@ export const InvitePageFlow = () => {
     const {
         mutate: mutateVerifyFlow,
         data,
-        isLoading: isVerifyFlowLoading,
+        isPending: isVerifyFlowLoading,
         isError,
     } = verifyFeedbackVersion;
 

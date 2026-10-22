@@ -86,7 +86,7 @@ export const ConsentPreview = () => (
                     of connecting to the Site, such as operating system, Internet service provider
                     utilized, and mobile network information. See the section below entitled “How
                     does Export Comments collect, use and share NPI?” for more information.
-                </Typography>
+                </p>
             </div>
         </div>
         <div className="mb-5">

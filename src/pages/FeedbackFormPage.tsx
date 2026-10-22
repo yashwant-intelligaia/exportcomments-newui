@@ -2,11 +2,11 @@
 
 import "../assets/css/defaultV2.css";
 
-import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useLocation } from "@/utils/navigation";
 import { Model, SurveyModel } from "survey-core";
 import { Survey } from "survey-react-ui";
+
+import { useLocation } from "@/utils/navigation";
 
 import { feedbackJson, themeJson } from "../containers/Feedback";
 import { useFeedbackMutation } from "../hooks";
@@ -85,8 +85,8 @@ export const FeedbackFormPage = () => {
     }, [email, name]);
 
     return (
-        <Box style={{ height: "calc(100vh - 60px)" }}>
+        <div className="h-[calc(100vh-60px)]">
             <Survey model={survey} />
-        </Box>
+        </div>
     );
 };

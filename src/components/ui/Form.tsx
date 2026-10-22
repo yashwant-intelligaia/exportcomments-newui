@@ -39,7 +39,13 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
             >
                 {startAdornment && <span className="pl-3 text-muted">{startAdornment}</span>}
                 {multiline ? (
-                    <textarea id={id} rows={rows} className={cn(base, "resize-y")} {...(rest as unknown as TextareaHTMLAttributes<HTMLTextAreaElement>)} />
+                    <textarea
+                        id={id}
+                        ref={ref as unknown as React.Ref<HTMLTextAreaElement>}
+                        rows={rows}
+                        className={cn(base, "resize-y")}
+                        {...(rest as unknown as TextareaHTMLAttributes<HTMLTextAreaElement>)}
+                    />
                 ) : (
                     <input id={id} ref={ref} className={base} {...rest} />
                 )}

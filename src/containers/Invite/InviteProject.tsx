@@ -14,7 +14,7 @@ const InviteProject = () => {
     const token = query.get("token");
 
     const { verifyUserInvite } = useProjectMutations();
-    const { mutate, data, isLoading, error } = verifyUserInvite;
+    const { mutate, data, isPending: isLoading, error } = verifyUserInvite;
 
     useEffect(() => {
         if (token) {

@@ -1,6 +1,5 @@
 "use client";
 
-import { Grid } from "@mui/material";
 import { useState } from "react";
 
 import { AddProjectDrawer } from "../containers";
@@ -25,62 +24,23 @@ const ProjectDashboard = () => {
     return (
         <>
             {projectList?.length === 0 ? (
-                <Grid
-                    container
-                    spacing={4}
-                    sx={{
-                        ".MuiCard-root": {
-                            boxShadow: "0px 6px 12px 0px #0000001F",
-                            padding: "10px",
-                            borderRadius: "10px",
-                            ".MuiButton-outlinedPrimary": {
-                                padding: "0.5rem 1rem",
-                            },
-                        },
-                    }}
-                >
-                    <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
-                        <EcBasicCard
-                            svgicon={<FigmaIcon style={{ marginRight: "0.5rem" }} />}
-                            heading="Add New Project"
-                            subheading="Import your Figma projects to start comment statistics."
-                            buttonText="Add Project"
-                            onClick={() => {
-                                setDrawerContent(<AddProjectDrawer onClose={handleDrawerClose} />);
-                            }}
-                            buttonsvgicon={<PlusIcon />}
-                        />
-                    </Grid>
-                    {/* TODO: uncomment below code once demo video will be available. */}
-                    {/* <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={6}
-                        lg={4}
-                        xl={3}
-                        sx={{
-                            ".MuiCard-root": {
-                                background:
-                                    "linear-gradient(52.86deg, #2979FF -207.53%, #F5FCFE 52.19%)",
-                                border: "1px solid #A9C9FF",
-                            },
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <EcBasicCard
+                        svgicon={<FigmaIcon className="mr-2" />}
+                        heading="Add New Project"
+                        subheading="Import your Figma projects to start comment statistics."
+                        buttonText="Add Project"
+                        onClick={() => {
+                            setDrawerContent(<AddProjectDrawer onClose={handleDrawerClose} />);
                         }}
-                    >
-                        <EcBasicCard
-                            svgicon={<TourplayIcon style={{ marginRight: "0.5rem" }} />}
-                            heading="Take a Quick Tour"
-                            subheading="Explore all the essential features by watching short videos which will help you to complete your first ever goal with Export comment."
-                            buttonText="Watch Demo"
-                            onClick={() => {}}
-                            buttonsvgicon={<CircleplayIcon />}
-                        />
-                    </Grid> */}
-                </Grid>
+                        buttonsvgicon={<PlusIcon />}
+                    />
+                    {/* TODO: add the "Take a Quick Tour" card once the demo video is available. */}
+                </div>
             ) : (
                 <ProjectListPage />
             )}
-            {drawerContent && drawerContent}
+            {drawerContent}
         </>
     );
 };

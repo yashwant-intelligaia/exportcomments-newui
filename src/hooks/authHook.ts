@@ -17,7 +17,8 @@ const useAuthMutations = () => {
     const history = useHistory();
     const { setToken, setUser } = UserContext();
 
-    const saveFigmaAccessToken = useMutation({ mutationFn: async (requestData: RequestTokenType) => {
+    const saveFigmaAccessToken = useMutation({
+        mutationFn: async (requestData: RequestTokenType) => {
             const { data } = await api({
                 url: `${APP_CONSTANT.webApi.getToken}`,
                 version: "v2",
@@ -28,17 +29,15 @@ const useAuthMutations = () => {
                 },
             });
             return get(data, "data", {});
-        }, onSettled: (response, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-                return response;
-            } });
+        },
+        onSettled: (response, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+            return response;
+        },
+    });
 
     const logoutUserSession = () => {
         removeUserToken();

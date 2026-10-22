@@ -1,20 +1,14 @@
 "use client";
 
-import {
-    CommentResponseDataType,
-    PageType,
-    ProcessedPageDataType,
-    ProcessedPrototypeDataType,
-} from "../types";
+import { CommentResponseDataType, PageType, ProcessedPageDataType, ProcessedPrototypeDataType } from "../types";
 
 export const processPrototypeData = (
     data: CommentResponseDataType,
     pageData: PageType[],
-    expandMap: Map<number, boolean>
+    expandMap: Map<number, boolean>,
 ): ProcessedPageDataType[] =>
     pageData.map((page) => {
-        const filteredComments =
-            data?.comments.filter((comment) => comment?.clientMeta?.nodeId === page.node_id) || [];
+        const filteredComments = data?.comments.filter((comment) => comment?.clientMeta?.nodeId === page.node_id) || [];
         const allFlowVersions = page.flows.flatMap((flow) => flow.versions);
         const expanded = expandMap.get(page.page_id);
         return {
@@ -25,9 +19,7 @@ export const processPrototypeData = (
             totalVersions: allFlowVersions,
             prototypes: page.flows.map((flow) => {
                 const flowComments =
-                    data?.comments.filter(
-                        (comment) => comment?.clientMeta?.nodeId === flow.node_id
-                    ) || [];
+                    data?.comments.filter((comment) => comment?.clientMeta?.nodeId === flow.node_id) || [];
                 return {
                     prototypeId: parseInt(flow.flow_id, 10),
                     prototypeTitle: flow.name,

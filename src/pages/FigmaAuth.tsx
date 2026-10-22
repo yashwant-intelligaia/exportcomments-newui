@@ -20,7 +20,7 @@ export const FigmaAuth = () => {
     const { setToken } = UserContext();
 
     const { saveFigmaAccessToken } = useAuthMutations();
-    const { mutate, isLoading, data, isError } = saveFigmaAccessToken;
+    const { mutate, isPending: isLoading, data, isError } = saveFigmaAccessToken;
 
     useEffect(() => {
         setLoadingMessage(getLoadingMessage("login"));

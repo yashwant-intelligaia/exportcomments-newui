@@ -25,7 +25,19 @@ const loadingImagesForComments = [
     "https://export-comments.s3.ap-south-1.amazonaws.com/load-anim-02.gif",
     "https://export-comments.s3.ap-south-1.amazonaws.com/load-anim-03.gif",
 ];
-const loadingImagesForProjects = [defaultLoader];
+const loadingImagesForProjects = [defaultLoader.src];
+
+/*
+ * Random picks would differ between the server render and hydration, so the first
+ * element is used until the page has hydrated; afterwards the choice is random again.
+ */
+let hydrated = false;
+if (typeof window !== "undefined") {
+    setTimeout(() => {
+        hydrated = true;
+    }, 1500);
+}
+const pick = <T,>(list: T[]) => (hydrated ? list[Math.floor(Math.random() * list.length)] : list[0]);
 
 const getLoadingMessage = (type: string) => {
     let message: string[] = [""];
@@ -41,7 +53,7 @@ const getLoadingMessage = (type: string) => {
             message = ["Please wait while we are fetching your project list"];
     }
 
-    return message[Math.floor(Math.random() * message.length)];
+    return pick(message);
 };
 
 const getLoadingImage = (type: string) => {
@@ -55,10 +67,10 @@ const getLoadingImage = (type: string) => {
             image = loadingImagesForProjects;
             break;
         default:
-            image = [defaultLoader];
+            image = [defaultLoader.src];
     }
 
-    return image[Math.floor(Math.random() * image.length)];
+    return pick(image);
 };
 
 export { getLoadingImage, getLoadingMessage };

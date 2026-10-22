@@ -12,7 +12,7 @@ export const InviteProjectPage = () => {
     const history = useHistory();
     const token = query.get("token");
     const { verifyPage } = usePageMutations();
-    const { mutate: mutateVerifyPage, data, isLoading: isVerifyPageLoading, isError } = verifyPage;
+    const { mutate: mutateVerifyPage, data, isPending: isVerifyPageLoading, isError } = verifyPage;
     useEffect(() => {
         mutateVerifyPage({ token });
     }, [token]);

@@ -12,7 +12,8 @@ const usePageMutations = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
 
-    const verifyPage = useMutation({ mutationFn: async (formData: any) => {
+    const verifyPage = useMutation({
+        mutationFn: async (formData: any) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.verifyPage}`,
@@ -25,17 +26,15 @@ const usePageMutations = () => {
             });
 
             return get(data, "data", {});
-        }, onSettled: (response, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-                return response;
-            } });
+        },
+        onSettled: (response, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+            return response;
+        },
+    });
     return {
         verifyPage,
     };

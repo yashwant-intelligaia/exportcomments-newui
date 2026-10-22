@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+"use client";
+
 import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 import { ProjectDetailsContext, PrototypePageContext } from "../../contexts";
@@ -145,7 +146,7 @@ export const PrototypesList = () => {
     }
 
     return (
-        <Box sx={{ overflowX: "auto", margin: "1rem 1rem" }}>
+        <div className="m-4 overflow-x-auto">
             {filteredPrototypeData.map((page, index) => (
                 <LazyRow
                     key={uniqueKey(`page-${page.pageId}`)}
@@ -160,7 +161,7 @@ export const PrototypesList = () => {
                     />
                 </LazyRow>
             ))}
-            {drawerContent && drawerContent}
-        </Box>
+            {drawerContent}
+        </div>
     );
 };

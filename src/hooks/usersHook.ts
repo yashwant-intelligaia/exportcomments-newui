@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryWithSettled } from "./queryUtils";
 import axios, { AxiosError } from "axios";
 import { get } from "../utils/object";
 import { useContext } from "react";
@@ -30,131 +31,136 @@ const FILES = "files";
 axios.defaults.baseURL = APP_CONSTANT.baseUrl;
 
 const useFetchUsers = (props: ISnackBarMessage) =>
-    useQuery<IUserInformationResponse, AxiosError>({ queryKey: [USER_LIST], queryFn: () => axios.get(`${APP_CONSTANT.webApi.getUserList}`), retry: 3,
+    useQueryWithSettled<IUserInformationResponse, AxiosError>(
+        {
+            queryKey: [USER_LIST],
+            queryFn: () => axios.get(`${APP_CONSTANT.webApi.getUserList}`),
+            retry: 3,
             retryDelay: 3,
+        },
+        (
+            usersResponse: IUserInformationResponse | undefined,
+            error: AxiosError | null,
+        ): IUserInformationResponse | null | AxiosError => {
+            if (usersResponse) {
+                return usersResponse;
+            }
 
-            onSettled: (
-                usersResponse: IUserInformationResponse | undefined,
-                error: AxiosError | null
-            ): IUserInformationResponse | null | AxiosError => {
-                if (usersResponse) {
-                    return usersResponse;
+            if (error) {
+                if (props.snackbarShowMessage) {
+                    props.snackbarShowMessage((error as any)?.response?.data?.message, "error");
                 }
+                return error;
+            }
+            return null;
+        },
+    );
 
-                if (error) {
-                    if (props.snackbarShowMessage) {
-                        props.snackbarShowMessage(error?.response?.data?.message, "error");
-                    }
-                    return error;
-                }
-                return null;
-            } });
-
-const useFetchUserDetails = ({
-    showError = true,
-    enabled = true,
-}: {
-    showError?: boolean;
-    enabled?: boolean;
-}) => {
+const useFetchUserDetails = ({ showError = true, enabled = true }: { showError?: boolean; enabled?: boolean }) => {
     const { token, setUser } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    return useQuery<any, AxiosError>({ queryKey: [USER], queryFn: async () => {
-            const { data } = await api({
-                version: "v2",
-                url: APP_CONSTANT.webApi.getUser,
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Timezone: TIME_ZONE,
-                },
-            });
-            return get(data, "data", {});
-        }, retry: false,
+    return useQueryWithSettled<any, AxiosError>(
+        {
+            queryKey: [USER],
+            queryFn: async () => {
+                const { data } = await api({
+                    version: "v2",
+                    url: APP_CONSTANT.webApi.getUser,
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Timezone: TIME_ZONE,
+                    },
+                });
+                return get(data, "data", {});
+            },
+            retry: false,
             enabled,
             // staleTime: 5 * 1000,
             staleTime: Infinity,
             refetchOnMount: false,
-            onSettled: (data, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    if (showError) {
-                        showToast({ message, severity: "error" });
-                    }
+        },
+        (data, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                if (showError) {
+                    showToast({ message, severity: "error" });
                 }
-                if (data) {
-                    setUser(data);
-                }
-            } });
+            }
+            if (data) {
+                setUser(data);
+            }
+        },
+    );
 };
 
 const useFetchFigmaUserData = () => {
     const { token, setFigmaUser } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    return useQuery<FigmaUserType, AxiosError>({ queryKey: [FIGMA_USER], queryFn: async () => {
-            const { data } = await api({
-                version: "v2",
-                url: APP_CONSTANT.webApi.getUserFigmaDetails,
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Timezone: TIME_ZONE,
-                },
-            });
-            return get(data, "data", {});
-        }, retry: 3,
+    return useQueryWithSettled<FigmaUserType, AxiosError>(
+        {
+            queryKey: [FIGMA_USER],
+            queryFn: async () => {
+                const { data } = await api({
+                    version: "v2",
+                    url: APP_CONSTANT.webApi.getUserFigmaDetails,
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Timezone: TIME_ZONE,
+                    },
+                });
+                return get(data, "data", {});
+            },
+            retry: 3,
             retryDelay: 3,
             staleTime: Infinity,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-            onSettled: (data, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-                if (data) {
-                    setFigmaUser(data);
-                }
-            } });
+        },
+        (data, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+            if (data) {
+                setFigmaUser(data);
+            }
+        },
+    );
 };
 
 const useFetchInviteeUsers = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    return useQuery<UserResponseType[], AxiosError>({ queryKey: [INVITEES], queryFn: async () => {
-            const { data } = await api({
-                version: "v2",
-                url: APP_CONSTANT.webApi.getAllUsers,
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Timezone: TIME_ZONE,
-                },
-            });
-            return get(data, "data", {});
-        }, retry: 3,
+    return useQueryWithSettled<UserResponseType[], AxiosError>(
+        {
+            queryKey: [INVITEES],
+            queryFn: async () => {
+                const { data } = await api({
+                    version: "v2",
+                    url: APP_CONSTANT.webApi.getAllUsers,
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Timezone: TIME_ZONE,
+                    },
+                });
+                return get(data, "data", {});
+            },
+            retry: 3,
             retryDelay: 3,
             staleTime: 0,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-            onSettled: (data, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-            } });
+        },
+        (data, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+        },
+    );
 };
 
 const useProcessInviteesData = (data: UserResponseType[]): ProcessedInviteesDataType[] => {
@@ -178,7 +184,8 @@ const useAddUserToProject = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
 
-    const addUserToProject = useMutation({ mutationFn: async (formData: AddUserFormDataType[]) => {
+    const addUserToProject = useMutation({
+        mutationFn: async (formData: AddUserFormDataType[]) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.addUser,
@@ -190,19 +197,17 @@ const useAddUserToProject = () => {
                 data: formData,
             });
             return get(data, "data", {});
-        }, onSettled: (response, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                    return error;
-                }
-                showToast({ message: response?.data?.message });
-                return response;
-            } });
+        },
+        onSettled: (response, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+                return error;
+            }
+            showToast({ message: response?.data?.message });
+            return response;
+        },
+    });
     return { addUserToProject };
 };
 
@@ -210,7 +215,8 @@ const useDeleteProjectMember = (callback: () => void) => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
     const queryClient = useQueryClient();
-    const deleteProjectMember = useMutation({ mutationFn: async (formData: DeleteProjectMemberDataType) => {
+    const deleteProjectMember = useMutation({
+        mutationFn: async (formData: DeleteProjectMemberDataType) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.deleteProjectMember,
@@ -222,24 +228,27 @@ const useDeleteProjectMember = (callback: () => void) => {
                 data: formData,
             });
             return get(data, "data", {});
-        }, onError: (error: AxiosError) => {
-                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
-                showToast({ message, severity: "error" });
-            },
+        },
+        onError: (error: AxiosError) => {
+            const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+            showToast({ message, severity: "error" });
+        },
 
-            onSuccess: () => {
-                callback();
-                showToast({
-                    message: "User removed from project successfully",
-                    severity: "success",
-                });
-                queryClient.refetchQueries({ queryKey: [FILES] });
-            } });
+        onSuccess: () => {
+            callback();
+            showToast({
+                message: "User removed from project successfully",
+                severity: "success",
+            });
+            queryClient.refetchQueries({ queryKey: [FILES] });
+        },
+    });
     return { deleteProjectMember };
 };
 const useUnsubscribeMutation = () => {
     const { showToast } = useContext(ToasterContext);
-    const releaseEmail = useMutation({ mutationFn: (payloadData: { token: string }) =>
+    const releaseEmail = useMutation({
+        mutationFn: (payloadData: { token: string }) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.unsubscribeReleaseEmail,
@@ -248,21 +257,19 @@ const useUnsubscribeMutation = () => {
                 headers: {
                     Timezone: TIME_ZONE,
                 },
-            }), onSettled: (response: any, error: any) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                    return error;
-                }
-                showToast({
-                    message: "You have successfully unsubscribed to future release emails",
-                });
-                return response;
-            } });
+            }),
+        onSettled: (response: any, error: any) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+                return error;
+            }
+            showToast({
+                message: "You have successfully unsubscribed to future release emails",
+            });
+            return response;
+        },
+    });
     return { releaseEmail };
 };
 
@@ -286,32 +293,31 @@ const useUserMutation = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
 
-    const acceptTermsOfUseAndPrivacyPolicy = useMutation({ mutationFn: () =>
+    const acceptTermsOfUseAndPrivacyPolicy = useMutation({
+        mutationFn: () =>
             axios.get(APP_CONSTANT.webApi.acceptTermsOfUseAndPrivacyPolicy, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            }), onSettled: (response: any, error: any) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                    return error;
+            }),
+        onSettled: (response: any, error: any) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+                return error;
+            }
+            queryClient.setQueryData<UserDataType | undefined>([USER], (userDetail) => {
+                if (!userDetail) {
+                    return undefined;
                 }
-                queryClient.setQueryData<UserDataType | undefined>([USER], (userDetail) => {
-                    if (!userDetail) {
-                        return undefined;
-                    }
-                    return {
-                        ...userDetail,
-                        acceptTermsOfUseAndPrivacyPolicy: true,
-                    };
-                });
-                return response;
-            } });
+                return {
+                    ...userDetail,
+                    acceptTermsOfUseAndPrivacyPolicy: true,
+                };
+            });
+            return response;
+        },
+    });
 
     return { acceptTermsOfUseAndPrivacyPolicy };
 };

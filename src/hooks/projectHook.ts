@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryWithSettled } from "./queryUtils";
 import { AxiosError } from "axios";
 import { get } from "../utils/object";
 import { useContext } from "react";
@@ -41,7 +42,8 @@ const useProjectMutations = () => {
     const { token } = UserContext();
     const queryClient = useQueryClient();
 
-    const updateProject = useMutation({ mutationFn: async (formData: UpdateProjectDataType) => {
+    const updateProject = useMutation({
+        mutationFn: async (formData: UpdateProjectDataType) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.updateProjectTitle,
@@ -53,15 +55,18 @@ const useProjectMutations = () => {
                 data: formData,
             });
             return get(data, "data", {});
-        }, onError: (error: AxiosError) => {
-                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
-                showToast({ message, severity: "error" });
-            },
-            onSuccess: () => {
-                showToast({ message: "Project Title Updated Successfully" });
-            } });
+        },
+        onError: (error: AxiosError) => {
+            const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+            showToast({ message, severity: "error" });
+        },
+        onSuccess: () => {
+            showToast({ message: "Project Title Updated Successfully" });
+        },
+    });
 
-    const verifyUserInvite = useMutation({ mutationFn: async (formData: { inviteToken: string }) => {
+    const verifyUserInvite = useMutation({
+        mutationFn: async (formData: { inviteToken: string }) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.verifyUserInvite,
@@ -73,16 +78,19 @@ const useProjectMutations = () => {
                 data: formData,
             });
             return get(data, "data", {});
-        }, onError: (error: AxiosError) => {
-                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
-                showToast({ message, severity: "error" });
-            },
-            onSuccess: () => {
-                queryClient.refetchQueries({ queryKey: [FILES] });
-                showToast({ message: "User invitation verified successfully" });
-            } });
+        },
+        onError: (error: AxiosError) => {
+            const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+            showToast({ message, severity: "error" });
+        },
+        onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: [FILES] });
+            showToast({ message: "User invitation verified successfully" });
+        },
+    });
 
-    const sendInvite = useMutation({ mutationFn: async (formData: ProjectInviteRequestType) => {
+    const sendInvite = useMutation({
+        mutationFn: async (formData: ProjectInviteRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.inviteProjectUser}`,
@@ -94,14 +102,17 @@ const useProjectMutations = () => {
                 },
             });
             return get(data, "data", {});
-        }, onSettled: (response, error) => {
-                if (error) return { type: "error", message: error };
-                queryClient.refetchQueries({ queryKey: [INVITEES] });
-                showToast({ message: "Invite sent successfully" });
-                return response;
-            } });
+        },
+        onSettled: (response, error) => {
+            if (error) return { type: "error", message: error };
+            queryClient.refetchQueries({ queryKey: [INVITEES] });
+            showToast({ message: "Invite sent successfully" });
+            return response;
+        },
+    });
 
-    const invitePage = useMutation({ mutationFn: async (formData: InvitePageRequestType) => {
+    const invitePage = useMutation({
+        mutationFn: async (formData: InvitePageRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.invitePage}`,
@@ -113,21 +124,20 @@ const useProjectMutations = () => {
                 },
             });
             return get(data, "data", {});
-        }, onSettled: (response, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    return showToast({ message, severity: "error" });
-                }
-                queryClient.refetchQueries({ queryKey: [INVITEES] });
-                showToast({ message: "Page Link sent successfully" });
-                return response;
-            } });
+        },
+        onSettled: (response, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                return showToast({ message, severity: "error" });
+            }
+            queryClient.refetchQueries({ queryKey: [INVITEES] });
+            showToast({ message: "Page Link sent successfully" });
+            return response;
+        },
+    });
 
-    const inviteFlow = useMutation({ mutationFn: async (formData: InviteFlowRequestType) => {
+    const inviteFlow = useMutation({
+        mutationFn: async (formData: InviteFlowRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.inviteFlow}`,
@@ -139,21 +149,20 @@ const useProjectMutations = () => {
                 },
             });
             return get(data, "data", {});
-        }, onSettled: (response, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-                queryClient.refetchQueries({ queryKey: [INVITEES] });
-                showToast({ message: "Flow Link sent successfully" });
-                return response;
-            } });
+        },
+        onSettled: (response, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+            queryClient.refetchQueries({ queryKey: [INVITEES] });
+            showToast({ message: "Flow Link sent successfully" });
+            return response;
+        },
+    });
 
-    const inviteVersion = useMutation({ mutationFn: async (formData: InviteVersionRequestType) => {
+    const inviteVersion = useMutation({
+        mutationFn: async (formData: InviteVersionRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.inviteVersion}`,
@@ -165,21 +174,20 @@ const useProjectMutations = () => {
                 },
             });
             return get(data, "data", {});
-        }, onSettled: (response, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    return showToast({ message, severity: "error" });
-                }
-                queryClient.refetchQueries({ queryKey: [VERSIONS] });
-                showToast({ message: "Version Link sent successfully" });
-                return response;
-            } });
+        },
+        onSettled: (response, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                return showToast({ message, severity: "error" });
+            }
+            queryClient.refetchQueries({ queryKey: [VERSIONS] });
+            showToast({ message: "Version Link sent successfully" });
+            return response;
+        },
+    });
 
-    const markAsFavourite = useMutation({ mutationFn: async (formData: { projectId: number; status: boolean }) => {
+    const markAsFavourite = useMutation({
+        mutationFn: async (formData: { projectId: number; status: boolean }) => {
             const { data } = await api({
                 version: "v2",
                 url: `${APP_CONSTANT.webApi.userFavorite}`,
@@ -192,20 +200,18 @@ const useProjectMutations = () => {
             const response = get(data, "data", {});
             const statusMessage = get(data, "message", "");
             return formattedResponse<any>(response, statusMessage);
-        }, onSettled: (response, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                    return;
-                }
-                queryClient.refetchQueries({ queryKey: [VERSIONS] });
-                const { statusMessage } = response || { statusMessage: "" };
-                showToast({ message: statusMessage });
-            } });
+        },
+        onSettled: (response, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+                return;
+            }
+            queryClient.refetchQueries({ queryKey: [VERSIONS] });
+            const { statusMessage } = response || { statusMessage: "" };
+            showToast({ message: statusMessage });
+        },
+    });
 
     return {
         updateProject,
@@ -221,64 +227,68 @@ const useProjectMutations = () => {
 const useFetchProjectUsers = (projectId?: number) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<ProjectUserResponseType[], AxiosError>({ queryKey: [ProjectUsers, projectId], queryFn: async () => {
-            const { data } = await api({
-                version: "v2",
-                url: `${APP_CONSTANT.webApi.userFiles}`,
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Timezone: TIME_ZONE,
-                },
-                data: {
-                    projectId,
-                },
-            });
-            return get(data, "data", {}) as ProjectUserResponseType[];
-        }, enabled: !!projectId,
+    return useQueryWithSettled<ProjectUserResponseType[], AxiosError>(
+        {
+            queryKey: [ProjectUsers, projectId],
+            queryFn: async () => {
+                const { data } = await api({
+                    version: "v2",
+                    url: `${APP_CONSTANT.webApi.userFiles}`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Timezone: TIME_ZONE,
+                    },
+                    data: {
+                        projectId,
+                    },
+                });
+                return get(data, "data", {}) as ProjectUserResponseType[];
+            },
+            enabled: !!projectId,
             retryDelay: 3,
             staleTime: 60 * 1000,
-            onSettled: (data, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-            } });
+        },
+        (data, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+        },
+    );
 };
 
 const useFetchProjectBranch = (projectId?: number) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<BranchResponseType[], AxiosError>({ queryKey: [BRANCH_LIST, projectId], queryFn: async () => {
-            const { data } = await api({
-                version: "v2",
-                url: `project/${projectId}/branch`,
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Timezone: TIME_ZONE,
-                },
-            });
+    return useQueryWithSettled<BranchResponseType[], AxiosError>(
+        {
+            queryKey: [BRANCH_LIST, projectId],
+            queryFn: async () => {
+                const { data } = await api({
+                    version: "v2",
+                    url: `project/${projectId}/branch`,
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Timezone: TIME_ZONE,
+                    },
+                });
 
-            return get(data, "data", {}) as any;
-        }, enabled: !!projectId,
+                return get(data, "data", {}) as any;
+            },
+            enabled: !!projectId,
             retryDelay: 3,
             staleTime: Infinity,
-            onSettled: (data, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-                return data;
-            } });
+        },
+        (data, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+            return data;
+        },
+    );
 };
 
 const useFetchPrototypeList = (branchKey: string) => {
@@ -290,77 +300,75 @@ const useFetchPrototypeList = (branchKey: string) => {
     }: {
         projectId: string;
     } = useParams();
-    return useQuery<PageType[], AxiosError>({ queryKey: [PROTOTYPES, projectId, branchKey], queryFn: async () => {
-            const { data } = await api({
-                version: "v2",
-                url: `${APP_CONSTANT.webApi.prototypes}`,
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Timezone: TIME_ZONE,
-                },
-                data: {
-                    projectId,
-                    branchKey,
-                },
-            });
-            return get(data, "data", {}) as PageType[];
-        }, retry: 3,
+    return useQueryWithSettled<PageType[], AxiosError>(
+        {
+            queryKey: [PROTOTYPES, projectId, branchKey],
+            queryFn: async () => {
+                const { data } = await api({
+                    version: "v2",
+                    url: `${APP_CONSTANT.webApi.prototypes}`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Timezone: TIME_ZONE,
+                    },
+                    data: {
+                        projectId,
+                        branchKey,
+                    },
+                });
+                return get(data, "data", {}) as PageType[];
+            },
+            retry: 3,
             retryDelay: 3,
             gcTime: 60 * 5 * 1000,
             staleTime: 60 * 5 * 1000,
             refetchInterval: 60 * 5 * 1000,
             refetchOnMount: false,
-
-            onSettled: (prototypeResponse, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                    history.push("/");
-                }
-                return prototypeResponse;
-            } });
+        },
+        (prototypeResponse, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+                history.push("/");
+            }
+            return prototypeResponse;
+        },
+    );
 };
 
-const useFetchProjectList = ({
-    startDate,
-    endDate,
-    key,
-    enabled = true,
-}: FetchProjectListParams) => {
+const useFetchProjectList = ({ startDate, endDate, key, enabled = true }: FetchProjectListParams) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<IUserFile[], AxiosError>({ queryKey: [PROJECT_LIST, key], queryFn: async () => {
-            const { data } = await api({
-                version: "v2",
-                url: `${APP_CONSTANT.webApi.fetchProject}${
-                    startDate && endDate ? `?startDate=${startDate}&endDate=${endDate}` : ``
-                }`,
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Timezone: TIME_ZONE,
-                },
-            });
-            return get(data, "data", {}) as IUserFile[];
-        }, retryDelay: 3,
+    return useQueryWithSettled<IUserFile[], AxiosError>(
+        {
+            queryKey: [PROJECT_LIST, key],
+            queryFn: async () => {
+                const { data } = await api({
+                    version: "v2",
+                    url: `${APP_CONSTANT.webApi.fetchProject}${
+                        startDate && endDate ? `?startDate=${startDate}&endDate=${endDate}` : ``
+                    }`,
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Timezone: TIME_ZONE,
+                    },
+                });
+                return get(data, "data", {}) as IUserFile[];
+            },
+            retryDelay: 3,
             staleTime: 60 * 5 * 1000,
             enabled,
-            onSettled: (prototypeResponse, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-                return prototypeResponse;
-            } });
+        },
+        (prototypeResponse, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+            return prototypeResponse;
+        },
+    );
 };
 
 const getFilterDateRange = ({
@@ -416,11 +424,7 @@ const getFilterDateRange = ({
             startDates = new Date(scurrentDate.getFullYear(), 0, 2);
             startDates.setHours(0, 0, 0, 0);
 
-            endDates = new Date(
-                ecurrentDate.getFullYear(),
-                ecurrentDate.getMonth(),
-                ecurrentDate.getDate()
-            );
+            endDates = new Date(ecurrentDate.getFullYear(), ecurrentDate.getMonth(), ecurrentDate.getDate());
             endDates.setHours(23, 59, 59, 999);
             return {
                 startDate: formatDateToISOString(startDates),

@@ -47,7 +47,7 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
             setInvite(true);
             setMessage(data.data.message);
         } else if (error) {
-            setMessage(error?.response?.data?.message);
+            setMessage((error as any)?.response?.data?.message);
         }
     }, [data, error]);
 
