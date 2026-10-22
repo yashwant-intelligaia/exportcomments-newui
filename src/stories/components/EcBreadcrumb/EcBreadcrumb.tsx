@@ -1,4 +1,4 @@
-import { Breadcrumbs, Link, Typography } from "@mui/material";
+"use client";
 
 import { uniqueKey } from "../../../utils";
 
@@ -12,43 +12,25 @@ interface EcBreadcrumbPropsType {
     data: EcBreadcrumbDataType[];
 }
 
-export const EcBreadcrumb = (props: EcBreadcrumbPropsType) => {
-    const { data } = props;
-
-    return (
-        <Breadcrumbs
-            sx={{
-                ".MuiBreadcrumbs-separator": {
-                    color: "#B4B4BB",
-                    margin: "auto 5px",
-                    fontSize: "0.875rem",
-                },
-            }}
-            aria-label="breadcrumb"
-        >
-            {data.map(({ title, active, onClick }, index) =>
-                active ? (
-                    <Link
-                        key={uniqueKey(`${title}-active-breadcrumb-${index}`)}
-                        underline="hover"
-                        color="#5494FF"
-                        style={{
-                            cursor: "pointer",
-                            textDecoration: "none",
-                        }}
-                        onClick={onClick}
-                    >
-                        {title}
-                    </Link>
-                ) : (
-                    <Typography
-                        key={uniqueKey(`${title}-inactive-breadcrumb-${index}`)}
-                        color="text.primary"
-                    >
-                        {title}
-                    </Typography>
-                )
-            )}
-        </Breadcrumbs>
-    );
-};
+export const EcBreadcrumb = ({ data }: EcBreadcrumbPropsType) => (
+    <nav aria-label="breadcrumb">
+        <ol className="flex flex-wrap items-center">
+            {data.map(({ title, active, onClick }, index) => (
+                <li key={uniqueKey(`${title}-breadcrumb-${index}`)} className="flex items-center">
+                    {index > 0 && (
+                        <span aria-hidden="true" className="text-muted mx-1.5 text-sm">
+                            /
+                        </span>
+                    )}
+                    {active ? (
+                        <button type="button" onClick={onClick} className="text-blue-ink hover:underline">
+                            {title}
+                        </button>
+                    ) : (
+                        <span className="text-ink">{title}</span>
+                    )}
+                </li>
+            ))}
+        </ol>
+    </nav>
+);

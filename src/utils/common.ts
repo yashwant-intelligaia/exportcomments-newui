@@ -1,6 +1,9 @@
+"use client";
+
 import axios, { AxiosPromise, AxiosRequestConfig } from "axios";
 import EmojiConvertor from "emoji-js";
-import { useLocation } from "react-router-dom";
+
+import { useLocation } from "@/utils/navigation";
 
 import { APP_CONSTANT } from "../constants/AppConstant";
 import { FormattedResponseType, ResponseType } from "../types";
@@ -13,7 +16,7 @@ const uniqueKey = (prefix: string | number) => `${prefix}-${new Date().getTime()
 
 const emailValidation = (email: string) => {
     const pattern = new RegExp(
-        /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
+        /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i,
     );
 
     if (!email) {
@@ -68,10 +71,7 @@ const getMessagesWithEmojis = (message: string) => {
     return emoji.replace_colons(message);
 };
 
-function formattedResponse<T>(
-    response: ResponseType<T>,
-    statusMessage: string
-): FormattedResponseType<T> {
+function formattedResponse<T>(response: ResponseType<T>, statusMessage: string): FormattedResponseType<T> {
     return {
         ...response.data,
         statusMessage,

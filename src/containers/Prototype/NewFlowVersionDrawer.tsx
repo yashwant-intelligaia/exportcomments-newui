@@ -1,22 +1,9 @@
-import { Box, Typography } from "@mui/material";
-import styled from "styled-components";
+"use client";
 
 import Icon from "../../assets/Icon.svg";
 import { useFetchFlowList } from "../../hooks";
 import { EcDrawer } from "../../stories/components";
 import { NewFlowVersionCard } from "./NewFlowVersionCard";
-
-const FeedbackContainer = styled.div`
-    border-radius: 8px;
-    margin-bottom: 15px;
-    padding: 0px 10px;
-    width: auto;
-    max-width: 700px;
-    margin-top: 20px;
-    @media (max-width: 600px) {
-        width: 330px;
-    }
-`;
 
 interface FlowVersionDrawerPropsType {
     data: {
@@ -29,58 +16,36 @@ interface FlowVersionDrawerPropsType {
     onClose: () => void;
 }
 
-export const NewFlowVersionDrawer = (props: FlowVersionDrawerPropsType) => {
-    const {
-        data: { prototypeId, nodeId, prototypeTitle, pageId },
-        open,
-        onClose,
-    } = props;
-
+export const NewFlowVersionDrawer = ({
+    data: { prototypeId, nodeId, prototypeTitle, pageId },
+    open,
+    onClose,
+}: FlowVersionDrawerPropsType) => {
     const { data: versionList = [], refetch: versionListRefetch } = useFetchFlowList(prototypeId);
 
     return (
         <EcDrawer
             title={
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginBottom: "20px",
-                    }}
-                >
-                    <img
-                        src={Icon}
-                        alt="Prototype Icon"
-                        style={{
-                            color: "black",
-                            marginRight: "14px",
-                            width: "20px",
-                            height: "20px",
-                        }}
-                    />
-                    <Typography variant="h6" fontWeight="500">
-                        {prototypeTitle}
-                    </Typography>
-                </Box>
+                <span className="mb-5 flex items-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={Icon.src} alt="Prototype Icon" className="mr-3.5 size-5" />
+                    <span className="text-xl font-medium">{prototypeTitle}</span>
+                </span>
             }
             open={open}
             direction="right"
             onClose={onClose}
             customeWidth
         >
-            <FeedbackContainer>
+            <div className="mt-5 mb-4 w-[330px] max-w-[700px] rounded-md px-2.5 sm:w-auto">
                 {versionList?.map((version: any) => (
                     <NewFlowVersionCard
                         key={version.versionId}
-                        data={{
-                            version,
-                            nodeId,
-                            pageId,
-                        }}
+                        data={{ version, nodeId, pageId }}
                         refetchCallback={versionListRefetch}
                     />
                 ))}
-            </FeedbackContainer>
+            </div>
         </EcDrawer>
     );
 };

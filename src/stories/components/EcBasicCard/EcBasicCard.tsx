@@ -1,14 +1,18 @@
-import { Box, Button, Card, CardActions, CardContent, Typography } from "@mui/material";
+"use client";
+
 import React from "react";
+
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Display";
 
 interface CardComponentProps {
     heading: string;
     subheading: string;
     buttonText: string;
     onClick: () => void;
-    imageUrl?: string; // Optional image URL
+    imageUrl?: string;
     svgicon?: JSX.Element;
-    buttonicon?: string; // Optional image URL
+    buttonicon?: string;
     buttonsvgicon?: JSX.Element;
 }
 
@@ -22,33 +26,24 @@ const EcBasicCard: React.FC<CardComponentProps> = ({
     buttonicon,
     buttonsvgicon,
 }) => (
-    <Card
-        sx={{
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-        }}
-    >
-        <CardContent sx={{ flex: "1 0 auto" }}>
-            <Box display="flex" alignItems="center" mb={2}>
-                {imageUrl && <img src={imageUrl} alt="icon" style={{ marginRight: 8 }} />}
+    <Card className="flex h-full flex-col justify-between">
+        <div className="flex-auto p-4">
+            <div className="mb-4 flex items-center gap-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                {imageUrl && <img src={imageUrl} alt="icon" />}
                 {svgicon}
-                <Typography variant="h5" component="div">
-                    {heading}
-                </Typography>
-            </Box>
-            <Typography sx={{ flexGrow: 1 }} color="text.secondary">
-                {subheading}
-            </Typography>
-        </CardContent>
-        <CardActions sx={{ padding: 2 }}>
-            <Button variant="outlined" sx={{ gap: "0.5rem" }} onClick={onClick}>
-                {buttonicon && <img src={buttonicon} alt="icon" style={{ marginRight: 8 }} />}
+                <h3 className="font-sans text-xl font-semibold tracking-normal">{heading}</h3>
+            </div>
+            <p className="text-muted">{subheading}</p>
+        </div>
+        <div className="p-4">
+            <Button variant="outlined" onClick={onClick}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                {buttonicon && <img src={buttonicon} alt="icon" />}
                 {buttonsvgicon}
                 {buttonText}
             </Button>
-        </CardActions>
+        </div>
     </Card>
 );
 

@@ -1,7 +1,8 @@
-import { grey } from "@mui/material/colors";
+"use client";
 
-const GREY_300 = grey[300];
-const GREY_700 = grey[700];
-const GREY_900 = grey[900];
+/* Neutral greys (previously from MUI colors) */
+const GREY_300 = "#e0e0e0";
+const GREY_700 = "#616161";
+const GREY_900 = "#212121";
 
 export { GREY_300, GREY_700, GREY_900 };

@@ -1,30 +1,20 @@
-import moment from "moment";
+"use client";
+
+import { differenceInDays, format } from "date-fns";
+
+/* Same-day dates show the time, older dates show e.g. "Oct 22, 2026". */
+const formatDate = (raw: string | number | Date) => {
+    const date = new Date(raw);
+    return differenceInDays(date, new Date()) === 0 ? format(date, "h:mm a") : format(date, "MMM d, yyyy");
+};
 
 export const DateCell = (props: any) => {
     const { value } = props;
-    let data = "";
+    let data = "-";
     if (value.row) {
-        if (value.row[value.column.key]) {
-            const latest = moment(new Date());
-            const datefromFile = moment(value.row[value.column.key]);
-            if (datefromFile.diff(latest, "day") === 0) {
-                data = moment(new Date(value.row[value.column.key])).format("h:mm a");
-            } else {
-                data = moment(new Date(value.row[value.column.key])).format("ll");
-            }
-        } else {
-            data = "-";
-        }
+        if (value.row[value.column.key]) data = formatDate(value.row[value.column.key]);
     } else if (value.createdAt) {
-        const latest = moment(new Date());
-        const datefromFile = moment(value.createdAt);
-        if (datefromFile.diff(latest, "day") === 0) {
-            data = moment(new Date(value.createdAt)).format("h:mm a");
-        } else {
-            data = moment(new Date(value.createdAt)).format("ll");
-        }
-    } else {
-        data = "-";
+        data = formatDate(value.createdAt);
     }
     return <span>{data}</span>;
 };

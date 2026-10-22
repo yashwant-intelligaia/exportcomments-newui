@@ -1,38 +1,19 @@
-import { Box, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import React, { useContext } from "react";
-import { useHistory } from "react-router-dom";
-import styled from "styled-components";
+"use client";
+
+import { useContext } from "react";
+
+import { Segmented } from "@/components/ui/Segmented";
+import { useHistory } from "@/utils/navigation";
 
 import { ProjectDetailsContext } from "../../contexts";
 import { ProjectViewByType } from "../../types";
 
-const Container = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-
-    @media screen and (max-width: 767px) {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-
-        h6 {
-            font-size: 1rem !important;
-        }
-    }
-`;
-
 export const SubheaderToggle = () => {
     const { view, setSearchInput, projectData, onChangeView } = useContext(ProjectDetailsContext);
-    const viewByValue = projectData?.editorType === "figjam" ? "comments" : view;
+    const viewByValue = (projectData?.editorType === "figjam" ? "comments" : view) as ProjectViewByType;
     const history = useHistory();
 
-    const handleChangeView = (
-        event: React.MouseEvent<HTMLElement>,
-        newValue: ProjectViewByType
-    ) => {
-        event.preventDefault();
+    const handleChangeView = (newValue: ProjectViewByType) => {
         if (view !== newValue) {
             setSearchInput("");
         }
@@ -41,65 +22,23 @@ export const SubheaderToggle = () => {
     };
 
     return (
-        <Container>
-            <Typography
-                variant="h6"
-                style={{
-                    fontSize: "1.25rem",
-                    lineHeight: "30px",
-                    letterSpacing: "0.25%",
-                    margin: "0.325rem 0",
-                }}
-            >
+        <div className="flex items-center justify-between px-5 max-md:flex-col max-md:items-start max-md:gap-2">
+            <h6 className="text-ink my-[5px] font-sans text-xl leading-[30px] font-semibold tracking-normal max-md:text-base">
                 All {view === "prototypes" ? "Prototypes" : "Comments"}
-            </Typography>
-            <Box
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                }}
-            >
-                <Typography
-                    style={{
-                        marginRight: "10px",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                    }}
-                >
-                    View by
-                </Typography>
-                <ToggleButtonGroup
-                    color="primary"
+            </h6>
+            <div className="flex items-center justify-end">
+                <span className="mr-2.5 text-sm font-bold">View by</span>
+                <Segmented<ProjectViewByType>
+                    ariaLabel="View by"
                     value={viewByValue}
-                    exclusive
                     onChange={handleChangeView}
-                    aria-label="Platform"
-                    sx={{
-                        height: "30px",
-                        ".MuiToggleButton-root": {
-                            border: "1px solid #2979FF",
-                            color: "#2979FF",
-                            "&.MuiToggleButton-primary": {
-                                color: "#2979FF",
-                                "&.Mui-selected": {
-                                    color: "#fff",
-                                    background: "#2979FF",
-                                },
-                            },
-                        },
-                    }}
                     disabled={projectData?.editorType === "figjam"}
-                >
-                    <ToggleButton value="comments" sx={{ textTransform: "none" }}>
-                        Comments
-                    </ToggleButton>
-                    {/* TODO: add disabled state for toggleButton */}
-                    <ToggleButton value="prototypes" sx={{ textTransform: "none" }}>
-                        Prototypes
-                    </ToggleButton>
-                </ToggleButtonGroup>
-            </Box>
-        </Container>
+                    options={[
+                        { value: "comments", label: "Comments" },
+                        { value: "prototypes", label: "Prototypes" },
+                    ]}
+                />
+            </div>
+        </div>
     );
 };

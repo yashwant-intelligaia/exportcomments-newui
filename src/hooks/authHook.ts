@@ -1,7 +1,9 @@
-import { get } from "lodash";
+"use client";
+
+import { useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
-import { useMutation } from "react-query";
-import { useHistory } from "react-router-dom";
+
+import { useHistory } from "@/utils/navigation";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
@@ -9,14 +11,15 @@ import { removeUser, removeUserToken } from "../services/AuthService";
 import { removeCustomRange, removeFilter } from "../services/ProjectService";
 import { RequestTokenType } from "../types";
 import { api, messages } from "../utils";
+import { get } from "../utils/object";
 
 const useAuthMutations = () => {
     const { showToast } = useContext(ToasterContext);
     const history = useHistory();
     const { setToken, setUser } = UserContext();
 
-    const saveFigmaAccessToken = useMutation(
-        async (requestData: RequestTokenType) => {
+    const saveFigmaAccessToken = useMutation({
+        mutationFn: async (requestData: RequestTokenType) => {
             const { data } = await api({
                 url: `${APP_CONSTANT.webApi.getToken}`,
                 version: "v2",
@@ -28,20 +31,14 @@ const useAuthMutations = () => {
             });
             return get(data, "data", {});
         },
-        {
-            onSettled: (response, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-                return response;
-            },
-        }
-    );
+        onSettled: (response, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+            return response;
+        },
+    });
 
     const logoutUserSession = () => {
         removeUserToken();

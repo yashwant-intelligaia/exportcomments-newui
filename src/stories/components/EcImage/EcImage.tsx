@@ -1,8 +1,7 @@
-import { ImageListItem, ImageListItemProps } from "@mui/material";
+"use client";
 
-const EcImage = (props: ImageListItemProps) => {
-    const { children, ...rest } = props;
-    return <ImageListItem {...rest}>{children}</ImageListItem>;
-};
+import { HTMLAttributes } from "react";
+
+const EcImage = ({ children, ...rest }: HTMLAttributes<HTMLDivElement>) => <div {...rest}>{children}</div>;
 
 export { EcImage };

@@ -1,71 +1,56 @@
-import { Tooltip, tooltipClasses, TooltipProps, Typography } from "@mui/material";
-import { MutableRefObject, ReactNode, useEffect, useState } from "react";
-import styled from "styled-components";
+"use client";
 
-type EcOverflowTooltipProps = TooltipProps & {
+import { MutableRefObject, ReactNode, useEffect, useState } from "react";
+
+import { Tooltip } from "@/components/ui/Tooltip";
+
+interface EcOverflowTooltipProps {
+    title: string | ReactNode;
     childRef?: MutableRefObject<any>;
     description?: string | ReactNode;
     titleFontWeight?: string | ReactNode;
-};
-const EcOverflowTooltip = styled(
-    ({ className, titleFontWeight, childRef, ...props }: EcOverflowTooltipProps) => {
-        const [showHover, setShowHover] = useState(false);
+    placement?: string;
+    arrow?: boolean;
+    children: ReactNode;
+}
 
+/* Only shows the tooltip when the referenced child's text is truncated. */
+const EcOverflowTooltip = ({
+    title,
+    description,
+    titleFontWeight,
+    childRef,
+    placement,
+    children,
+}: EcOverflowTooltipProps) => {
+    const [showHover, setShowHover] = useState(false);
+
+    useEffect(() => {
         const compareSize = () => {
-            setShowHover(childRef?.current.scrollWidth > childRef?.current.clientWidth);
+            const el = childRef?.current;
+            setShowHover(!!el && el.scrollWidth > el.clientWidth);
         };
+        compareSize();
+        window.addEventListener("resize", compareSize);
+        return () => window.removeEventListener("resize", compareSize);
+    }, [childRef]);
 
-        // compare once and add resize listener on componentDidMount phase
-        useEffect(() => {
-            compareSize();
-            window.addEventListener("resize", compareSize);
-        }, []);
-
-        // remove resize listener on componentWillUnmount phase
-        useEffect(
-            () => () => {
-                window.removeEventListener("resize", compareSize);
-            },
-            []
-        );
-        return (
-            <Tooltip
-                {...props}
-                disableHoverListener={!showHover}
-                classes={{ popper: className }}
-                title={
-                    <>
-                        <Typography
-                            style={
-                                {
-                                    fontWeight: titleFontWeight || "bold",
-                                    fontSize: "14px",
-                                    marginBottom: "0",
-                                } as React.CSSProperties
-                            }
-                        >
-                            {props.title}
-                        </Typography>
-                        {props.description && (
-                            <p style={{ fontWeight: "normal", margin: "0" }}>{props.description}</p>
-                        )}
-                    </>
-                }
-                disableTouchListener={!showHover}
-            />
-        );
-    }
-)(() => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: "#fff",
-        color: "#212121",
-        fontSize: 12,
-        boxShadow: "0 2px 8px 0 rgba(0,0,0,0.25)",
-        padding: "8px 10px 8px",
-        lineHeight: "16px",
-        letterSpacing: "0.5px",
-        maxWidth: "250px",
-    },
-}));
+    if (!showHover) return <>{children}</>;
+    return (
+        <Tooltip
+            placement={placement?.startsWith("bottom") ? "bottom" : "top"}
+            title={
+                <>
+                    <span className="block text-sm" style={{ fontWeight: (titleFontWeight as string) || "bold" }}>
+                        {title}
+                    </span>
+                    {description && <span className="block font-normal">{description}</span>}
+                </>
+            }
+        >
+            {children}
+        </Tooltip>
+    );
+};
 
 export { EcOverflowTooltip };

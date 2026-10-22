@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+
+import { useHistory } from "@/utils/navigation";
 
 import { useProjectMutations } from "../../hooks";
 import { Loader } from "../../stories/components/Loader/Loader";
@@ -12,7 +15,7 @@ const InviteProject = () => {
     const token = query.get("token");
 
     const { verifyUserInvite } = useProjectMutations();
-    const { mutate, data, isLoading, error } = verifyUserInvite;
+    const { mutate, data, isPending: isLoading, error } = verifyUserInvite;
 
     useEffect(() => {
         if (token) {
@@ -31,8 +34,7 @@ const InviteProject = () => {
     }, [data, error]);
 
     if (!token) return <PageNotFound />;
-    if (isLoading)
-        return <Loader message={getLoadingMessage("project")} image={getLoadingImage("project")} />;
+    if (isLoading) return <Loader message={getLoadingMessage("project")} image={getLoadingImage("project")} />;
     return <></>;
 };
 export { InviteProject };

@@ -1,9 +1,7 @@
-import { Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
+"use client";
 
-const EcButton = styled(Button)(`
-    text-transform: none;
-    font-weight:bold;
-`);
+import { Button } from "@/components/ui/Button";
+
+const EcButton = Button;
 
 export { EcButton };

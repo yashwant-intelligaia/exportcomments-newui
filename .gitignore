@@ -26,3 +26,8 @@ yarn-error.log*
 
 # Storybook build output
 .storybook
+# next
+/.next
+/out
+next-env.d.ts
+*.tsbuildinfo

@@ -1,42 +1,25 @@
-import {
-    ArrowDropDown as ArrowDropDownIcon,
-    CheckCircle as CheckCircleIcon,
-    Close as CloseIcon,
-} from "@mui/icons-material";
-import {
-    Autocomplete,
-    Avatar,
-    Box,
-    Button,
-    Checkbox,
-    createFilterOptions,
-    FormControlLabel,
-    IconButton,
-    TextField,
-    Typography,
-} from "@mui/material";
-import { get } from "lodash";
+"use client";
+
+import { CheckCircle2, ChevronDown, X } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 
+import { Button, IconButton } from "@/components/ui/Button";
+import { Combobox } from "@/components/ui/Combobox";
+import { Avatar } from "@/components/ui/Display";
+import { Checkbox } from "@/components/ui/Form";
+
 import { ToasterContext } from "../../contexts";
-import {
-    useAddUserToProject,
-    useFetchFiles,
-    useFetchInviteeUsers,
-    useProcessInviteesData,
-} from "../../hooks";
+import { useAddUserToProject, useFetchFiles, useFetchInviteeUsers, useProcessInviteesData } from "../../hooks";
 import { EcDrawer } from "../../stories/components";
 import { AddUserFormDataType, IUserFile, ProcessedInviteesDataType } from "../../types";
 import { emailValidation, uniqueKey } from "../../utils";
+import { get } from "../../utils/object";
 
 const AddUserDrawer = (props: { onClose: () => void }) => {
     const [error, setError] = useState("");
     const { onClose } = props;
     const { showToast } = useContext(ToasterContext);
     const [selectedUsers, setSelectedUsers] = useState<ProcessedInviteesDataType[]>([]);
-    const filter = createFilterOptions<ProcessedInviteesDataType>({
-        stringify: ({ name, email }) => `${name} ${email}`,
-    });
     const { data: invitees = [], isFetching: isFetchingInvitees } = useFetchInviteeUsers();
     const { data: projects = [], isFetching: isFetchingProjects } = useFetchFiles(props as any);
     const processedProjectsData = get(projects, "data.data", []) as IUserFile[];
@@ -44,7 +27,7 @@ const AddUserDrawer = (props: { onClose: () => void }) => {
 
     const processedInviteesData = useProcessInviteesData(invitees);
     const { addUserToProject } = useAddUserToProject();
-    const { mutate: mutateAddUser, isLoading: isAddingUserToProject, isSuccess } = addUserToProject;
+    const { mutate: mutateAddUser, isPending: isAddingUserToProject, isSuccess } = addUserToProject;
 
     const getSelectedUser = (option: ProcessedInviteesDataType) =>
         selectedUsers.some((user) => user.email === option.email);
@@ -129,72 +112,71 @@ const AddUserDrawer = (props: { onClose: () => void }) => {
             onClose();
         }
     }, [isSuccess]);
+
+    const handlePick = (newValue: ProcessedInviteesDataType | null) => {
+        let userAlreadyAdded = false;
+        if (newValue && typeof newValue === "object") {
+            selectedUsers.forEach((selectedUser) => {
+                if (selectedUser.email === newValue.email) {
+                    userAlreadyAdded = true;
+                }
+            });
+            setError("");
+        }
+        if (newValue && typeof newValue === "object" && newValue?.inputValue) {
+            // Create a new value from the user input
+            if (emailValidation(newValue.inputValue)) {
+                setError("");
+                setSelectedUsers((selectedUser) => [
+                    ...selectedUser,
+                    {
+                        inputValue: "",
+                        name: "",
+                        email: newValue.inputValue || "",
+                        avatar: "",
+                        showProject: false,
+                        selectedProjectIds: processedProjectsDataIds,
+                    },
+                ]);
+            } else {
+                setError("Email is not valid");
+            }
+        } else if (!userAlreadyAdded && newValue) {
+            setError("");
+            const updatedNewValue = newValue as ProcessedInviteesDataType;
+            updatedNewValue.selectedProjectIds = processedProjectsDataIds;
+            setSelectedUsers((selectedUser) => [...selectedUser, updatedNewValue]);
+        }
+    };
+
+    const allSelected = (ids: number[]) => ids.length === processedProjectsDataIds.length;
+
     return (
         <EcDrawer
             open
             direction="right"
             closeOnClickOutside={false}
             onClose={onClose}
-            title={
-                <Typography variant="h6" fontWeight="500" mb={1.5}>
-                    Add Users
-                </Typography>
-            }
+            title={<span className="text-xl font-medium">Add Users</span>}
         >
-            <Box mt={2} pr={2}>
-                <Autocomplete
-                    id="users"
-                    sx={{ width: "100%" }}
+            <div className="mt-4 pr-4">
+                <Combobox<ProcessedInviteesDataType>
+                    id="NB-enter-name-or-email"
+                    label="Enter name or email"
                     options={processedInviteesData}
-                    getOptionDisabled={getSelectedUser}
-                    disableCloseOnSelect
-                    autoHighlight
                     disabled={isFetchingInvitees || isFetchingProjects}
-                    freeSolo
-                    getOptionLabel={() => ""}
-                    clearOnBlur
-                    onChange={(event, newValue) => {
-                        let userAlreadyAdded = false;
-                        if (newValue && typeof newValue === "object") {
-                            selectedUsers.forEach((selectedUser) => {
-                                if (selectedUser.email === newValue.email) {
-                                    userAlreadyAdded = true;
-                                }
-                            });
-                            setError("");
-                        }
-                        if (newValue && typeof newValue === "object" && newValue?.inputValue) {
-                            // Create a new value from the user input
-                            if (emailValidation(newValue.inputValue)) {
-                                setError("");
-                                setSelectedUsers((selectedUser) => [
-                                    ...selectedUser,
-                                    {
-                                        inputValue: "",
-                                        name: "",
-                                        email: newValue.inputValue || "",
-                                        avatar: "",
-                                        showProject: false,
-                                        selectedProjectIds: processedProjectsDataIds,
-                                    },
-                                ]);
-                            } else {
-                                setError("Email is not valid");
-                            }
-                        } else if (!userAlreadyAdded && newValue) {
-                            setError("");
-                            const updatedNewValue = newValue as ProcessedInviteesDataType;
-                            updatedNewValue.selectedProjectIds = processedProjectsDataIds;
-                            setSelectedUsers((selectedUser) => [...selectedUser, updatedNewValue]);
-                        }
-                    }}
-                    filterOptions={(filterOption, params) => {
-                        const filtered = filter(filterOption, params);
-                        const { inputValue } = params;
+                    keepOpenOnSelect
+                    getKey={(o) => o.inputValue || o.email}
+                    getLabel={(o) => o.email}
+                    getOptionDisabled={getSelectedUser}
+                    onChange={handlePick}
+                    filterOptions={(pool, inputValue) => {
+                        const q = inputValue.trim().toLowerCase();
+                        const filtered = q
+                            ? pool.filter((o) => `${o.name} ${o.email}`.toLowerCase().includes(q))
+                            : [...pool];
                         // Suggest the creation of a new value
-                        const isExisting = filterOption.some((option) =>
-                            option.email.includes(inputValue)
-                        );
+                        const isExisting = pool.some((option) => option.email.includes(inputValue));
                         if (inputValue !== "" && !isExisting) {
                             filtered.push({
                                 inputValue,
@@ -203,300 +185,98 @@ const AddUserDrawer = (props: { onClose: () => void }) => {
                                 avatar: "",
                                 showProject: false,
                                 selectedProjectIds: processedProjectsDataIds,
-                            });
+                            } as ProcessedInviteesDataType);
                         }
                         return filtered;
                     }}
-                    renderOption={(renderProps, option) => (
-                        <Box
-                            display="flex"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            p={2}
-                            m={0}
-                            sx={{
-                                cursor: "pointer",
-                                width: "100%",
-                                "&:hover": {
-                                    background: "#EBF2FF !important",
-                                },
-                            }}
-                            component="li"
-                            key={option.email}
-                            {...renderProps}
-                        >
-                            <Box
-                                display="flex"
-                                alignItems="center"
-                                component="li"
-                                sx={{
-                                    cursor: "pointer",
-                                    backgroundColor: "transparent !important",
-                                    flexGrow: 1,
-                                    width: "70%",
-                                }}
-                            >
-                                <Avatar
-                                    sx={{
-                                        width: "36px",
-                                        height: "36px",
-                                        bgcolor: "#efefef",
-                                        color: "#000",
-                                        fontSize: "18px",
-                                    }}
-                                    src={option.avatar}
-                                />
-                                <Box ml={1} fontWeight={400} width="100%">
-                                    <Box fontSize={16}>
-                                        <Typography variant="inherit">{option.name}</Typography>
-                                    </Box>
-                                    <Box fontSize={14} color="#616161" width="90%">
-                                        <Typography
-                                            variant="inherit"
-                                            sx={{
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                display: "block",
-                                            }}
-                                        >
-                                            {option.email}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </Box>
-                            {getSelectedUser(option) ? (
-                                <CheckCircleIcon
-                                    sx={{
-                                        fill: "#65B168 !important",
-                                    }}
-                                />
-                            ) : null}
-                        </Box>
-                    )}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            error={!!error}
-                            label="Enter name or email"
-                            variant="standard"
-                            inputProps={{
-                                ...params.inputProps,
-                                autoComplete: "off", // disable autocomplete and autofill
-                            }}
-                            onChange={(event) => {
-                                if (!!error && event.target.value.trim() !== "") {
-                                    setError("");
-                                }
-                            }}
-                            helperText={error || ""}
-                            id="NB-enter-name-or-email"
-                        />
+                    renderOption={(option) => (
+                        <div className="flex items-center justify-between py-1">
+                            <div className="flex w-[70%] grow items-center gap-2">
+                                <Avatar src={option.avatar} name={option.name || option.email} size={36} />
+                                <div className="min-w-0 grow">
+                                    <div className="text-base">{option.name}</div>
+                                    <div className="text-muted truncate text-sm">{option.email}</div>
+                                </div>
+                            </div>
+                            {getSelectedUser(option) ? <CheckCircle2 className="size-5 text-[#65b168]" /> : null}
+                        </div>
                     )}
                 />
-            </Box>
-            <Box
-                width={350}
-                height="calc(100vh - 190px)"
-                overflow="scroll"
-                pr={1}
-                sx={{
-                    overflowX: "hidden",
-                }}
-            >
-                <Box fontSize={16} fontWeight={700} mt={3}>
-                    <Typography variant="inherit">Selected User(s)</Typography>
-                </Box>
-                {!selectedUsers && (
-                    <Box fontSize={14} color=" #444444" mt={2}>
-                        <Typography variant="inherit">No users have been selected</Typography>
-                    </Box>
-                )}
-                {selectedUsers.map(
-                    ({ name, email, avatar, selectedProjectIds, showProject }, userIndex) => (
-                        <Box
-                            p={2}
-                            pb={1}
-                            mt={2}
-                            border={1}
-                            borderColor="#e0e0e0"
-                            borderRadius="12px"
-                            key={`selected-user-${uniqueKey(userIndex)}`}
-                        >
-                            <Box display="flex" alignItems="center" justifyContent="center">
-                                <Avatar
-                                    sx={{
-                                        width: "36px",
-                                        height: "36px",
-                                        bgcolor: "#efefef",
-                                        color: "#000",
-                                        fontSize: "18px",
-                                    }}
-                                    src={avatar}
-                                />
-                                <Box ml={1} fontWeight={400} position="relative" width="100%">
-                                    <Box fontSize={16}>
-                                        <Typography variant="inherit">{name}</Typography>
-                                    </Box>
-                                    <Box fontSize={14} color="#616161" width="90%">
-                                        <Typography
-                                            variant="inherit"
-                                            sx={{
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                display: "block",
-                                            }}
-                                        >
-                                            {email}
-                                        </Typography>
-                                    </Box>
-                                    <Box
-                                        position="absolute"
-                                        sx={{
-                                            top: "50%",
-                                            right: "0",
-                                            transform: "translateY(-50%)",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <IconButton
-                                            aria-label="close drawer"
-                                            component="span"
-                                            onClick={onClose}
-                                            sx={{
-                                                color: (theme) => theme.palette.grey[500],
-                                                "&:hover": {
-                                                    color: "#000",
-                                                },
-                                            }}
-                                        >
-                                            <CloseIcon
-                                                onClick={() => handleRemoveSelectedUser(userIndex)}
-                                            />
-                                        </IconButton>
-                                    </Box>
-                                </Box>
-                            </Box>
-
-                            <Box borderTop={1} borderColor="#e0e0e0" mt={2} pt={1}>
-                                <FormControlLabel
-                                    label=""
-                                    control={
-                                        <Box
-                                            display="flex"
-                                            justifyContent="space-between"
-                                            width="100%"
-                                            alignItems="center"
-                                        >
-                                            <Box display="flex" alignItems="center" width="100%">
-                                                <Checkbox
-                                                    // indeterminate={addedUser.checkAll}
-                                                    // checked={addedUser.checkAll}
-                                                    indeterminate={
-                                                        selectedProjectIds.length ===
-                                                        processedProjectsDataIds.length
-                                                    }
-                                                    checked={
-                                                        selectedProjectIds.length ===
-                                                        processedProjectsDataIds.length
-                                                    }
-                                                    onChange={() =>
-                                                        handleCheckAllProjects(userIndex)
-                                                    }
-                                                />
-                                                <Box>All Projects</Box>
-                                            </Box>
-                                        </Box>
-                                    }
-                                    sx={{
-                                        width: "calc(100% - 35px)",
-                                        margin: "0px",
-                                        background: "#fff",
-                                        "&:hover": {
-                                            background: "#EBF2FF",
-                                        },
-                                    }}
-                                />
+                {error && <p className="text-danger mt-1 text-xs">{error}</p>}
+            </div>
+            <div className="h-[calc(100vh-190px)] w-[350px] max-w-full overflow-x-hidden overflow-y-scroll pr-2">
+                <p className="mt-6 text-base font-bold">Selected User(s)</p>
+                {!selectedUsers && <p className="text-muted mt-4 text-sm">No users have been selected</p>}
+                {selectedUsers.map(({ name, email, avatar, selectedProjectIds, showProject }, userIndex) => (
+                    <div
+                        key={`selected-user-${uniqueKey(userIndex)}`}
+                        className="border-line mt-4 rounded-md border p-4 pb-2"
+                    >
+                        <div className="flex items-center">
+                            <Avatar src={avatar} name={name || email} size={36} />
+                            <div className="relative ml-2 w-full">
+                                <div className="text-base">{name}</div>
+                                <div className="text-muted w-[90%] truncate text-sm">{email}</div>
                                 <IconButton
-                                    sx={{
-                                        display: "inline-flex",
-                                        padding: "0",
-                                    }}
+                                    aria-label="remove user"
+                                    size="small"
+                                    className="text-muted absolute top-1/2 right-0 -translate-y-1/2"
+                                    onClick={() => handleRemoveSelectedUser(userIndex)}
+                                >
+                                    <X className="size-5" />
+                                </IconButton>
+                            </div>
+                        </div>
+
+                        <div className="border-line mt-4 border-t pt-2">
+                            <div className="flex items-center">
+                                <div className="hover:bg-blue-soft grow">
+                                    <Checkbox
+                                        checked={allSelected(selectedProjectIds)}
+                                        onChange={() => handleCheckAllProjects(userIndex)}
+                                        label="All Projects"
+                                        className="w-full p-1"
+                                    />
+                                </div>
+                                <IconButton
+                                    size="small"
+                                    aria-label="toggle projects"
                                     onClick={() => handleShowUserProjects(userIndex)}
                                 >
-                                    <ArrowDropDownIcon
-                                        sx={{
-                                            width: "35px",
-                                            height: "35px",
-                                        }}
-                                    />
+                                    <ChevronDown className="size-5" />
                                 </IconButton>
-                                {showProject &&
-                                    processedProjectsData.map(
-                                        ({ fileName: projectName, projectId }, projectIndex) => (
-                                            <Box
-                                                key={`user-${uniqueKey(
-                                                    userIndex
-                                                )}-project-${uniqueKey(projectIndex)}`}
-                                                sx={{
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    borderTop: "1px dashed #e0e0e0",
-                                                }}
-                                            >
-                                                <FormControlLabel
-                                                    label={projectName}
-                                                    control={
-                                                        <Checkbox
-                                                            checked={selectedProjectIds.includes(
-                                                                projectId
-                                                            )}
-                                                            onChange={() =>
-                                                                handleProjectCheckChange(
-                                                                    userIndex,
-                                                                    projectId
-                                                                )
-                                                            }
-                                                        />
-                                                    }
-                                                    sx={{
-                                                        margin: "0px",
-                                                        background: "#fff",
-                                                        "&:hover": {
-                                                            background: "#EBF2FF",
-                                                        },
-                                                    }}
-                                                />
-                                            </Box>
-                                        )
-                                    )}
-                            </Box>
-                        </Box>
-                    )
-                )}
-            </Box>
-            <Box width={350} display="flex" justifyContent="flex-end" mt={1}>
-                <Button
-                    variant="text"
-                    sx={{ marginRight: "10px", textTransform: "inherit" }}
-                    onClick={onClose}
-                >
-                    {/* TODO: In future, we need to add functionality to cancel query, api request and promise as well */}
+                            </div>
+                            {showProject &&
+                                processedProjectsData.map(({ fileName: projectName, projectId }, projectIndex) => (
+                                    <div
+                                        key={`user-${uniqueKey(userIndex)}-project-${uniqueKey(projectIndex)}`}
+                                        className="border-line hover:bg-blue-soft flex flex-col border-t border-dashed"
+                                    >
+                                        <Checkbox
+                                            checked={selectedProjectIds.includes(projectId)}
+                                            onChange={() => handleProjectCheckChange(userIndex, projectId)}
+                                            label={projectName}
+                                            className="w-full p-1"
+                                        />
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <div className="mt-2 flex w-[350px] max-w-full justify-end gap-2.5">
+                {/* TODO: In future, we need to add functionality to cancel query, api request and promise as well */}
+                <Button variant="text" onClick={onClose}>
                     Cancel
                 </Button>
                 <Button
-                    variant="contained"
-                    sx={{ marginRight: "10px", textTransform: "inherit" }}
+                    id="NB-add-user-button"
                     disabled={isAddingUserToProject || selectedUsers.length === 0}
                     onClick={submitForm}
-                    id="NB-add-user-button"
                 >
                     Add
                 </Button>
-            </Box>
+            </div>
         </EcDrawer>
     );
 };

@@ -1,8 +1,11 @@
-import { debounce } from "lodash";
+"use client";
+
 import { useEffect, useMemo, useRef } from "react";
 
+import { debounce } from "../utils/object";
+
 const useDebounce = (callback: any, time?: number) => {
-    const ref: any = useRef();
+    const ref = useRef<any>(undefined);
 
     useEffect(() => {
         ref.current = callback;

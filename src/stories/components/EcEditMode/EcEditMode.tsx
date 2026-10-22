@@ -1,24 +1,21 @@
-import {
-    Clear,
-    CreateOutlined as CreateOutlinedIcon,
-    Done as DoneIcon,
-    PriorityHigh,
-} from "@mui/icons-material";
-import { Box, FormControl, IconButton, Input, Typography } from "@mui/material";
-import { Variant } from "@mui/material/styles/createTypography";
-import { useRef, useState } from "react";
+"use client";
+
+import { AlertCircle, Check, Pencil, X } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import { IconButton } from "@/components/ui/Button";
+import { cn } from "@/components/ui/cn";
 
 import { EcTooltip } from "../EcTooltip";
 
 interface EcEditModePropsType {
     editable?: boolean;
-    // TODO: need to update type
     name?: any;
     title: any;
     placeholder?: string;
     error?: string;
-    variant?: Variant | "inherit";
+    variant?: string;
     size?: string | number;
     className?: string;
     showTooltip?: boolean;
@@ -27,108 +24,99 @@ interface EcEditModePropsType {
     isLoading?: boolean;
 }
 
-const EcEditMode = (props: EcEditModePropsType) => {
-    const {
-        editable,
-        name,
-        title,
-        placeholder,
-        icon,
-        variant,
-        size,
-        className,
-        showTooltip,
-        isLoading,
-        onSubmit,
-    } = props;
+const variantClass: Record<string, string> = {
+    h4: "text-2xl",
+    h5: "text-xl",
+    h6: "text-lg",
+    subtitle1: "text-base",
+    body1: "text-base",
+    body2: "text-sm",
+};
+
+const EcEditMode = ({
+    editable = true,
+    name,
+    title,
+    placeholder = "Enter title",
+    icon,
+    variant = "h6",
+    size = 18,
+    className,
+    showTooltip = true,
+    isLoading,
+    onSubmit,
+}: EcEditModePropsType) => {
     const [isEditable, setIsEditable] = useState(false);
-    const inputRef = useRef(name);
 
     const { register, formState, handleSubmit, setValue } = useForm();
     const { project: titleError } = formState.errors;
+    const iconSize = { width: Number(size), height: Number(size) };
+
     const handleSubmitTitle = async (formData: any) => {
         const { project } = formData;
         if (!isEditable) {
-            setIsEditable(!isEditable);
+            setIsEditable(true);
         } else {
             const isTitleUpdated = await onSubmit(project.trim());
-            if (isTitleUpdated) setIsEditable(!isEditable);
+            if (isTitleUpdated) setIsEditable(false);
         }
     };
 
     return (
         <form onSubmit={handleSubmit(handleSubmitTitle)}>
-            <Box
-                display="flex"
-                alignItems="center"
-                sx={{ gap: isEditable ? 0 : 0.5, paddingRight: 1 }}
-            >
-                {icon && (
-                    <IconButton disableRipple disableFocusRipple aria-label="Edit" size="small">
-                        {icon}
-                    </IconButton>
-                )}
+            <div className={cn("flex items-center pr-2", !isEditable && "gap-1")}>
+                {icon && <span className="inline-flex p-1">{icon}</span>}
 
                 {isEditable && (
-                    <FormControl>
-                        <Input
-                            autoComplete="off"
-                            inputRef={inputRef}
-                            defaultValue={title}
-                            autoFocus
-                            sx={{ fontSize: 16 }}
-                            inputProps={{ style: { width: "100vh" } }}
-                            placeholder={placeholder}
-                            aria-describedby="error"
-                            className={className}
-                            error={titleError}
-                            {...register(name, {
-                                required: {
-                                    value: true,
-                                    message: "Project title cannot be empty",
-                                },
-                                maxLength: {
-                                    value: 100,
-                                    message: "Project title cannot exceed 100 characters",
-                                },
-                                pattern: {
-                                    value: /^[a-zA-Z0-9\s]*$/,
-                                    message: "Project title cannot contain special characters",
-                                },
-                                validate: {
-                                    noLeadingTrailingSpaces: (value) =>
-                                        value.trim().length !== 0 ||
-                                        "Project title cannot be whitespace only",
-                                    noLeadingSpaces: (value) =>
-                                        value === value.trim() ||
-                                        "Project title cannot start or end with spaces",
-                                },
-                            })}
-                        />
-                    </FormControl>
+                    <input
+                        autoComplete="off"
+                        defaultValue={title}
+                        autoFocus
+                        placeholder={placeholder}
+                        aria-describedby="error"
+                        aria-invalid={!!titleError}
+                        className={cn(
+                            "text-ink w-[min(60vw,32rem)] border-b bg-transparent py-1 text-base focus:outline-none",
+                            titleError ? "border-danger" : "border-ink",
+                            className,
+                        )}
+                        {...register(name, {
+                            required: { value: true, message: "Project title cannot be empty" },
+                            maxLength: { value: 100, message: "Project title cannot exceed 100 characters" },
+                            pattern: {
+                                value: /^[a-zA-Z0-9\s]*$/,
+                                message: "Project title cannot contain special characters",
+                            },
+                            validate: {
+                                noLeadingTrailingSpaces: (value) =>
+                                    value.trim().length !== 0 || "Project title cannot be whitespace only",
+                                noLeadingSpaces: (value) =>
+                                    value === value.trim() || "Project title cannot start or end with spaces",
+                            },
+                        })}
+                    />
                 )}
 
                 {!isEditable && showTooltip && (
                     <EcTooltip title={title} placement="top" arrow>
-                        {/* Todo need to implement line-height in next release using theme */}
-                        <Typography variant={variant} noWrap style={{ lineHeight: "2.25rem" }}>
+                        <span className={cn("text-ink truncate leading-9", variantClass[variant] ?? "text-lg")}>
                             {title}
-                        </Typography>
+                        </span>
                     </EcTooltip>
                 )}
 
                 {isEditable && (
                     <IconButton
                         aria-label="Cancel"
+                        size="small"
+                        className="ml-1"
+                        disabled={!editable || isLoading}
                         onClick={() => {
                             setIsEditable(false);
                             setValue(name, title);
                         }}
-                        style={{ marginLeft: "5px" }}
-                        disabled={!editable || isLoading}
-                        size="small"
                     >
-                        <Clear style={{ fontSize: size }} />
+                        <X style={iconSize} />
                     </IconButton>
                 )}
 
@@ -136,37 +124,24 @@ const EcEditMode = (props: EcEditModePropsType) => {
                     aria-label="Edit"
                     type="submit"
                     size="small"
+                    className="mr-5"
                     disabled={!editable || isLoading}
-                    sx={{
-                        margin: "0px 20px 0px 0px",
-                    }}
                 >
                     {isEditable && titleError && (
-                        <EcTooltip title={titleError?.message} placement="top" arrow>
-                            <PriorityHigh style={{ fontSize: 18, color: "red" }} />
+                        <EcTooltip title={titleError?.message as string} placement="top" arrow>
+                            <AlertCircle className="text-danger size-[18px]" />
                         </EcTooltip>
                     )}
-                    {isEditable && !titleError && <DoneIcon style={{ fontSize: size }} />}
+                    {isEditable && !titleError && <Check style={iconSize} />}
                     {!isEditable && (
                         <EcTooltip title="Edit Title" placement="top" arrow>
-                            <CreateOutlinedIcon style={{ fontSize: size }} />
+                            <Pencil style={iconSize} />
                         </EcTooltip>
                     )}
                 </IconButton>
-            </Box>
+            </div>
         </form>
     );
-};
-
-EcEditMode.defaultProps = {
-    placeholder: "Enter title",
-    editable: true,
-    variant: "h6",
-    size: 18,
-    className: undefined,
-    showTooltip: true,
-    icon: undefined,
-    isLoading: undefined,
 };
 
 export { EcEditMode };

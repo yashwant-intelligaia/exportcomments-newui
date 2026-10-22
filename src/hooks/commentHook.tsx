@@ -1,7 +1,8 @@
+"use client";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { get } from "lodash";
 import { useContext } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { APP_CONSTANT, TIME_ZONE } from "../constants/AppConstant";
 import { ToasterContext, UserContext } from "../contexts";
@@ -17,6 +18,8 @@ import {
     ProcessedReactionType,
 } from "../types";
 import { api, messages } from "../utils";
+import { get } from "../utils/object";
+import { useQueryWithSettled } from "./queryUtils";
 
 const COMMENTS = "comments";
 
@@ -25,44 +28,40 @@ axios.defaults.baseURL = APP_CONSTANT.baseUrl;
 const useFetchComments = (projectId?: number, branchKey?: string) => {
     const { showToast } = useContext(ToasterContext);
     const { token } = UserContext();
-    return useQuery<CommentResponseDataType, AxiosError>(
-        [COMMENTS, projectId, branchKey],
-        async () => {
-            const payload: { projectId?: number; branchKey?: string } = {
-                projectId,
-            };
-            if (branchKey) {
-                payload.branchKey = branchKey;
-            }
-            const { data } = await api({
-                url: `${APP_CONSTANT.webApi.comments}`,
-                method: "POST",
-                version: "v2",
-                data: payload,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            return get(data, "data", {}) as CommentResponseDataType;
-        },
+    return useQueryWithSettled<CommentResponseDataType, AxiosError>(
         {
+            queryKey: [COMMENTS, projectId, branchKey],
+            queryFn: async () => {
+                const payload: { projectId?: number; branchKey?: string } = {
+                    projectId,
+                };
+                if (branchKey) {
+                    payload.branchKey = branchKey;
+                }
+                const { data } = await api({
+                    url: `${APP_CONSTANT.webApi.comments}`,
+                    method: "POST",
+                    version: "v2",
+                    data: payload,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                return get(data, "data", {}) as CommentResponseDataType;
+            },
             retry: 3,
             retryDelay: 3,
             staleTime: Infinity,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             enabled: !!projectId,
-            onSettled: (data, error) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                }
-            },
-        }
+        },
+        (data, error) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+            }
+        },
     );
 };
 
@@ -83,17 +82,15 @@ const callDeleteApi =
 const useDeleteComment = () => {
     const { token } = UserContext();
     const { showToast } = useContext(ToasterContext);
-    return useMutation(callDeleteApi(token), {
-        onSettled: (
-            response: AxiosResponse | undefined,
-            error: AxiosError | null
-        ): any | null | AxiosError => {
+    return useMutation({
+        mutationFn: callDeleteApi(token),
+        onSettled: (response: AxiosResponse | undefined, error: AxiosError | null): any | null | AxiosError => {
             if (response) {
                 showToast({ message: response?.data?.message });
                 return response;
             }
             if (error) {
-                showToast({ message: error?.response?.data?.message, severity: "error" });
+                showToast({ message: (error as any)?.response?.data?.message, severity: "error" });
                 return error;
             }
             return null;
@@ -106,8 +103,8 @@ const useReactionMutation = () => {
     const { showToast } = useContext(ToasterContext);
     const queryClient = useQueryClient();
 
-    const getReaction = useMutation(
-        (reactionDetails: any) =>
+    const getReaction = useMutation({
+        mutationFn: (reactionDetails: any) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.getReaction,
@@ -121,26 +118,20 @@ const useReactionMutation = () => {
                     Timezone: TIME_ZONE,
                 },
             }),
-        {
-            onSettled: (response: any, error: any) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                    return error;
-                }
+        onSettled: (response: any, error: any) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+                return error;
+            }
 
-                showToast({ message: response?.data?.message });
-                return response;
-            },
-        }
-    );
+            showToast({ message: response?.data?.message });
+            return response;
+        },
+    });
 
-    const addReaction = useMutation(
-        (payload: AddOrDeleteReactionRequestType) =>
+    const addReaction = useMutation({
+        mutationFn: (payload: AddOrDeleteReactionRequestType) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.addReaction,
@@ -151,46 +142,40 @@ const useReactionMutation = () => {
                     Timezone: TIME_ZONE,
                 },
             }),
-        {
-            onSettled: async (response, error, variables) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
-                    );
-                    showToast({ message, severity: "error" });
-                    return error;
-                }
-                const { projectId, commentId, emoji } = variables;
-                const queryName = [COMMENTS, projectId];
-                await queryClient.cancelQueries(queryName);
-                const previousData = await queryClient.getQueryData(queryName);
-                const comments = get(previousData, "data.comments.comments.comments", []);
-                comments.forEach((comment: any) => {
-                    if (comment.id === commentId) {
-                        comment.reactions = [
-                            ...comment.reactions,
-                            {
-                                emoji,
-                                createdAt: new Date().toISOString(),
-                                user: {
-                                    id: user.figmaUserId,
-                                    handle: user.name,
-                                    imgUrl: user.avatar,
-                                },
+        onSettled: async (response, error, variables) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+                return error;
+            }
+            const { projectId, commentId, emoji } = variables;
+            const queryName = [COMMENTS, projectId];
+            await queryClient.cancelQueries({ queryKey: queryName });
+            const previousData = await queryClient.getQueryData(queryName);
+            const comments = get(previousData, "data.comments.comments.comments", []);
+            comments.forEach((comment: any) => {
+                if (comment.id === commentId) {
+                    comment.reactions = [
+                        ...comment.reactions,
+                        {
+                            emoji,
+                            createdAt: new Date().toISOString(),
+                            user: {
+                                id: user.figmaUserId,
+                                handle: user.name,
+                                imgUrl: user.avatar,
                             },
-                        ];
-                    }
-                });
-                queryClient.invalidateQueries([COMMENTS]);
-                return response;
-            },
-        }
-    );
+                        },
+                    ];
+                }
+            });
+            queryClient.invalidateQueries({ queryKey: [COMMENTS] });
+            return response;
+        },
+    });
 
-    const deleteReaction = useMutation(
-        (payload: AddOrDeleteReactionRequestType) =>
+    const deleteReaction = useMutation({
+        mutationFn: (payload: AddOrDeleteReactionRequestType) =>
             api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.deleteReaction,
@@ -201,42 +186,36 @@ const useReactionMutation = () => {
                     Timezone: TIME_ZONE,
                 },
             }),
-        {
-            onSettled: async (response, error, variables) => {
-                if (error) {
-                    const message = get(
-                        error,
-                        "response.data.message",
-                        messages.SOMETHING_WENT_WRONG
+        onSettled: async (response, error, variables) => {
+            if (error) {
+                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+                showToast({ message, severity: "error" });
+                return error;
+            }
+            const { projectId, commentId, emoji } = variables;
+            const queryName = [COMMENTS, projectId];
+            await queryClient.cancelQueries({ queryKey: queryName });
+            const previousData = await queryClient.getQueryData(queryName);
+            const comments = get(previousData, "data.comments.comments.comments", []);
+            comments.forEach((comment: any) => {
+                if (comment.id === commentId) {
+                    comment.reactions = comment.reactions.filter(
+                        (reaction: {
+                            user: {
+                                id: string;
+                                handle: string;
+                                imgUrl: string;
+                            };
+                            emoji: string;
+                            createdAt: string;
+                        }) => reaction.emoji !== emoji,
                     );
-                    showToast({ message, severity: "error" });
-                    return error;
                 }
-                const { projectId, commentId, emoji } = variables;
-                const queryName = [COMMENTS, projectId];
-                await queryClient.cancelQueries(queryName);
-                const previousData = await queryClient.getQueryData(queryName);
-                const comments = get(previousData, "data.comments.comments.comments", []);
-                comments.forEach((comment: any) => {
-                    if (comment.id === commentId) {
-                        comment.reactions = comment.reactions.filter(
-                            (reaction: {
-                                user: {
-                                    id: string;
-                                    handle: string;
-                                    imgUrl: string;
-                                };
-                                emoji: string;
-                                createdAt: string;
-                            }) => reaction.emoji !== emoji
-                        );
-                    }
-                });
-                queryClient.invalidateQueries([COMMENTS]);
-                return response;
-            },
-        }
-    );
+            });
+            queryClient.invalidateQueries({ queryKey: [COMMENTS] });
+            return response;
+        },
+    });
     return { getReaction, addReaction, deleteReaction };
 };
 
@@ -245,8 +224,8 @@ const useCommentMutation = () => {
     const { showToast } = useContext(ToasterContext);
     const queryClient = useQueryClient();
 
-    const replyComment = useMutation(
-        async (formData: IReplyRequestType) => {
+    const replyComment = useMutation({
+        mutationFn: async (formData: IReplyRequestType) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.reply,
@@ -258,20 +237,18 @@ const useCommentMutation = () => {
             });
             return get(data, "data", {});
         },
-        {
-            onError: (error: AxiosError) => {
-                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
-                showToast({ message, severity: "error" });
-            },
-            onSuccess: (_, payload) => {
-                queryClient.refetchQueries([COMMENTS, payload.projectId, payload.branchKey]);
-                showToast({ message: "Reply posted Successfully" });
-            },
-        }
-    );
+        onError: (error: AxiosError) => {
+            const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+            showToast({ message, severity: "error" });
+        },
+        onSuccess: (_, payload) => {
+            queryClient.refetchQueries({ queryKey: [COMMENTS, payload.projectId, payload.branchKey] });
+            showToast({ message: "Reply posted Successfully" });
+        },
+    });
 
-    const markAsRead = useMutation(
-        async (formData: { projectId: number; branchKey: string }) => {
+    const markAsRead = useMutation({
+        mutationFn: async (formData: { projectId: number; branchKey: string }) => {
             const { data } = await api({
                 version: "v2",
                 url: APP_CONSTANT.webApi.markAsRead,
@@ -283,17 +260,15 @@ const useCommentMutation = () => {
             });
             return get(data, "data", {});
         },
-        {
-            onError: (error: AxiosError) => {
-                const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
-                showToast({ message, severity: "error" });
-            },
-            onSuccess: (_, { projectId, branchKey }) => {
-                queryClient.invalidateQueries([COMMENTS, projectId, branchKey]);
-                showToast({ message: "Comments marked as read" });
-            },
-        }
-    );
+        onError: (error: AxiosError) => {
+            const message = get(error, "response.data.message", messages.SOMETHING_WENT_WRONG);
+            showToast({ message, severity: "error" });
+        },
+        onSuccess: (_, { projectId, branchKey }) => {
+            queryClient.invalidateQueries({ queryKey: [COMMENTS, projectId, branchKey] });
+            showToast({ message: "Comments marked as read" });
+        },
+    });
 
     return { replyComment, markAsRead };
 };
@@ -303,9 +278,7 @@ const useProcessCommentReactions = (reactions: CommentReactionResponseType[]) =>
     reactions.forEach(({ emoji, user, createdAt }) => {
         if (!emoji) return;
         const emojiName = emoji.replace(/:/g, "");
-        const existingReaction = processedReactions.find(
-            (reaction) => reaction.emoji === emojiName
-        );
+        const existingReaction = processedReactions.find((reaction) => reaction.emoji === emojiName);
 
         if (existingReaction) {
             existingReaction.users.push({ ...user, createdAt });
@@ -318,9 +291,7 @@ const useProcessCommentReactions = (reactions: CommentReactionResponseType[]) =>
         }
     });
     processedReactions.forEach((reaction) => {
-        reaction.users.sort(
-            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        reaction.users.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     });
 
     return processedReactions;
@@ -375,7 +346,7 @@ const processfilteredComments = (searchKey: string, data: CommentRowType[]) => {
     const comments: CommentRowType[] = data.filter(
         (comment) =>
             comment.message.toLowerCase().includes(searchKey.toLowerCase()) ||
-            (comment.userName && comment.userName.toLowerCase().includes(searchKey.toLowerCase()))
+            (comment.userName && comment.userName.toLowerCase().includes(searchKey.toLowerCase())),
     );
 
     return comments;

@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+
+import { useHistory } from "@/utils/navigation";
 
 import { useFlowMutations } from "../../hooks";
 import { Loader } from "../../stories/components/Loader/Loader";
@@ -10,12 +13,7 @@ export const InvitePageFlow = () => {
     const history = useHistory();
     const token = query.get("token");
     const { verifyFeedbackVersion } = useFlowMutations();
-    const {
-        mutate: mutateVerifyFlow,
-        data,
-        isLoading: isVerifyFlowLoading,
-        isError,
-    } = verifyFeedbackVersion;
+    const { mutate: mutateVerifyFlow, data, isPending: isVerifyFlowLoading, isError } = verifyFeedbackVersion;
 
     useEffect(() => {
         mutateVerifyFlow({ token });

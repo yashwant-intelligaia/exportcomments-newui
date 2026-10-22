@@ -1,187 +1,81 @@
-import { Box } from "@mui/material";
+"use client";
+
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 
 import Figma from "../../../assets/figma.svg";
 import { UserContext } from "../../../contexts";
-import { useFocusRef } from "../../../hooks/useFocusRef";
 import { EcTooltip } from "../../../stories/components";
 import { CommentRowType, ReactionActionType } from "../../../types";
 import { getMessagesWithEmojis, getReactionAction } from "../../../utils";
 import { ReactionList } from "../ReactionList";
 import { ReactionPopover } from "../ReactionPopover";
 
-const Cell = styled.div`
-    position: relative;
-    width: 100%;
-    display: flex;
-    .action-location {
-        strong {
-            color: #2979ff;
-            width: 5rem;
-            margin-right: 1.5rem;
-            font-weight: 700;
-            font-size: 0.875rem;
-            cursor: pointer;
-            align-items: center;
-            & > span {
-                white-space: nowrap;
-            }
-            .down-icon {
-                margin-left: 2px;
-                display: inline-flex;
-                line-height: 1;
-            }
-        }
-        a {
-            cursor: pointer;
-        }
-        img {
-            height: 18px;
-            width: 18px;
-            cursor: pointer;
-            display: flex;
-        }
-    }
-`;
-
-const HighlightStatusIcon = styled.div`
-    &.highlight-icon {
-        background-color: #2979ff;
-        height: 11px;
-        width: 11px;
-        display: none;
-        border-radius: 50%;
-        position: absolute;
-        right: 0;
-    }
-`;
-
 interface CommentCellPropsType {
-    isCellSelected: boolean;
     row: CommentRowType;
     onReplyClick: () => void;
-    onAddOrRemoveReaction: (
-        reaction: string,
-        action: ReactionActionType,
-        commentId: string
-    ) => void;
+    onAddOrRemoveReaction: (reaction: string, action: ReactionActionType, commentId: string) => void;
 }
 
-export const CommentCell = (props: CommentCellPropsType) => {
+export const CommentCell = ({ row, onReplyClick, onAddOrRemoveReaction }: CommentCellPropsType) => {
     const { figmaUser } = UserContext();
-    const { isCellSelected, row, onReplyClick, onAddOrRemoveReaction } = props;
-    const { ref, tabIndex } = useFocusRef<HTMLSpanElement>(isCellSelected);
-    const commentsDomElement = useRef<any>(null);
-    const [getEllips, hideEllips] = useState(false);
+    const commentsDomElement = useRef<HTMLSpanElement>(null);
+    const [isTruncated, setTruncated] = useState(false);
+
     useEffect(() => {
-        if (commentsDomElement.current) {
-            hideEllips(
-                commentsDomElement.current.offsetWidth < commentsDomElement.current.scrollWidth
-            );
-        }
+        const el = commentsDomElement.current;
+        if (el) setTruncated(el.offsetWidth < el.scrollWidth);
     }, []);
 
+    const react = (reaction: string) =>
+        onAddOrRemoveReaction(reaction, getReactionAction(row.reactions || [], reaction, figmaUser), row.id);
+
+    const message = (
+        <span ref={commentsDomElement} className="w-[70%] truncate leading-4">
+            {getMessagesWithEmojis(row.message)}
+        </span>
+    );
+    const replyCount = row?.children?.length ?? 0;
+
     return (
-        <Cell>
-            <Box display="flex" flexDirection="column" minWidth="32rem">
-                <Box display="flex" alignItems="center" height="30px">
-                    {getEllips ? (
-                        <EcTooltip
-                            className="comment-cell-tooltip"
-                            title={row.message}
-                            placement="top-start"
-                            arrow
-                        >
-                            <span
-                                className="cell"
-                                ref={commentsDomElement}
-                                style={{
-                                    width: "70%",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    lineHeight: "1rem",
-                                }}
-                            >
-                                {getMessagesWithEmojis(row.message)}
-                            </span>
+        <div className="relative flex w-full">
+            {row.unreadComment && (
+                <span
+                    aria-label="unread"
+                    className="bg-blue-ink absolute top-1/2 right-0 size-[11px] -translate-y-1/2 rounded-full"
+                />
+            )}
+            <div className="flex min-w-[32rem] flex-col">
+                <div className="flex h-[30px] items-center">
+                    {isTruncated ? (
+                        <EcTooltip title={row.message} placement="top-start" arrow>
+                            {message}
                         </EcTooltip>
                     ) : (
-                        <span
-                            className="cell"
-                            ref={commentsDomElement}
-                            style={{
-                                width: "70%",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                lineHeight: "1rem",
-                            }}
-                        >
-                            {getMessagesWithEmojis(row.message)}
-                        </span>
+                        message
                     )}
-                </Box>
-                <Box display="flex" alignItems="center" height="44px">
-                    <ReactionPopover
-                        onClickReaction={(reaction) => {
-                            onAddOrRemoveReaction(
-                                reaction,
-                                getReactionAction(row.reactions || [], reaction, figmaUser),
-                                row.id
-                            );
-                        }}
-                    />
-                    <ReactionList
-                        data={row.reactions}
-                        onClick={(reaction) => {
-                            onAddOrRemoveReaction(
-                                reaction,
-                                getReactionAction(row.reactions || [], reaction, figmaUser),
-                                row.id
-                            );
-                        }}
-                    />
-                </Box>
-            </Box>
-            <Box position="absolute" right="0" top="0" width="11rem" height="100%">
-                <Box
-                    component="span"
-                    display="flex"
-                    alignItems="center"
-                    alignContent="center"
-                    justifyContent="flex-end"
-                    paddingLeft="1rem"
-                    paddingRight="1rem"
-                    position="relative"
-                    className="action-location"
-                    width="10rem"
-                    height="100%"
-                >
-                    <strong
-                        style={{
-                            display: row.children && row.children.length ? "flex" : "none",
-                        }}
-                        role="presentation"
+                </div>
+                <div className="flex h-11 items-center">
+                    <ReactionPopover onClickReaction={react} />
+                    <ReactionList data={row.reactions} onClick={react} />
+                </div>
+            </div>
+            <div className="absolute top-0 right-0 flex h-full w-40 items-center justify-end gap-6 px-4">
+                {replyCount > 0 && (
+                    <button
+                        type="button"
                         onClick={onReplyClick}
+                        className="text-blue-ink w-20 text-sm font-bold whitespace-nowrap"
                     >
-                        <span ref={ref} tabIndex={tabIndex}>
-                            {row?.children?.length === 1
-                                ? `${row?.children?.length} Reply`
-                                : `${row?.children?.length} Replies`}
-                        </span>
-                    </strong>
-
-                    <EcTooltip title="Figma Location" placement="top" arrow>
-                        <a target="_blank" rel="noreferrer" href={row.commentLocation}>
-                            <img alt="notification" src={Figma} />
-                        </a>
-                    </EcTooltip>
-
-                    <HighlightStatusIcon className="highlight-icon" />
-                </Box>
-            </Box>
-        </Cell>
+                        {replyCount === 1 ? `${replyCount} Reply` : `${replyCount} Replies`}
+                    </button>
+                )}
+                <EcTooltip title="Figma Location" placement="top" arrow>
+                    <a target="_blank" rel="noreferrer" href={row.commentLocation} aria-label="Figma Location">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img alt="" src={Figma.src} className="size-[18px]" />
+                    </a>
+                </EcTooltip>
+            </div>
+        </div>
     );
 };

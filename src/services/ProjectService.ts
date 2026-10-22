@@ -1,3 +1,5 @@
+"use client";
+
 import { FilterType } from "../types";
 
 export const getFilter = () => sessionStorage.getItem("selectedFilter") as FilterType;

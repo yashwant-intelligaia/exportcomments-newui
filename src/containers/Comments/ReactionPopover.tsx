@@ -1,6 +1,10 @@
-import { AddReactionOutlined as AddReactionOutlinedIcon } from "@mui/icons-material";
-import { Box, Button, IconButton, Popover } from "@mui/material";
+"use client";
+
+import { SmilePlus } from "lucide-react";
 import { useState } from "react";
+
+import { IconButton } from "@/components/ui/Button";
+import { Popover } from "@/components/ui/Popover";
 
 import { FILTERED_EMOJIS } from "../../utils";
 
@@ -8,61 +12,32 @@ interface ReactionPopoverPropsType {
     onClickReaction: (reaction: string) => void;
 }
 
-const ReactionPopover = (props: ReactionPopoverPropsType) => {
-    const { onClickReaction } = props;
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+const ReactionPopover = ({ onClickReaction }: ReactionPopoverPropsType) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
     return (
         <>
-            <IconButton onClick={handleClick}>
-                <AddReactionOutlinedIcon />
+            <IconButton aria-label="Add reaction" onClick={(event) => setAnchorEl(event.currentTarget)}>
+                <SmilePlus className="size-5" />
             </IconButton>
-            <Popover
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={() => setAnchorEl(null)}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                }}
-            >
-                <Box
-                    sx={{
-                        width: 250,
-                        height: 200,
-                        overflow: "auto",
-                        display: "grid",
-                        gridTemplateColumns: "repeat(auto-fill, minmax(35px, 1fr))",
-                        gap: 0.1,
-                        padding: 0.1,
-                    }}
-                >
+            <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+                <div className="grid h-[200px] w-[250px] grid-cols-[repeat(auto-fill,minmax(35px,1fr))] gap-px overflow-auto p-px">
                     {FILTERED_EMOJIS.map(({ key, name, emoji }) => (
-                        <Box key={key} display="flex" justifyContent="center" alignItems="center">
-                            <Button
+                        <div key={key} className="flex items-center justify-center">
+                            <button
+                                type="button"
                                 aria-label={name}
-                                sx={{
-                                    minWidth: "auto",
-                                    fontSize: "18px",
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    alignContent: "center",
-                                }}
-                                variant="text"
+                                className="hover:bg-surface-sunk inline-flex items-center rounded-sm px-1.5 py-1 text-lg"
                                 onClick={() => {
                                     onClickReaction(`:${key}:`);
                                     setAnchorEl(null);
                                 }}
                             >
                                 {emoji}
-                            </Button>
-                        </Box>
+                            </button>
+                        </div>
                     ))}
-                </Box>
+                </div>
             </Popover>
         </>
     );

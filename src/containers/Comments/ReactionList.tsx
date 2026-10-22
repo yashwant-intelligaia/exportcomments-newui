@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+"use client";
 
 import { UserContext } from "../../contexts";
 import { useProcessCommentReactions } from "../../hooks";
@@ -17,8 +17,7 @@ interface ReactionTooltipPropsType {
     children: JSX.Element;
 }
 
-const ReactionTooltip = (props: ReactionTooltipPropsType) => {
-    const { emoji, users, children } = props;
+const ReactionTooltip = ({ emoji, users, children }: ReactionTooltipPropsType) => {
     const { figmaUser } = UserContext();
     let displayString = ``;
     const myUserIndex = users.findIndex((value) => value.id === figmaUser.id);
@@ -30,17 +29,15 @@ const ReactionTooltip = (props: ReactionTooltipPropsType) => {
         <EcTooltip
             title={
                 <>
-                    <Typography variant="subtitle2">
-                        {displayString}
-                        {plusCount > 0 ? ` +${plusCount}` : ``}
-                    </Typography>
+                    {displayString}
+                    {plusCount > 0 ? ` +${plusCount}` : ``}
                 </>
             }
             description={
-                <Box display="flex" alignItems="center">
+                <span className="flex items-center">
                     Reacted with&nbsp;
                     {emoji && getReactionImage(emoji)}
-                </Box>
+                </span>
             }
             placement="bottom"
             arrow
@@ -50,33 +47,20 @@ const ReactionTooltip = (props: ReactionTooltipPropsType) => {
     );
 };
 
-export const ReactionList = (props: ReactionListPropsType) => {
-    const { onClick, data } = props;
+export const ReactionList = ({ onClick, data }: ReactionListPropsType) => {
     const processedReactions = useProcessCommentReactions(data || []);
     return (
         <>
             {processedReactions.map(({ emoji, users }, index) => (
                 <ReactionTooltip key={uniqueKey(`reaction-${index}`)} emoji={emoji} users={users}>
-                    <Button
-                        sx={{
-                            border: "1px solid #9E9E9E",
-                            borderRadius: "5px",
-                            minWidth: "auto",
-                            minHeight: "2.125rem",
-                            padding: "0px 10px",
-                            fontSize: "16px",
-                            lineHeight: "1",
-                            color: "#000",
-                            display: "inline-flex",
-                            gap: ".5rem",
-                            margin: "4px",
-                        }}
-                        variant="text"
+                    <button
+                        type="button"
                         onClick={() => onClick(`:${emoji}:`)}
+                        className="border-ink/50 text-ink hover:bg-surface-sunk m-1 inline-flex min-h-[2.125rem] items-center gap-2 rounded-sm border px-2.5 text-base leading-none"
                     >
                         {emoji && getReactionImage(emoji)}
                         {users.length}
-                    </Button>
+                    </button>
                 </ReactionTooltip>
             ))}
         </>

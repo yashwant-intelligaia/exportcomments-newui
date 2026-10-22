@@ -1,9 +1,10 @@
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import { Button } from "@mui/material";
-import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
+"use client";
+
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
+
+import { Button } from "@/components/ui/Button";
+import { Popover } from "@/components/ui/Popover";
 
 import { useFetchProjectList } from "../../hooks";
 import { AddButtonsOptionType } from "../../types";
@@ -17,122 +18,47 @@ interface AddButtonsPropsType {
     onButtonClick?: (index: number) => void;
 }
 
-const AddButtons = (props: AddButtonsPropsType) => {
-    const { options, onOptionClick } = props;
-    const [anchorEl, setAnchorEl] = useState(null);
+const AddButtons = ({ options, onOptionClick }: AddButtonsPropsType) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const open = Boolean(anchorEl);
 
-    const handleClick = (event: any) => {
-        setAnchorEl(event.currentTarget);
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        setOpen(false);
-    };
-
-    const [open, setOpen] = useState(Boolean(anchorEl));
-    const id = open ? "simple-popover" : undefined;
-
-    const { data: projectListData } = useFetchProjectList({
-        key: "all",
-    });
+    const { data: projectListData } = useFetchProjectList({ key: "all" });
 
     return (
         <>
             <Button
-                onClick={handleClick}
-                sx={{
-                    textTransform: "none",
-                }}
                 id="NB-add-new-button"
-                variant="contained"
-                endIcon={
-                    open ? (
-                        <ArrowDropUpIcon sx={{ fontSize: "20px" }} />
-                    ) : (
-                        <ArrowDropDownIcon sx={{ fontSize: "20px" }} />
-                    )
-                }
+                aria-haspopup="menu"
+                aria-expanded={open}
+                onClick={(event) => setAnchorEl(open ? null : event.currentTarget)}
+                endIcon={open ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
             >
                 Add New
             </Button>
-            <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                }}
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                }}
-            >
-                <div>
-                    {options.map(({ title }, index) => (
-                        <Typography key={`add-option-${uniqueKey(index)}`}>
-                            {title === "Users" && projectListData?.length === 0 ? (
-                                <span
-                                    style={{
-                                        color: "gray",
-                                        width: "90px",
-                                        display: "block",
-                                        padding: "8px",
-                                        cursor: "not-allowed",
-                                    }}
-                                >
-                                    {title}
-                                </span>
-                            ) : (
-                                <span
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => {
-                                        onOptionClick && onOptionClick(index);
-                                        setOpen(false);
-                                    }}
-                                    onKeyPress={(e) => {
-                                        if (e.key === "Enter") {
-                                            onOptionClick && onOptionClick(index);
-                                            setOpen(false);
-                                        }
-                                    }}
-                                    style={{
-                                        cursor: "pointer",
-                                        color: "black",
-                                        width: "115px",
-                                        display: "block",
-                                        padding: "8px",
-                                        transition: "background-color 0.3s",
-                                        backgroundColor: "transparent",
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        (e.target as HTMLElement).style.backgroundColor = "#e0e0e0";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        (e.target as HTMLElement).style.backgroundColor =
-                                            "transparent";
-                                    }}
-                                >
-                                    {title}
-                                </span>
-                            )}
-                        </Typography>
-                    ))}
+            <Popover open={open} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+                <div role="menu" className="py-1">
+                    {options.map(({ title }, index) => {
+                        const disabled = title === "Users" && projectListData?.length === 0;
+                        return (
+                            <button
+                                key={`add-option-${uniqueKey(index)}`}
+                                type="button"
+                                role="menuitem"
+                                disabled={disabled}
+                                onClick={() => {
+                                    onOptionClick?.(index);
+                                    setAnchorEl(null);
+                                }}
+                                className="text-ink hover:bg-surface-sunk disabled:text-muted block w-36 px-4 py-2 text-left text-sm disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                            >
+                                {title}
+                            </button>
+                        );
+                    })}
                 </div>
             </Popover>
         </>
     );
-};
-
-AddButtons.defaultProps = {
-    prefix: "Add New",
-    ariaLabel: "option buttons",
-    onOptionClick: undefined,
-    onButtonClick: undefined,
 };
 
 export { AddButtons };

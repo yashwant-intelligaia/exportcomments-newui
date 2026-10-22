@@ -1,8 +1,8 @@
-import { Typography } from "@mui/material";
-import { isEmpty } from "lodash";
+"use client";
+
 import { useContext, useEffect, useMemo, useState } from "react";
-import DataGrid, { Column, FormatterProps, SortColumn } from "react-data-grid";
-import styled from "styled-components";
+
+import { DataColumn, DataTable, SortState } from "@/components/ui/DataTable";
 
 import { ProjectDetailsContext, SizeContext, UserContext } from "../../contexts";
 import {
@@ -15,81 +15,13 @@ import {
 } from "../../hooks";
 import { EcDrawer } from "../../stories/components";
 import { Loader } from "../../stories/components/Loader/Loader";
-import {
-    CommentActionType,
-    CommentRowType,
-    IFileUser,
-    IUserFile,
-    ReactionActionType,
-} from "../../types";
+import { CommentActionType, CommentRowType, IFileUser, IUserFile, ReactionActionType } from "../../types";
 import { getLoadingImage, getLoadingMessage, processCommentsData } from "../../utils";
+import { isEmpty } from "../../utils/object";
 import { PageNotFound } from "../Common";
 import { ActionCell, CommentCell, CreatedByCell, DateCell, StatusCell } from "./Cells";
 import { NoCommentsFound } from "./NoCommentsFound";
 import ReplyCommentsDrawer from "./ReplyCommentsDrawer";
-
-const GridContainer = styled.div`
-    padding: 10px 20px;
-    width: 100%;
-    .rdg {
-        border: 0;
-        resize: none !important;
-        background-color: #f5f5f5 !important;
-        &.grid {
-            &.noData {
-                height: 60px !important;
-            }
-        }
-    }
-    .rdg-header-row {
-        .rdg-cell {
-            background-color: #fff;
-            border-left: 0;
-            border-right: 0;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 0 10px;
-            &.orderId {
-                white-space: normal;
-                line-height: 1.2;
-                max-width: 5rem;
-            }
-            .rdg-sort-arrow {
-                margin-left: 8px;
-            }
-            &:hover {
-                &::after {
-                    background-color: #e0e0e0;
-                    height: 26px;
-                    top: 12px;
-                    width: 2px;
-                }
-            }
-        }
-    }
-    .parent {
-        background-color: #fff;
-        color: #212121;
-        border-bottom: 1px solid #e0e0e0;
-        &:hover,
-        &:active {
-            background-color: rgb(206, 221, 247) !important;
-        }
-    }
-    .highlighted-row {
-        background-color: rgb(206, 221, 247) !important;
-        .highlight-icon {
-            display: inline-flex;
-        }
-    }
-    .rdg-cell {
-        box-shadow: none !important;
-        border-right: 0;
-        border-bottom: 0;
-        display: flex;
-        align-items: center;
-        padding: 0 10px;
-    }
-`;
 
 export const CommentsList = () => {
     const { width, height } = useContext(SizeContext);
@@ -110,12 +42,10 @@ export const CommentsList = () => {
     const [comments, setComments] = useState<CommentRowType[]>([]);
     const [drawer, setDrawer] = useState<JSX.Element | null>(null);
     const [projectUsers, setProjectUsers] = useState([] as IFileUser[]);
-    const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>([]);
-    const [selectedRows, setSelectedRows] = useState<ReadonlySet<string>>(() => new Set());
+    const [sortColumns, setSortColumns] = useState<readonly SortState[]>([]);
     const branchKey = selectedBranch?.key || "";
 
-    const { data: projectUsersData, isFetched: isFetchedProjectUsers } =
-        useFetchProjectUsers(projectId);
+    const { data: projectUsersData, isFetched: isFetchedProjectUsers } = useFetchProjectUsers(projectId);
 
     useEffect(() => {
         if (isFetchedProjectUsers && projectUsersData) {
@@ -141,8 +71,7 @@ export const CommentsList = () => {
         }
     }, [searchInput, sortedComments]);
 
-    const { isFetching: isFetchingFigmaUser, isError: isFetchFigmaUserError } =
-        useFetchFigmaUserData();
+    const { isFetching: isFetchingFigmaUser, isError: isFetchFigmaUserError } = useFetchFigmaUserData();
     const {
         data: commentsData,
         isLoading: isFetchingComments,
@@ -151,8 +80,11 @@ export const CommentsList = () => {
 
     useEffect(() => {
         if (commentsData && commentfilter && !isEmpty(user)) {
-            const { sortedResponse, originalResponse, projectCommentInfo, projectCommentCount } =
-                processCommentsData(commentfilter, user, commentsData);
+            const { sortedResponse, originalResponse, projectCommentInfo, projectCommentCount } = processCommentsData(
+                commentfilter,
+                user,
+                commentsData,
+            );
             setComments(sortedResponse);
             setSortedComments(sortedResponse);
             setOriginalComments(originalResponse);
@@ -170,8 +102,6 @@ export const CommentsList = () => {
             }
         }
     }, [commentsData, commentfilter, user]);
-
-    const rowKeyGetter = (row: CommentRowType) => row.id;
 
     const {
         mutateAsync: mutateDeleteComment,
@@ -196,11 +126,7 @@ export const CommentsList = () => {
                 direction="right"
                 closeOnClickOutside={false}
                 onClose={() => setDrawer(null)}
-                title={
-                    <Typography variant="h6" fontWeight="500" mb={1.5}>
-                        All Replies
-                    </Typography>
-                }
+                title={<span className="text-xl font-medium">All Replies</span>}
                 customeWidth
             >
                 <ReplyCommentsDrawer
@@ -212,15 +138,11 @@ export const CommentsList = () => {
                     data={row}
                     onCancel={() => setDrawer(null)}
                 />
-            </EcDrawer>
+            </EcDrawer>,
         );
     };
 
-    const handleCommentActions = (
-        action: CommentActionType,
-        row: CommentRowType,
-        callback?: () => void
-    ) => {
+    const handleCommentActions = (action: CommentActionType, row: CommentRowType, callback?: () => void) => {
         if (action === "delete" && projectId) {
             mutateDeleteComment({
                 projectId,
@@ -235,11 +157,7 @@ export const CommentsList = () => {
         }
     };
 
-    const handleAddOrRemoveReaction = (
-        reaction: string,
-        action: ReactionActionType,
-        commentId: string
-    ) => {
+    const handleAddOrRemoveReaction = (reaction: string, action: ReactionActionType, commentId: string) => {
         switch (action) {
             case "add":
                 if (projectId) {
@@ -301,89 +219,55 @@ export const CommentsList = () => {
         return sortedData;
     }, [comments, sortColumns]);
 
-    const findRowClass = (row: CommentRowType) => {
-        let rowClasses = "parent";
-        if (row.unreadComment) {
-            rowClasses += " highlighted-row";
-        }
-        return rowClasses;
-    };
+    const findRowClass = (row: CommentRowType) => (row.unreadComment ? "!bg-blue-soft" : "");
 
-    const columns: Column<CommentRowType>[] = [
+    const cell = (row: CommentRowType, key: string) => ({ row, column: { key } });
+
+    const columns: DataColumn<CommentRowType>[] = [
         {
             key: "orderId",
             name: width > 767 ? "Comment Number" : "#",
             width: width > 767 ? 80 : 50,
-            minWidth: width > 767 ? 80 : 50,
-            resizable: false,
-            headerCellClass: "orderId",
+            sortable: false,
+            headerClassName: "max-w-20 leading-tight whitespace-normal",
         },
         {
             key: "message",
             name: "Comments",
             minWidth: 400,
-            resizable: true,
-            formatter({ row, isCellSelected }) {
-                return (
-                    <CommentCell
-                        row={row}
-                        isCellSelected={isCellSelected}
-                        onReplyClick={() => {
-                            handleOpenCommentsReplyDrawer(row);
-                        }}
-                        onAddOrRemoveReaction={handleAddOrRemoveReaction}
-                    />
-                );
-            },
+            render: (row) => (
+                <CommentCell
+                    row={row}
+                    onReplyClick={() => handleOpenCommentsReplyDrawer(row)}
+                    onAddOrRemoveReaction={handleAddOrRemoveReaction}
+                />
+            ),
         },
         {
             key: "userName",
             name: "Created By",
             width: 165,
-            resizable: true,
-            formatter: (row: React.PropsWithChildren<FormatterProps<CommentRowType, unknown>>) => (
-                <CreatedByCell value={row} />
-            ),
+            render: (row) => <CreatedByCell value={cell(row, "userName")} />,
         },
-
         {
             key: "createdAt",
             name: "Created at",
             width: 110,
-            formatter: (row: React.PropsWithChildren<FormatterProps<CommentRowType, unknown>>) => (
-                <DateCell value={row} />
-            ),
+            render: (row) => <DateCell value={cell(row, "createdAt")} />,
         },
-        {
-            key: "status",
-            name: "Status",
-            width: 110,
-            formatter: (row: React.PropsWithChildren<FormatterProps<CommentRowType, unknown>>) => (
-                <StatusCell value={row} />
-            ),
-        },
+        { key: "status", name: "Status", width: 110, render: (row) => <StatusCell value={cell(row, "status")} /> },
         {
             key: "resolvedAt",
             name: "Resolved at",
             width: 150,
-            formatter: (row: React.PropsWithChildren<FormatterProps<CommentRowType, unknown>>) => (
-                <DateCell value={row} />
-            ),
+            render: (row) => <DateCell value={cell(row, "resolvedAt")} />,
         },
-
         {
             key: "action",
             name: "Actions",
             width: 100,
-            resizable: false,
-            formatter: ({ row }) => (
-                <ActionCell
-                    onAction={(type) => {
-                        handleCommentActions(type, row);
-                    }}
-                    data={row}
-                />
-            ),
+            sortable: false,
+            render: (row) => <ActionCell onAction={(type) => handleCommentActions(type, row)} data={row} />,
         },
     ];
 
@@ -392,38 +276,28 @@ export const CommentsList = () => {
     }
 
     if (isFetchingComments || isFetchingFigmaUser) {
-        return (
-            <Loader message={getLoadingMessage("comments")} image={getLoadingImage("comments")} />
-        );
+        return <Loader message={getLoadingMessage("comments")} image={getLoadingImage("comments")} />;
     }
 
     return (
         <>
-            <GridContainer>
-                <DataGrid
-                    className={comments.length === 0 ? "grid noData" : "grid"}
-                    style={{
-                        height: `${height - 210}px`,
-                        resize: "both",
-                    }}
-                    defaultColumnOptions={{
-                        sortable: true,
-                        resizable: true,
-                    }}
-                    headerRowHeight={50}
+            <div className="w-full px-5 py-2.5">
+                <DataTable
+                    ariaLabel="Comments"
+                    className={comments.length === 0 ? "!h-[60px]" : ""}
+                    height={Math.max(height - 210, 200)}
+                    headerHeight={50}
                     rowHeight={82}
                     sortColumns={sortColumns}
                     onSortColumnsChange={setSortColumns}
                     columns={columns}
                     rows={sortedRows}
-                    selectedRows={selectedRows}
-                    onSelectedRowsChange={setSelectedRows}
-                    rowKeyGetter={rowKeyGetter}
-                    rowClass={(row) => findRowClass(row)}
+                    rowKey={(row) => row.id}
+                    rowClassName={findRowClass}
                 />
                 {comments.length === 0 && <NoCommentsFound />}
-            </GridContainer>
-            {drawer && drawer}
+            </div>
+            {drawer}
         </>
     );
 };

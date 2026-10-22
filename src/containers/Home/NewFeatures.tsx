@@ -1,59 +1,36 @@
-import { FiberManualRecord as FiberManualRecordIcon } from "@mui/icons-material";
-import { Box, Button, Grid, Typography } from "@mui/material";
-import { blue } from "@mui/material/colors";
+"use client";
+
 import { useContext, useState } from "react";
-import { Carousel } from "react-responsive-carousel";
-import styled from "styled-components";
+
+import { Button } from "@/components/ui/Button";
+import { Carousel } from "@/components/ui/Carousel";
+import { cn } from "@/components/ui/cn";
 
 import { SizeContext } from "../../contexts/SizeContext";
 import { EcImage } from "../../stories/components/EcImage/EcImage";
 import { ExportCommentLightIcon, NewProjectIcon, NewUserIcon } from "../../utils";
 import VideoModal from "./VideoModal";
 
-const blue300 = blue[300];
-const CarouselWrapper = styled.section`
-    .carousel .control-dots {
-        margin-bottom: 0;
-    }
-    .carousel .control-dots .dot {
-        background-color: #5393ff;
-        opacity: 0.3;
-        box-shadow: none;
-        height: 7px;
-        width: 7px;
-        margin: 0 3px;
-    }
-    .carousel .control-dots .dot.selected {
-        opacity: 0.8;
-        box-shadow: none;
-        height: 8px;
-        width: 8px;
-    }
-    .carousel-slider {
-        padding-bottom: 30px;
-    }
-`;
-
 const NewFeatures = () => {
     const [modal, setModal] = useState<JSX.Element>();
-    const WindowContext = () => useContext(SizeContext);
-    const { width } = WindowContext();
+    const { width } = useContext(SizeContext);
+    const iconSize = width > 768 ? 25 : 16;
     const NEW_FEATURES = [
         {
-            image: "../../../images/add-project.svg",
+            image: "/images/add-project.svg",
             videoTitle: "Add New Projects",
             videoSrc: "https://export-comments.s3.ap-south-1.amazonaws.com/create-new-project.mp4",
-            icon: <NewProjectIcon sx={{ fontSize: width > 768 ? 25 : 16 }} />,
+            icon: <NewProjectIcon style={{ width: iconSize, height: iconSize }} />,
             tag: true,
             title: "Connect new figma project directly from ‘Export Comment’ dashboard.",
             subtitle:
                 "With our new integration, you can directly connect to a Figma project from the dashboard by providing the valid figma file url. This feature provides the additional capability to connect your new projects to ‘Export Comments’ both ways.",
         },
         {
-            image: "../../../images/add-users.svg",
+            image: "/images/add-users.svg",
             videoTitle: "Invite New Users",
             videoSrc: "https://export-comments.s3.ap-south-1.amazonaws.com/add-new-user.mp4",
-            icon: <NewUserIcon sx={{ fontSize: width > 768 ? 25 : 16 }} />,
+            icon: <NewUserIcon style={{ width: iconSize, height: iconSize }} />,
             tag: true,
             title: "Invite new users to collaborate",
             subtitle:
@@ -67,179 +44,81 @@ const NewFeatures = () => {
                 isMenuOpen
                 handleClose={() => setModal(undefined)}
                 title={NEW_FEATURES[index].videoTitle}
-                mediaInfo={{
-                    src: NEW_FEATURES[index].videoSrc,
-                    controls: true,
-                }}
-            />
+                mediaInfo={{ src: NEW_FEATURES[index].videoSrc, controls: true }}
+            />,
         );
     };
 
     return (
         <>
-            <CarouselWrapper className="carousel-wrapper">
-                <Carousel
-                    emulateTouch
-                    autoPlay
-                    infiniteLoop
-                    useKeyboardArrows
-                    showStatus={false}
-                    showArrows={false}
-                >
+            <section className="carousel-wrapper">
+                <Carousel label="New features">
                     {NEW_FEATURES.map((feature, index) => (
-                        <>
-                            <Box
-                                sx={{
-                                    flexGrow: 1,
-                                    backgroundRepeat: "repeat-x",
-                                    //  backgroundColor: "#BBDEDB",
-                                    p: width > 768 ? 6.25 : 3.25,
-                                    borderRadius: 1,
-                                    mt: 2.5,
-                                    height: "100%",
-                                }}
-                            >
-                                <Grid container>
-                                    <Grid item xs={12} sm={6}>
-                                        <EcImage
-                                            id={`LP-modal-button-${index}`}
-                                            onClick={() => handleOpenModal(index)}
-                                            style={{
-                                                cursor: "pointer",
-                                                marginRight: width > 600 ? "5%" : "0",
-                                                width: width > 600 ? "95%" : "100%",
-                                            }}
-                                        >
+                        <div key={feature.videoTitle} className="mt-5 h-full rounded-md p-[13px] sm:p-6 md:p-[50px]">
+                            <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2">
+                                <EcImage
+                                    id={`LP-modal-button-${index}`}
+                                    onClick={() => handleOpenModal(index)}
+                                    className={cn("cursor-pointer", width > 600 ? "mr-[5%] w-[95%]" : "w-full")}
+                                >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={feature.image} width="100%" alt="Banner Placeholder" />
+                                </EcImage>
+                                <div className={cn("relative", width > 768 && "pt-4")}>
+                                    <div className={cn("absolute right-1 z-10", width > 768 ? "-top-[30px]" : "top-1")}>
+                                        {feature.tag && (
+                                            // eslint-disable-next-line @next/next/no-img-element
                                             <img
-                                                src={feature.image}
-                                                width="100%"
-                                                alt="Banner Placeholder"
+                                                src="/images/new-button.svg"
+                                                width={width > 768 ? 70 : 50}
+                                                alt="New Button"
                                             />
-                                        </EcImage>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={6}
-                                        md={6}
-                                        sx={{
-                                            position: "relative",
-                                            pt: width > 768 ? 2 : 0,
-                                        }}
+                                        )}
+                                    </div>
+                                    <div className={cn("flex items-start justify-start", width <= 600 && "mt-4")}>
+                                        <div className="bg-blue flex size-[35px] items-center justify-center rounded-full p-2 md:size-[45px]">
+                                            <ExportCommentLightIcon style={{ width: 25, height: 25 }} />
+                                        </div>
+                                        <div className="flex h-[35px] items-center justify-center gap-1 p-1 md:h-[45px] md:p-2">
+                                            {[0, 1, 2].map((dot) => (
+                                                <span key={dot} className="bg-ink size-[7px] rounded-full" />
+                                            ))}
+                                        </div>
+                                        <div className="flex size-[35px] items-center justify-center md:size-[45px]">
+                                            {feature.icon}
+                                        </div>
+                                    </div>
+                                    <div
+                                        className={cn(
+                                            "mt-3 flex flex-col items-start justify-center gap-3 text-left",
+                                            width <= 600 && "pr-8",
+                                        )}
                                     >
-                                        <Box
-                                            sx={{
-                                                position: "absolute",
-                                                top: width > 768 ? "-30px" : "5px",
-                                                right: "5px",
-                                                zIndex: "10",
-                                            }}
-                                        >
-                                            {feature.tag && (
-                                                <img
-                                                    src="../../images/new-button.svg"
-                                                    width={width > 768 ? "70" : "50"}
-                                                    alt="New Button"
-                                                />
+                                        <h3
+                                            className={cn(
+                                                "text-ink font-sans font-bold tracking-normal",
+                                                width > 820 ? "text-2xl" : "text-base",
                                             )}
-                                        </Box>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                justifyContent: "flex-start",
-                                                alignItems: "flex-start",
-                                                mt: width > 600 ? 0 : 2,
-                                            }}
                                         >
-                                            <Box
-                                                sx={{
-                                                    width: width > 768 ? "45px" : "35px",
-                                                    height: width > 768 ? "45px" : "35px",
-                                                    borderRadius: "50%",
-                                                    background: blue300,
-                                                    p: 1,
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                }}
-                                            >
-                                                <ExportCommentLightIcon sx={{ fontSize: 25 }} />
-                                            </Box>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    height: width > 768 ? "45px" : "35px",
-                                                    p: width > 768 ? 1 : 0.5,
-                                                    gap: 0.5,
-                                                }}
-                                            >
-                                                <FiberManualRecordIcon sx={{ fontSize: 7 }} />
-                                                <FiberManualRecordIcon sx={{ fontSize: 7 }} />
-                                                <FiberManualRecordIcon sx={{ fontSize: 7 }} />
-                                            </Box>
-                                            <Box
-                                                sx={{
-                                                    width: width > 768 ? "45px" : "35px",
-                                                    height: width > 768 ? "45px" : "35px",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    background:
-                                                        index === 2 ? "#000" : "transparent",
-                                                    borderRadius: index === 2 ? "50%" : "0",
-                                                    p: index === 2 ? "1" : "0",
-                                                }}
-                                            >
-                                                {feature.icon}
-                                            </Box>
-                                        </Box>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                justifyContent: "center",
-                                                alignItems: "flex-start",
-                                                pr: width > 600 ? 0 : 4,
-                                                gap: 1.5,
-                                                mt: 1.5,
-                                                textAlign: "left",
-                                            }}
+                                            {feature.title}
+                                        </h3>
+                                        <p className={cn("font-medium", width > 820 ? "text-base" : "text-sm")}>
+                                            {feature.subtitle}
+                                        </p>
+                                        <Button
+                                            id={`LP-learn-more-button-${index}`}
+                                            onClick={() => handleOpenModal(index)}
                                         >
-                                            <Typography
-                                                variant={width > 820 ? "h5" : "subtitle1"}
-                                                fontWeight="700"
-                                            >
-                                                {feature.title}
-                                            </Typography>
-                                            <Typography
-                                                variant={width > 820 ? "body1" : "body2"}
-                                                fontWeight="500"
-                                            >
-                                                {feature.subtitle}
-                                            </Typography>
-                                            <Button
-                                                sx={{
-                                                    textTransform: "none",
-                                                    background: "#2979ff",
-                                                }}
-                                                variant="contained"
-                                                onClick={() => handleOpenModal(index)}
-                                                id={`LP-learn-more-button-${index}`}
-                                            >
-                                                Learn More
-                                            </Button>
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                        </>
+                                            Learn More
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </Carousel>
-            </CarouselWrapper>
-            {modal && modal}
+            </section>
+            {modal}
         </>
     );
 };

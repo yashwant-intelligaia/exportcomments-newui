@@ -1,6 +1,9 @@
-import { KeyboardArrowDown as KeyboardArrowDownIcon } from "@mui/icons-material";
-import { Box, IconButton, Menu, MenuItem } from "@mui/material";
-import React from "react";
+"use client";
+
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+
+import { Menu, MenuItem } from "@/components/ui/Popover";
 
 import { UserContext } from "../../../contexts";
 import { EcTooltip } from "../../../stories/components";
@@ -11,100 +14,49 @@ interface ActionCellPropsType {
     onAction: (type: CommentActionType) => void;
 }
 
-export const ActionCell = (props: ActionCellPropsType) => {
-    const { data, onAction } = props;
+export const ActionCell = ({ data, onAction }: ActionCellPropsType) => {
     const { user } = UserContext();
-    const [actionOptions, setActionOptions] = React.useState<null | HTMLSpanElement>(null);
-    const isMenuOpen = Boolean(actionOptions);
+    const [actionOptions, setActionOptions] = useState<null | HTMLElement>(null);
     const isButtonDisabled = user.figmaUserId !== data.user.id;
 
     return (
-        <>
-            <Box style={{ display: "flex", alignItems: "center" }}>
-                <Box
-                    style={{
-                        fontFamily: "Roboto",
-                        fontSize: "14px",
-                        fontStyle: "normal",
-                        fontWeight: 700,
-                        lineHeight: "20px",
-                        letterSpacing: "0.5px",
-                        textAlign: "left",
-                        color: "#2979ff",
-                        cursor: "pointer",
+        <div className="flex items-center">
+            <button
+                type="button"
+                className="text-blue-ink text-sm font-bold tracking-wide"
+                onClick={() => onAction("reply")}
+            >
+                Reply
+            </button>
+            <span className="bg-line mr-1 ml-2 inline-block h-5 w-px" />
+            <EcTooltip title={isButtonDisabled ? "This Action Can't Be Performed" : ""} placement="left-start" arrow>
+                <button
+                    type="button"
+                    aria-label="more actions"
+                    className="text-blue-ink mr-1 flex items-center rounded-sm py-1"
+                    onClick={(event) => {
+                        if (!isButtonDisabled) setActionOptions(event.currentTarget);
                     }}
-                    onClick={() => onAction("reply")}
                 >
-                    Reply
-                </Box>
+                    <ChevronDown className="size-5" />
+                </button>
+            </EcTooltip>
 
-                {/* Separator line */}
-                <Box
-                    style={{
-                        backgroundColor: "#e0e0e0",
-                        height: "20px",
-                        width: "1px",
-                        display: "inline-block",
-                        marginInline: "8px 4px",
-                    }}
-                />
-                <EcTooltip
-                    disableHoverListener={!isButtonDisabled}
-                    title="This Action Can't Be Performed"
-                    placement="left-start"
-                    arrow
-                >
-                    <Box
-                        style={{
-                            cursor: "pointer",
-                            display: "flex",
-                            alignSelf: "center",
-                            lineHeight: 1,
-                            marginRight: "4px",
-                        }}
-                        role="presentation"
-                    >
-                        <IconButton
-                            color="primary"
-                            aria-label="more actions"
-                            component="span"
-                            style={{
-                                padding: "4px 0",
-                                borderRadius: "4px",
-                            }}
-                            onClick={(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-                                if (!isButtonDisabled) {
-                                    setActionOptions(event.currentTarget);
-                                }
-                            }}
-                        >
-                            <KeyboardArrowDownIcon style={{ color: "#2979ff" }} />
-                        </IconButton>
-                    </Box>
-                </EcTooltip>
-
-                {/* Menu Options */}
-                <Menu
-                    className="mui-dropdown"
-                    anchorEl={actionOptions}
-                    id="primary-search-account-menu"
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                    }}
-                    transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                    }}
-                    keepMounted
-                    open={isMenuOpen}
-                    onClose={() => {
+            <Menu
+                open={Boolean(actionOptions)}
+                anchorEl={actionOptions}
+                onClose={() => setActionOptions(null)}
+                placement="bottom-end"
+            >
+                <MenuItem
+                    onClick={() => {
                         setActionOptions(null);
+                        onAction("delete");
                     }}
                 >
-                    <MenuItem onClick={() => onAction("delete")}>Delete</MenuItem>
-                </Menu>
-            </Box>
-        </>
+                    Delete
+                </MenuItem>
+            </Menu>
+        </div>
     );
 };

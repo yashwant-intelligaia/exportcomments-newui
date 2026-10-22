@@ -1,9 +1,7 @@
-import { Button, Stack } from "@mui/material";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
-import { styled } from "@mui/material/styles";
+"use client";
+
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Display";
 
 import { ActionButtonType } from "../../../types";
 import { uniqueKey } from "../../../utils";
@@ -16,54 +14,32 @@ interface ProjectCardPropsType {
     actionButtons?: ActionButtonType[];
 }
 
-const StyledButton = styled(Button)(`
-  text-transform: none;
-  justify-content: flex-start;
-`);
-
-const ProjectCard = (props: ProjectCardPropsType) => {
-    const { icon, title, action, children, actionButtons } = props;
-    return (
-        <Card elevation={4} sx={{ minWidth: 300, mb: 2 }}>
-            <CardHeader sx={{ px: 2, pt: 1, pb: 2 }} avatar={icon} action={action} title={title} />
-
-            <CardContent sx={{ mt: -1.5, mx: { xs: 1.75, sm: 1.5, md: 1.75 }, p: 0.5 }}>
-                {children}
-                {!!actionButtons && actionButtons.length > 0 && (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            alignContent: "flex-start",
-                            flexWrap: "wrap",
-                            mt: 1,
-                            height: "auto",
-                        }}
-                    >
-                        <Stack
-                            direction={{ xs: "column", sm: "row" }}
-                            spacing={{ xs: 1, sm: 2, md: 4 }}
+const ProjectCard = ({ icon, title, action, children, actionButtons }: ProjectCardPropsType) => (
+    <Card className="mb-4 min-w-[300px]">
+        <div className="flex items-center gap-3 px-4 pt-2 pb-4">
+            {icon}
+            <div className="flex-1">{title}</div>
+            {action}
+        </div>
+        <div className="mx-3 px-1 pb-3">
+            {children}
+            {!!actionButtons && actionButtons.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2 sm:gap-6">
+                    {actionButtons.map(({ icon: actionButtonIcon, label, onClick, disabled }, index) => (
+                        <Button
+                            key={uniqueKey(index)}
+                            onClick={onClick}
+                            variant="text"
+                            disabled={disabled}
+                            startIcon={actionButtonIcon}
                         >
-                            {actionButtons.map(
-                                ({ icon: actionButtonIcon, label, onClick, disabled }, index) => (
-                                    <StyledButton
-                                        key={uniqueKey(index)}
-                                        onClick={onClick}
-                                        variant="text"
-                                        disabled={disabled}
-                                        startIcon={actionButtonIcon}
-                                    >
-                                        {label}
-                                    </StyledButton>
-                                )
-                            )}
-                        </Stack>
-                    </Box>
-                )}
-            </CardContent>
-        </Card>
-    );
-};
+                            {label}
+                        </Button>
+                    ))}
+                </div>
+            )}
+        </div>
+    </Card>
+);
 
 export { ProjectCard };

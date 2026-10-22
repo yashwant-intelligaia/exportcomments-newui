@@ -1,3 +1,5 @@
+"use client";
+
 export const FILTERED_EMOJIS = [
     {
         key: "100",

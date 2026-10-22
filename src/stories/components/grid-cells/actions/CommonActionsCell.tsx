@@ -1,89 +1,38 @@
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Menu, MenuItem } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
+"use client";
+
+import { ChevronDown, MoreVertical } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import styled from "styled-components";
+
+import { Menu, MenuItem } from "@/components/ui/Popover";
+import { Tooltip } from "@/components/ui/Tooltip";
+import { useHistory } from "@/utils/navigation";
 
 import { UserContext } from "../../../../contexts/UserContext";
 
-const ActionwithDrop = styled.span`
-    display: flex;
-    align-items: center;
-
-    .seperator {
-        background-color: #e0e0e0;
-        height: 20px;
-        width: 1px;
-        display: inline-block;
-        margin-inline: 8px 4px;
-    }
-
-    .actiondown-wrap {
-        cursor: pointer;
-        display: flex;
-        align-self: center;
-        line-height: 1;
-        margin-right: 4px;
-        .actiondown-icon,
-        .actionup-icon {
-            color: #2979ff;
-        }
-        .drawer-more-action {
-            padding: 4px 0;
-            border-radius: 4px;
-        }
-    }
-`;
-
-const DefaultAction = styled.span`
-    font-family: Roboto;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 20px;
-    letter-spacing: 0.5px;
-    text-align: left;
-    color: #2979ff;
-    cursor: pointer;
-`;
-
 export const CommonActionsCell = (props: any) => {
     const history = useHistory();
-    const [actionOptions, setActionOptions] = React.useState<null | HTMLSpanElement>(null);
+    const [actionOptions, setActionOptions] = React.useState<null | HTMLElement>(null);
     const { value, from, defaultLabel, defaultActions, onAction } = props;
-    const menuId = "primary-search-account-menu";
-    const handleMenuClose = () => {
-        setActionOptions(null);
-    };
     const [isButtonDisabled, setButtonDisabled] = useState(true);
     const { user } = UserContext();
 
     useEffect(() => {
         if (value.user) {
-            if (user.figmaUserId === value.user.id) {
-                setButtonDisabled(false);
-            } else {
-                setButtonDisabled(true);
-            }
+            setButtonDisabled(user.figmaUserId !== value.user.id);
         }
     }, [value]);
 
-    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLSpanElement>) => {
+    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         if (!isButtonDisabled) {
             setActionOptions(event.currentTarget);
         }
     };
 
     const handleAction = (parameter: string) => () => {
+        setActionOptions(null);
         if (value.column) {
             if (value.column.key === "figmaUserId" && parameter === "navigate-file") {
-                const userfiles = "../projects/";
-                if (history) {
-                    history.push(`${userfiles}${value.row[value.column.key]}`);
-                }
+                history.push(`/projects/${value.row[value.column.key]}`);
             } else {
                 onAction(parameter, props);
             }
@@ -92,24 +41,36 @@ export const CommonActionsCell = (props: any) => {
         }
     };
 
-    const isMenuOpen = Boolean(actionOptions);
-    const actionMenu = (
-        <div className="test">
+    return (
+        <span className="flex items-center">
+            {from === "comments" && (
+                <button
+                    type="button"
+                    className="text-blue-ink text-sm font-bold tracking-wide"
+                    onClick={handleAction(defaultActions)}
+                >
+                    {defaultLabel}
+                </button>
+            )}
+            <span className="bg-line mr-1 ml-2 inline-block h-5 w-px" />
+            {defaultLabel !== "Go to My Files" && (
+                <button
+                    type="button"
+                    className="text-blue-ink mr-1 flex items-center rounded-sm p-1"
+                    aria-label="more action"
+                    onClick={handleProfileMenuOpen}
+                >
+                    <Tooltip title={isButtonDisabled ? "This Action Can't Be Performed" : undefined}>
+                        {from === "drawer" ? <MoreVertical className="size-5" /> : <ChevronDown className="size-5" />}
+                    </Tooltip>
+                </button>
+            )}
+
             <Menu
-                className="mui-dropdown"
+                open={Boolean(actionOptions)}
                 anchorEl={actionOptions}
-                id={menuId}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                }}
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                }}
-                keepMounted
-                open={isMenuOpen}
-                onClose={handleMenuClose}
+                onClose={() => setActionOptions(null)}
+                placement="bottom-end"
             >
                 {defaultLabel !== "Reply" && from === "comments" && !value.row.parentId && (
                     <MenuItem onClick={handleAction("reply")}>Reply</MenuItem>
@@ -127,66 +88,13 @@ export const CommonActionsCell = (props: any) => {
                         {value.row.isFavorite ? "Mark as Non-Favorite" : "Mark as Favorite"}
                     </MenuItem>
                 )}
-
                 {defaultLabel !== "Reply" && from === "userFiles" && (
                     <MenuItem onClick={handleAction("share-sheet")}>Share Sheet</MenuItem>
                 )}
-
                 {defaultLabel !== "Go to My Files" && from === "all-user" && (
                     <MenuItem onClick={handleAction("navigate-file")}>Go to My Files</MenuItem>
                 )}
             </Menu>
-        </div>
-    );
-
-    return (
-        <>
-            <ActionwithDrop>
-                {from === "comments" && (
-                    <DefaultAction
-                        className="child-action-disable"
-                        role="presentation"
-                        onClick={handleAction(defaultActions)}
-                    >
-                        {defaultLabel}
-                    </DefaultAction>
-                )}
-                <span className="seperator" />
-                {defaultLabel !== "Go to My Files" && (
-                    <span
-                        className="actiondown-wrap"
-                        role="presentation"
-                        onClick={handleProfileMenuOpen}
-                    >
-                        {from === "drawer" ? (
-                            <Tooltip
-                                disableHoverListener={!isButtonDisabled}
-                                title="This Action Can't Be Performed"
-                                placement="left-start"
-                            >
-                                <IconButton
-                                    color="primary"
-                                    className="drawer-more-action"
-                                    aria-label="more action"
-                                    component="span"
-                                >
-                                    <MoreVertIcon className="actiondown-icon" />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip
-                                disableHoverListener={!isButtonDisabled}
-                                title="This Action Can't Be Performed"
-                                placement="left-start"
-                            >
-                                <KeyboardArrowDownIcon className="actiondown-icon" />
-                            </Tooltip>
-                        )}
-                    </span>
-                )}
-
-                {actionMenu}
-            </ActionwithDrop>
-        </>
+        </span>
     );
 };

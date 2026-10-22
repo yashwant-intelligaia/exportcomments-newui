@@ -1,9 +1,10 @@
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import { Box, Grid, IconButton, Typography } from "@mui/material";
-import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
-import { styled } from "@mui/material/styles";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+"use client";
+
+import { ChevronRight } from "lucide-react";
+import { ReactNode, useState } from "react";
+
+import { cn } from "@/components/ui/cn";
+import { useParams } from "@/utils/navigation";
 
 import placeHolderImg from "../../assets/imagePlaceholder.svg";
 import previewLoaderImg from "../../assets/previewLoader.gif";
@@ -11,28 +12,6 @@ import { EcModal } from "../../stories/components";
 import { EcImage } from "../../stories/components/EcImage/EcImage";
 import { CommentDataType, ProcessedPrototypeDataType, VersionDataType } from "../../types";
 import { CommentIcon, PlayIcon, VersionIcon } from "../../utils/icons";
-
-const AccordionSummary = styled((props: AccordionSummaryProps) => (
-    <MuiAccordionSummary {...props} />
-))(({ theme }) => ({
-    flexDirection: "row-reverse",
-    "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-        transform: "rotate(90deg)",
-    },
-    "& .MuiAccordionSummary-content": {
-        marginLeft: theme.spacing(1),
-        fontSize: "14px",
-        fontWeight: "500",
-        "&.Mui-expanded": {
-            margin: "12px 0 12px 8px",
-        },
-        ".MuiTypography-caption": {
-            color: "#3A3A44",
-            lineHeight: "1.75rem",
-            letterSpacing: "inherit",
-        },
-    },
-}));
 
 interface PrototypeAccordionSummaryDataType {
     nodeId: string;
@@ -50,156 +29,99 @@ interface PrototypeAccordionSummaryPropsType {
     figmaImageLoading: boolean;
 }
 
-const PrototypeAccordionSummary = (props: PrototypeAccordionSummaryPropsType) => {
-    const {
-        data: { nodeId, pageTitle, comments = [], prototypes = [], totalVersions, expanded },
-        onExpandToggle,
-        figmaImage,
-        figmaImageLoading,
-    } = props;
-    const {
-        projectId,
-    }: {
-        projectId: string;
-    } = useParams();
+const Stat = ({ label, className, children }: { label: string; className: string; children: ReactNode }) => (
+    <div className={className}>
+        <span className="text-body block text-xs leading-7">{label}</span>
+        <span className="text-ink flex items-center gap-2 text-sm font-medium">{children}</span>
+    </div>
+);
+
+const PrototypeAccordionSummary = ({
+    data: { nodeId, pageTitle, comments = [], prototypes = [], totalVersions, expanded },
+    onExpandToggle,
+    figmaImage,
+    figmaImageLoading,
+}: PrototypeAccordionSummaryPropsType) => {
+    const { projectId }: { projectId: string } = useParams();
     const [previewModal, setPreviewModal] = useState<JSX.Element | undefined>(undefined);
+    const canExpand = prototypes.length > 0;
 
     const handlePreviewImageClick = (imageUrl: string, title: string) => {
         setPreviewModal(
             <EcModal
                 size="md"
                 open
-                onClose={() => {
-                    setPreviewModal(undefined);
-                }}
-                title={
-                    <Typography variant="h4" fontWeight="700" mb={1.5}>
-                        {title}
-                    </Typography>
-                }
+                onClose={() => setPreviewModal(undefined)}
+                title={<h4 className="mb-3 font-sans text-2xl font-bold tracking-normal">{title}</h4>}
                 showCloseIcon
                 textAlign="left"
             >
-                <Box
-                    marginTop={3}
-                    sx={{
-                        maxHeight: "550px",
-                        overflowY: "scroll",
-                    }}
-                >
-                    <img
-                        src={imageUrl}
-                        alt="Large flow"
-                        width="976px"
-                        style={{
-                            display: "block",
-                            maxWidth: "100%",
-                        }}
-                    />
-                </Box>
-            </EcModal>
+                <div className="mt-6 max-h-[550px] overflow-y-scroll">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={imageUrl} alt="Large flow" width={976} className="block max-w-full" />
+                </div>
+            </EcModal>,
         );
     };
 
-    const getPreviewImgSrc = (id?: string) => {
-        if (figmaImageLoading) return previewLoaderImg;
-        if (!figmaImageLoading && !figmaImage) return placeHolderImg;
+    const getPreviewImgSrc = (id?: string): string => {
+        if (figmaImageLoading) return previewLoaderImg.src;
+        if (!figmaImage) return placeHolderImg.src;
         if (id && figmaImage?.[id]) return figmaImage[id];
-        return placeHolderImg;
+        return placeHolderImg.src;
     };
 
     return (
         <>
             {previewModal}
-            <AccordionSummary
-                expandIcon={
-                    prototypes.length > 0 ? (
-                        <IconButton
-                            sx={{ "&:hover": { svg: { color: "rgb(41, 121, 255)" } } }}
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                if (prototypes.length > 0) {
-                                    onExpandToggle(!expanded);
-                                }
-                            }}
-                            aria-expanded={expanded}
-                            aria-label="show more"
-                        >
-                            <ArrowForwardIosSharpIcon sx={{ fontSize: "1rem", color: "#000" }} />
-                        </IconButton>
-                    ) : (
-                        <IconButton
-                            sx={{ pointerEvents: "none", svg: { color: "#ccc" } }}
-                            aria-expanded={expanded}
-                            aria-label="show more"
-                        >
-                            <ArrowForwardIosSharpIcon sx={{ fontSize: "1rem", color: "#000" }} />
-                        </IconButton>
-                    )
-                }
-                aria-controls={pageTitle}
-                sx={{ width: "100%", cursor: "default" }}
-            >
-                <Grid
-                    container
-                    rowSpacing={2}
-                    columnSpacing={1}
-                    alignItems="center"
-                    sx={{ cursor: "default" }}
+            <div className="flex w-full cursor-default items-center gap-2 px-4 py-3" aria-controls={pageTitle}>
+                <button
+                    type="button"
+                    aria-expanded={expanded}
+                    aria-label="show more"
+                    disabled={!canExpand}
+                    onClick={() => onExpandToggle(!expanded)}
+                    className={cn(
+                        "hover:text-blue-ink rounded-full p-2 transition-transform",
+                        expanded && "rotate-90",
+                        !canExpand && "text-line pointer-events-none",
+                    )}
                 >
-                    <Grid item lg={1} md={1} sm={1} xs={3}>
+                    <ChevronRight className="size-4" />
+                </button>
+                <div className="grid w-full grid-cols-12 items-center gap-x-2 gap-y-4">
+                    <div className="col-span-3 lg:col-span-1">
                         <EcImage
-                            style={{
-                                cursor: figmaImageLoading ? "not-allowed" : "pointer",
-                                width: "3.25rem",
-                                height: "3.25rem",
-                                border: "2px solid #B4B4BB",
-                                borderRadius: "0",
-                            }}
+                            className={cn(
+                                "size-[3.25rem] overflow-hidden border-2 border-[#b4b4bb]",
+                                figmaImageLoading ? "cursor-not-allowed" : "cursor-pointer",
+                            )}
                             onClick={() =>
                                 figmaImageLoading
-                                    ? {}
+                                    ? undefined
                                     : handlePreviewImageClick(figmaImage?.[nodeId] || "", pageTitle)
                             }
                             id={`${projectId}-${pageTitle}-${nodeId}`}
                         >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={getPreviewImgSrc(nodeId)} alt={pageTitle} />
                         </EcImage>
-                    </Grid>
-
-                    <Grid item md={2} sm={11} xs={9}>
-                        <Typography variant="caption">Page Name</Typography>
-                        <Typography variant="subtitle2">{pageTitle}</Typography>
-                    </Grid>
-                    <Grid item lg={4} md={4} xs={4}>
-                        <Typography variant="caption">Total Prototypes</Typography>
-                        <Typography variant="subtitle2" display="flex" alignItems="center" gap={1}>
-                            <PlayIcon /> {prototypes.length}
-                        </Typography>
-                    </Grid>
-                    <Grid item lg={2} md={2} xs={4}>
-                        <Typography variant="caption">Total Comments</Typography>
-                        <Typography variant="subtitle2" display="flex" alignItems="center" gap={1}>
-                            <CommentIcon /> {comments.length}
-                        </Typography>
-                    </Grid>
-                    <Grid item lg={2} md={3} xs={4}>
-                        <Typography variant="caption">Total Versions</Typography>
-                        <Typography
-                            variant="subtitle2"
-                            display="flex"
-                            alignItems="center"
-                            gap={1}
-                            sx={{
-                                cursor: "default",
-                            }}
-                        >
-                            <VersionIcon />
-                            {totalVersions?.length}
-                        </Typography>
-                    </Grid>
-                </Grid>
-            </AccordionSummary>
+                    </div>
+                    <Stat label="Page Name" className="col-span-9 sm:col-span-11 md:col-span-2">
+                        {pageTitle}
+                    </Stat>
+                    <Stat label="Total Prototypes" className="col-span-4">
+                        <PlayIcon /> {prototypes.length}
+                    </Stat>
+                    <Stat label="Total Comments" className="col-span-4 lg:col-span-2">
+                        <CommentIcon /> {comments.length}
+                    </Stat>
+                    <Stat label="Total Versions" className="col-span-4 md:col-span-3 lg:col-span-2">
+                        <VersionIcon />
+                        {totalVersions?.length}
+                    </Stat>
+                </div>
+            </div>
         </>
     );
 };

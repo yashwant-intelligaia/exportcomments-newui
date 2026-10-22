@@ -1,186 +1,55 @@
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+"use client";
+
+import { Search as SearchIcon, X } from "lucide-react";
 import { useEffect, useRef } from "react";
-import styled from "styled-components";
+
+import { cn } from "@/components/ui/cn";
 
 import { UserContext } from "../../../contexts/UserContext";
 
 export const Search = (props: any) => {
-    const SearchWrap = styled.div`
-        position: relative;
-        display: flex;
-        align-items: center;
-        min-height: 30px;
-        &.w-287 {
-            width: 287px;
-            @media (max-width: 600px) {
-                width: 100%;
-            }
-        }
-        .search-inline-ic {
-            position: absolute;
-            z-index: 1;
-            top: 50%;
-            margin-top: -11px;
-            color: #616161;
-        }
-        &.icon-left {
-            .search-inline-ic {
-                left: 0;
-            }
-            .search-input {
-                padding-left: 24px;
-            }
-        }
-
-        &.icon-right {
-            .search-inline-ic {
-                right: 0;
-            }
-            .search-input {
-                padding-right: 24px;
-            }
-        }
-        .search-input {
-            border: none;
-            background-color: transparent;
-            box-shadow: 0 1px 0 #616161;
-            -webkit-box-shadow: 0 1px 0 #616161;
-            padding: 8px 4px;
-            line-height: 1;
-            position: absolute;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-
-            &:hover {
-                box-shadow: 0 2px 0 #616161;
-                -webkit-box-shadow: 0 2px 0 #616161;
-            }
-            &:active,
-            &:focus {
-                box-shadow: 0 2px 0 #2979ff;
-                -webkit-box-shadow: 0 2px 0 #2979ff;
-            }
-
-            &::placeholder {
-                color: #9e9e9e;
-            }
-            &::-webkit-input-placeholder {
-                color: #9e9e9e;
-            }
-            &:-ms-input-placeholder {
-                color: #9e9e9e;
-            }
-        }
-    `;
-
-    const MobSearch = styled.div`
-        @media screen and (min-width: 768px) {
-            &.msearch-wrap {
-                display: none;
-            }
-            .mob-block {
-                display: none;
-            }
-        }
-        @media screen and (max-width: 767px) {
-            &.msearch-wrap {
-                position: absolute;
-                right: 25px;
-                color: #616161;
-                cursor: pointer;
-                transition: all 0.5s ease 0s;
-                -webkit-transition: all 0.5s ease 0s;
-                display: flex;
-                align-items: center;
-
-                &:hover,
-                &:focus,
-                &:active {
-                    color: #2979ff;
-                }
-
-                .mob-block {
-                    display: flex;
-                    margin-right: 11px;
-                }
-            }
-        }
-        @media (max-width: 380px) {
-            .msearch-wrap {
-                .mob-block {
-                    a {
-                        font-size: 13px;
-                    }
-                }
-            }
-        }
-    `;
-
-    const MarkAsRead = styled.a`
-        display: flex;
-        white-space: nowrap;
-        align-items: center;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        color: #2979ff;
-        line-height: 1.4375em;
-
-        &.disable {
-            color: #9e9e9e;
-            cursor: not-allowed;
-        }
-    `;
-
-    const inputRef = useRef(null as any);
-
+    const inputRef = useRef<HTMLInputElement>(null);
     const { isDisable } = UserContext();
-
-    const { placeholder, searchChange, value, mobSearch, setMobSearch, handleMarkAsReadClick } =
-        props;
+    const { placeholder, searchChange, value, mobSearch, setMobSearch, handleMarkAsReadClick } = props;
 
     useEffect(() => {
-        inputRef.current.focus();
+        inputRef.current?.focus();
     }, [value]);
-
-    const openSearch = () => {
-        if (mobSearch) {
-            setMobSearch(false);
-        } else {
-            setMobSearch(true);
-        }
-    };
 
     return (
         <>
-            <SearchWrap className="searchwrap icon-left w-287">
-                <SearchRoundedIcon className="search-inline-ic" />
+            <div className="relative flex min-h-[30px] w-full items-center sm:w-[287px]">
+                <SearchIcon className="text-muted pointer-events-none absolute left-0 size-5" />
                 <input
                     ref={inputRef}
                     value={value}
-                    onChange={(e: any) => searchChange(e)}
-                    className="search-input"
+                    onChange={(e) => searchChange(e)}
+                    className="border-ink/60 text-ink placeholder:text-muted hover:border-ink focus:border-ink w-full border-b bg-transparent py-2 pr-1 pl-6 text-sm leading-none focus:border-b-2 focus:outline-none"
                     placeholder={placeholder}
                     type="text"
+                    aria-label={placeholder}
                 />
-            </SearchWrap>
-            <MobSearch className="msearch-wrap">
-                <span className="mob-block">
-                    <MarkAsRead
-                        className={isDisable ? "disable" : ""}
-                        onClick={isDisable ? null : handleMarkAsReadClick}
-                    >
-                        Mark as Read
-                    </MarkAsRead>
-                </span>
-
-                {!mobSearch && (
-                    <SearchRoundedIcon className="search-inline-ic" onClick={openSearch} />
-                )}
-                {mobSearch && <CloseRoundedIcon onClick={openSearch} />}
-            </MobSearch>
+            </div>
+            <div className="text-muted absolute right-6 flex items-center md:hidden">
+                <button
+                    type="button"
+                    className={cn(
+                        "mr-3 text-sm font-semibold whitespace-nowrap",
+                        isDisable ? "text-muted/60 cursor-not-allowed" : "text-blue-ink",
+                    )}
+                    disabled={isDisable}
+                    onClick={handleMarkAsReadClick}
+                >
+                    Mark as Read
+                </button>
+                <button
+                    type="button"
+                    aria-label={mobSearch ? "close search" : "open search"}
+                    onClick={() => setMobSearch(!mobSearch)}
+                >
+                    {mobSearch ? <X className="size-5" /> : <SearchIcon className="size-5" />}
+                </button>
+            </div>
         </>
     );
 };

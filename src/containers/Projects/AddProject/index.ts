@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./AddNewProject";
 export * from "./AddNewProjectFooter";
 export * from "./AddProjectDrawer";

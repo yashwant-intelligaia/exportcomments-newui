@@ -1,5 +1,6 @@
-import { SvgIcon, SvgIconProps } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+"use client";
+
+import { SvgIcon, SvgIconProps } from "@/components/ui/SvgIcon";
 
 const NotionIcon = (props: SvgIconProps) => (
     <SvgIcon viewBox="0 0 39 41" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -82,14 +83,7 @@ const NotionDisconnectIcon = (props: SvgIconProps) => (
 );
 
 const NewProjectIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="48"
-        height="47"
-        viewBox="0 0 48 47"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="47" viewBox="0 0 48 47" fill="none" {...props}>
         <g>
             <path
                 d="M27.8914 4.86782C26.899 4.86782 26.0917 4.06045 26.0917 3.0679C26.0917 2.07401 26.899 1.26562 27.8914 1.26562C28.8852 1.26562 29.6937 2.07401 29.6937 3.0679C29.6937 4.06045 28.8852 4.86782 27.8914 4.86782ZM27.8914 1.95516C27.2793 1.95516 26.7812 2.45446 26.7812 3.0679C26.7812 3.68034 27.2793 4.17829 27.8914 4.17829C28.505 4.17829 29.0042 3.68033 29.0042 3.0679C29.0042 2.45446 28.505 1.95516 27.8914 1.95516Z"
@@ -156,26 +150,14 @@ const NewProjectIcon = (props: SvgIconProps) => (
         </g>
         <defs>
             <clipPath id="clip0_3_20">
-                <rect
-                    width="46.5434"
-                    height="46.5434"
-                    fill="white"
-                    transform="translate(0.874023 0.404297)"
-                />
+                <rect width="46.5434" height="46.5434" fill="white" transform="translate(0.874023 0.404297)" />
             </clipPath>
         </defs>
     </svg>
 );
 
 const NewUserIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="48"
-        height="48"
-        viewBox="0 0 48 48"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" {...props}>
         <path
             d="M30.9236 12.3715C30.9247 14.3962 30.3148 16.3741 29.1735 18.0464C28.0323 19.7188 26.4128 21.0078 24.5271 21.7448C22.6413 22.4818 20.577 22.6326 18.6042 22.1773C16.6314 21.722 14.8419 20.6819 13.4698 19.1931C12.3562 17.989 11.5536 16.5311 11.1319 14.9462C10.7103 13.3612 10.6824 11.6972 11.0506 10.099C11.4188 8.50077 12.1719 7.01674 13.2446 5.77603C14.3172 4.53532 15.6768 3.57552 17.205 2.98016C18.7332 2.38479 20.3837 2.1719 22.013 2.36C23.6423 2.54809 25.2009 3.13149 26.5532 4.05942C27.9056 4.98734 29.0107 6.23169 29.7724 7.68417C30.5341 9.13665 30.9293 10.7533 30.9236 12.3933V12.3715Z"
             fill="#FCD8AA"
@@ -196,14 +178,7 @@ const NewUserIcon = (props: SvgIconProps) => (
 );
 
 const NoCommentsIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="150"
-        height="150"
-        viewBox="0 0 150 150"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" fill="none" {...props}>
         <g clipPath="url(#clip0_5991_172472)">
             <path
                 d="M91.2142 107.109V109.908C91.2142 113.512 88.2922 116.434 84.6877 116.434H37.6882L28.9132 124.194C27.1627 125.742 24.4477 124.467 24.4477 122.098V116.434H20.4757C16.8712 116.434 13.9492 113.512 13.9492 109.908V65.5919C13.9492 62.0249 16.8097 59.1269 20.3602 59.0669V88.4264C20.3602 97.1414 27.4237 104.206 36.1387 104.206H87.8887L91.2142 107.107V107.109Z"
@@ -490,14 +465,7 @@ const NoCommentsIcon = (props: SvgIconProps) => (
     </svg>
 );
 const Dashboardicon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
         <path
             d="M14 5.6C14 5.03995 14 4.75992 14.109 4.54601C14.2049 4.35785 14.3578 4.20487 14.546 4.10899C14.7599 4 15.0399 4 15.6 4H18.4C18.9601 4 19.2401 4 19.454 4.10899C19.6422 4.20487 19.7951 4.35785 19.891 4.54601C20 4.75992 20 5.03995 20 5.6V8.4C20 8.96005 20 9.24008 19.891 9.45399C19.7951 9.64215 19.6422 9.79513 19.454 9.89101C19.2401 10 18.9601 10 18.4 10H15.6C15.0399 10 14.7599 10 14.546 9.89101C14.3578 9.79513 14.2049 9.64215 14.109 9.45399C14 9.24008 14 8.96005 14 8.4V5.6Z"
             stroke="#9696A0"
@@ -529,14 +497,7 @@ const Dashboardicon = (props: SvgIconProps) => (
     </svg>
 );
 const Projecticon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
         <path
             d="M8 5.00005C7.01165 5.00082 6.49359 5.01338 6.09202 5.21799C5.71569 5.40973 5.40973 5.71569 5.21799 6.09202C5 6.51984 5 7.07989 5 8.2V17.8C5 18.9201 5 19.4802 5.21799 19.908C5.40973 20.2843 5.71569 20.5903 6.09202 20.782C6.51984 21 7.07989 21 8.2 21H15.8C16.9201 21 17.4802 21 17.908 20.782C18.2843 20.5903 18.5903 20.2843 18.782 19.908C19 19.4802 19 18.9201 19 17.8V8.2C19 7.07989 19 6.51984 18.782 6.09202C18.5903 5.71569 18.2843 5.40973 17.908 5.21799C17.5064 5.01338 16.9884 5.00082 16 5.00005M8 5.00005V7H16V5.00005M8 5.00005V4.70711C8 4.25435 8.17986 3.82014 8.5 3.5C8.82014 3.17986 9.25435 3 9.70711 3H14.2929C14.7456 3 15.1799 3.17986 15.5 3.5C15.8201 3.82014 16 4.25435 16 4.70711V5.00005M16 11H14M16 16H14M8 11L9 12L11 10M8 16L9 17L11 15"
             stroke="#3A3A44"
@@ -547,14 +508,7 @@ const Projecticon = (props: SvgIconProps) => (
     </svg>
 );
 const TaskIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
         <path
             d="M15 19L17 21L21 17M13 3H8.2C7.0799 3 6.51984 3 6.09202 3.21799C5.71569 3.40973 5.40973 3.71569 5.21799 4.09202C5 4.51984 5 5.0799 5 6.2V17.8C5 18.9201 5 19.4802 5.21799 19.908C5.40973 20.2843 5.71569 20.5903 6.09202 20.782C6.51984 21 7.0799 21 8.2 21H11.5M13 3L19 9M13 3V7.4C13 7.96005 13 8.24008 13.109 8.45399C13.2049 8.64215 13.3578 8.79513 13.546 8.89101C13.7599 9 14.0399 9 14.6 9H19M19 9V13.4M9 17H11.5M9 13H15M9 9H10"
             stroke="#3A3A44"
@@ -566,14 +520,7 @@ const TaskIcon = (props: SvgIconProps) => (
 );
 
 const Downloadplugin = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
         <circle cx="12" cy="12" r="12" fill="#EBF2FF" />
         <path
             d="M16.6666 14V18M16.6666 18L15.3333 16.6667M16.6666 18L17.9999 16.6667M12.6666 6H9.46659C8.71985 6 8.34648 6 8.06126 6.14532C7.81038 6.27316 7.60641 6.47713 7.47858 6.72801C7.33325 7.01323 7.33325 7.3866 7.33325 8.13333V15.8667C7.33325 16.6134 7.33325 16.9868 7.47858 17.272C7.60641 17.5229 7.81038 17.7268 8.06126 17.8547C8.34648 18 8.71985 18 9.46659 18H13.3333M12.6666 6L16.6666 10M12.6666 6V8.93333C12.6666 9.3067 12.6666 9.49339 12.7392 9.63599C12.8032 9.76144 12.9052 9.86342 13.0306 9.92734C13.1732 10 13.3599 10 13.7333 10H16.6666M16.6666 10V11.3333"
@@ -585,28 +532,14 @@ const Downloadplugin = (props: SvgIconProps) => (
 );
 
 const ConnectIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
         <circle cx="12" cy="12" r="12" fill="#EBF2FF" />
         <path d="M8 12H16M12 8V16" stroke="#5494FF" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
 const Generatetoken = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
         <circle cx="12" cy="12" r="12" fill="#EBF2FF" />
         <path
             d="M18 6V9.33333M18 9.33333H14.6667M18 9.33333L16 7.52779C14.9385 6.57771 13.5367 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C14.8555 18 17.245 16.0053 17.8513 13.3333"
@@ -617,14 +550,7 @@ const Generatetoken = (props: SvgIconProps) => (
     </svg>
 );
 const FigmaIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="14"
-        height="22"
-        viewBox="0 0 14 22"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="22" viewBox="0 0 14 22" fill="none" {...props}>
         <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -659,14 +585,7 @@ const FigmaIcon = (props: SvgIconProps) => (
 );
 
 const TourplayIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
         <path
             d="M16.6582 9.28663C18.098 10.1865 18.8178 10.6364 19.0647 11.2124C19.2803 11.7155 19.2803 12.285 19.0647 12.788C18.8178 13.3641 18.098 13.814 16.6582 14.7138L9.896 18.9402C8.29805 19.9389 7.49907 20.4383 6.83973 20.3853C6.26501 20.3391 5.73818 20.0471 5.3944 19.5842C5 19.0532 5 18.111 5 16.2266V7.77381C5 5.88944 5 4.94725 5.3944 4.41622C5.73818 3.95334 6.26501 3.66135 6.83973 3.61515C7.49907 3.56214 8.29805 4.0615 9.896 5.06022L16.6582 9.28663Z"
             stroke="#3A3A44"
@@ -676,14 +595,7 @@ const TourplayIcon = (props: SvgIconProps) => (
     </svg>
 );
 const PlayIcon = (props: SvgIconProps) => (
-    <svg
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             d="M13.8817 7.73918C15.0815 8.48904 15.6814 8.86397 15.8871 9.344C16.0668 9.76323 16.0668 10.2378 15.8871 10.657C15.6814 11.137 15.0815 11.512 13.8817 12.2618L8.2465 15.7838C6.91488 16.6161 6.24907 17.0322 5.69962 16.9881C5.22068 16.9496 4.78166 16.7062 4.49517 16.3205C4.1665 15.878 4.1665 15.0928 4.1665 13.5225V6.4785C4.1665 4.90819 4.1665 4.12303 4.49517 3.68051C4.78166 3.29478 5.22068 3.05145 5.69962 3.01295C6.24907 2.96878 6.91488 3.38491 8.2465 4.21717L13.8817 7.73918Z"
             stroke="#4A4B57"
@@ -692,14 +604,7 @@ const PlayIcon = (props: SvgIconProps) => (
     </svg>
 );
 const PlusIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="18"
-        height="19"
-        viewBox="0 0 18 19"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none" {...props}>
         <path
             d="M4.5 9.5H13.5M9 5V14"
             stroke="#2979FF"
@@ -710,14 +615,7 @@ const PlusIcon = (props: SvgIconProps) => (
     </svg>
 );
 const CommentIcon = (props: SvgIconProps) => (
-    <svg
-        width="18"
-        height="18"
-        viewBox="0 0 18 18"
-        fill="none"
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" {...props} xmlns="http://www.w3.org/2000/svg">
         <path
             d="M15.7529 9C15.7529 12.7279 12.7308 15.75 9.00293 15.75C7.47562 15.75 2.25347 15.75 2.25347 15.75C2.25347 15.75 3.42287 12.9421 2.95486 12.0006C2.50557 11.0967 2.25293 10.0779 2.25293 9C2.25293 5.27208 5.275 2.25 9.00293 2.25C12.7308 2.25 15.7529 5.27208 15.7529 9Z"
             stroke="#3A3A44"
@@ -727,14 +625,7 @@ const CommentIcon = (props: SvgIconProps) => (
     </svg>
 );
 const VersionIcon = (props: SvgIconProps) => (
-    <svg
-        width="20"
-        height="16"
-        viewBox="0 0 20 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-    >
+    <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -744,14 +635,7 @@ const VersionIcon = (props: SvgIconProps) => (
     </svg>
 );
 const CopyIcon = (props: SvgIconProps) => (
-    <svg
-        width="20"
-        height="21"
-        viewBox="0 0 20 21"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-    >
+    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             d="M12.9689 17.5H5.32872C4.59489 17.5 4 16.9062 4 16.1737V6.55789M8.02768 14.7737H14.6713C15.4051 14.7737 16 14.1799 16 13.4474V4.82632C16 4.09381 15.4051 3.5 14.6713 3.5H8.02768C7.29385 3.5 6.69896 4.09381 6.69896 4.82632V13.4474C6.69896 14.1799 7.29385 14.7737 8.02768 14.7737Z"
             stroke="#3A3A44"
@@ -759,14 +643,7 @@ const CopyIcon = (props: SvgIconProps) => (
     </svg>
 );
 const CircleplayIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
         <path
             d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
             stroke="#5494FF"
@@ -784,14 +661,7 @@ const CircleplayIcon = (props: SvgIconProps) => (
     </svg>
 );
 const EclogoIcon = (props: SvgIconProps) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="28"
-        height="26"
-        viewBox="0 0 28 26"
-        fill="none"
-        {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="26" viewBox="0 0 28 26" fill="none" {...props}>
         <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -802,19 +672,11 @@ const EclogoIcon = (props: SvgIconProps) => (
 );
 
 const BranchIcon = (props: SvgIconProps) => {
-    const theme = useTheme();
     return (
-        <svg
-            width="17"
-            height="18"
-            viewBox="0 0 17 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            {...props}
-        >
+        <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
             <path
                 d="M8.71045 9H4.86045C4.3704 9 4.12538 9 3.93821 9.09537C3.77357 9.17926 3.63971 9.31312 3.55582 9.47776C3.46045 9.66493 3.46045 9.90995 3.46045 10.4V12.5M8.71045 9H12.5604C13.0505 9 13.2955 9 13.4827 9.09537C13.6473 9.17926 13.7812 9.31312 13.8651 9.47776C13.9604 9.66493 13.9604 9.90995 13.9604 10.4V12.5M8.71045 9V5.5M7.92295 5.5H9.49795C9.98799 5.5 10.233 5.5 10.4202 5.40463C10.5848 5.32074 10.7187 5.18688 10.8026 5.02224C10.8979 4.83507 10.8979 4.59005 10.8979 4.1V2.525C10.8979 2.03495 10.8979 1.78993 10.8026 1.60276C10.7187 1.43812 10.5848 1.30426 10.4202 1.22037C10.233 1.125 9.98799 1.125 9.49795 1.125H7.92295C7.4329 1.125 7.18788 1.125 7.00071 1.22037C6.83607 1.30426 6.70221 1.43812 6.61832 1.60276C6.52295 1.78993 6.52295 2.03495 6.52295 2.525V4.1C6.52295 4.59005 6.52295 4.83507 6.61832 5.02224C6.70221 5.18688 6.83607 5.32074 7.00071 5.40463C7.18788 5.5 7.4329 5.5 7.92295 5.5ZM2.67295 16.875H4.24795C4.738 16.875 4.98302 16.875 5.17019 16.7796C5.33483 16.6957 5.46869 16.5619 5.55258 16.3972C5.64795 16.2101 5.64795 15.965 5.64795 15.475V13.9C5.64795 13.41 5.64795 13.1649 5.55258 12.9778C5.46869 12.8131 5.33483 12.6793 5.17019 12.5954C4.98302 12.5 4.738 12.5 4.24795 12.5H2.67295C2.1829 12.5 1.93788 12.5 1.75071 12.5954C1.58607 12.6793 1.45221 12.8131 1.36832 12.9778C1.27295 13.1649 1.27295 13.41 1.27295 13.9V15.475C1.27295 15.965 1.27295 16.2101 1.36832 16.3972C1.45221 16.5619 1.58607 16.6957 1.75071 16.7796C1.93788 16.875 2.1829 16.875 2.67295 16.875ZM13.1729 16.875H14.7479C15.238 16.875 15.483 16.875 15.6702 16.7796C15.8348 16.6957 15.9687 16.5619 16.0526 16.3972C16.1479 16.2101 16.1479 15.965 16.1479 15.475V13.9C16.1479 13.41 16.1479 13.1649 16.0526 12.9778C15.9687 12.8131 15.8348 12.6793 15.6702 12.5954C15.483 12.5 15.238 12.5 14.7479 12.5H13.1729C12.6829 12.5 12.4379 12.5 12.2507 12.5954C12.0861 12.6793 11.9522 12.8131 11.8683 12.9778C11.7729 13.1649 11.7729 13.41 11.7729 13.9V15.475C11.7729 15.965 11.7729 16.2101 11.8683 16.3972C11.9522 16.5619 12.0861 16.6957 12.2507 16.7796C12.4379 16.875 12.6829 16.875 13.1729 16.875Z"
-                stroke={theme.palette.primary.main}
+                stroke={"#04050a"}
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"

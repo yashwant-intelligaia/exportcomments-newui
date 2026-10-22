@@ -1,17 +1,17 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { Box, Breakpoint, Container, IconButton, Modal, Stack, Typography } from "@mui/material";
-import { isArray } from "lodash";
+"use client";
+
+import { Button } from "@/components/ui/Button";
+import { Modal } from "@/components/ui/Modal";
 
 import { ActionButtonType } from "../../../types";
 import { uniqueKey } from "../../../utils";
-import { EcButton } from "../EcButton/EcButton";
 
 interface EcModalPropsType {
     open: boolean;
     children?: JSX.Element;
     title: JSX.Element;
     onClose: () => void;
-    size?: Breakpoint;
+    size?: "xs" | "sm" | "md" | "lg" | "xl";
     icon?: JSX.Element;
     subtitle?: string;
     closeOnClickOutside?: boolean;
@@ -23,14 +23,14 @@ interface EcModalPropsType {
 const EcModal = (props: EcModalPropsType) => {
     const {
         icon,
-        size,
+        size = "xs",
         children,
         open,
         title,
         subtitle,
         onClose,
-        actionButtons,
-        closeOnClickOutside,
+        actionButtons = [],
+        closeOnClickOutside = false,
         showCloseIcon,
         textAlign,
     } = props;
@@ -38,114 +38,45 @@ const EcModal = (props: EcModalPropsType) => {
         <Modal
             open={open}
             onClose={closeOnClickOutside ? onClose : undefined}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            size={size}
+            showCloseIcon={showCloseIcon}
         >
-            <Container
-                maxWidth={size}
-                sx={{
-                    p: 4,
-                    position: "absolute" as const,
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    textAlign,
-                    borderRadius: 1,
-                    bgcolor: "background.paper",
-                    boxShadow: 24,
-                }}
-            >
-                <IconButton
-                    aria-label="close"
-                    onClick={onClose}
-                    sx={{
-                        position: "absolute",
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
-                    }}
-                >
-                    {showCloseIcon && <CloseIcon />}
-                </IconButton>
-                {icon && (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            height: "85px",
-                            my: 2,
-                        }}
-                    >
-                        {icon}
-                    </Box>
-                )}
-                {title && title}
-                {subtitle && <Typography variant="body2">{subtitle}</Typography>}
-
-                {children && children}
-                {/* TODO: check gap between content and actionButton for success modal */}
+            <div style={{ textAlign }}>
+                {icon && <div className="my-2 flex h-[85px] justify-center">{icon}</div>}
+                {title}
+                {subtitle && <p className="text-sm">{subtitle}</p>}
+                {children}
                 {actionButtons && (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        {isArray(actionButtons) && (
-                            <Stack
-                                direction={{ xs: "column", sm: "row" }}
-                                spacing={{ xs: 1, sm: 2, md: 1 }}
-                                sx={{ pt: 1 }}
-                            >
-                                {actionButtons.map(
-                                    (
-                                        {
-                                            label: buttonLabel,
-                                            onClick,
-                                            size: actionButtonSize,
-                                            variant,
-                                        },
-                                        index
-                                    ) => (
-                                        <EcButton
-                                            variant={variant}
-                                            size={actionButtonSize || "small"}
-                                            key={uniqueKey(index)}
-                                            onClick={onClick}
-                                            aria-label={buttonLabel}
-                                        >
-                                            {buttonLabel}
-                                        </EcButton>
-                                    )
-                                )}
-                            </Stack>
-                        )}
-
-                        {!isArray(actionButtons) && (
-                            <EcButton
+                    <div className="flex flex-col items-center justify-center">
+                        {Array.isArray(actionButtons) ? (
+                            <div className="flex flex-col gap-2 pt-2 sm:flex-row">
+                                {actionButtons.map(({ label, onClick, size: btnSize, variant }, index) => (
+                                    <Button
+                                        key={uniqueKey(index)}
+                                        variant={variant}
+                                        size={btnSize || "small"}
+                                        onClick={onClick}
+                                        aria-label={label}
+                                    >
+                                        {label}
+                                    </Button>
+                                ))}
+                            </div>
+                        ) : (
+                            <Button
                                 variant="contained"
+                                className="mt-4"
                                 {...actionButtons}
-                                aria-label={actionButtons?.label}
-                                sx={{ mt: 2 }}
+                                aria-label={actionButtons.label}
                             >
-                                {actionButtons?.label}
-                            </EcButton>
+                                {actionButtons.label}
+                            </Button>
                         )}
-                    </Box>
+                    </div>
                 )}
-            </Container>
+            </div>
         </Modal>
     );
-};
-
-EcModal.defaultProps = {
-    size: "xs",
-    closeOnClickOutside: false,
-    actionButtons: [],
-    textAlign: undefined,
 };
 
 export { EcModal };

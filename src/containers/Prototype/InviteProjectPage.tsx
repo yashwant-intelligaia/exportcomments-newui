@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+
+import { useHistory } from "@/utils/navigation";
 
 import { usePageMutations } from "../../hooks";
 import { Loader } from "../../stories/components/Loader/Loader";
@@ -10,7 +13,7 @@ export const InviteProjectPage = () => {
     const history = useHistory();
     const token = query.get("token");
     const { verifyPage } = usePageMutations();
-    const { mutate: mutateVerifyPage, data, isLoading: isVerifyPageLoading, isError } = verifyPage;
+    const { mutate: mutateVerifyPage, data, isPending: isVerifyPageLoading, isError } = verifyPage;
     useEffect(() => {
         mutateVerifyPage({ token });
     }, [token]);

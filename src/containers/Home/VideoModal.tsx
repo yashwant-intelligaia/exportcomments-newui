@@ -1,31 +1,8 @@
-import { Close as CloseIcon } from "@mui/icons-material";
-import { Box, CardMedia, IconButton, Modal, Typography } from "@mui/material";
-import styled from "styled-components";
+"use client";
 
-const style = {
-    position: "absolute" as const,
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-};
+import { X } from "lucide-react";
 
-const VideoWrap = styled.div`
-    display: flex;
-    width: 100%;
-    margin-bottom: 30px;
-    padding: 0 30px;
-
-    img {
-        width: 100%;
-    }
-`;
+import { Modal } from "@/components/ui/Modal";
 
 interface IMediaInfoType {
     src: string;
@@ -39,69 +16,25 @@ interface IVideoModalType {
     handleClose: (index: any) => void;
 }
 
-const VideoModal = (props: IVideoModalType) => {
-    const {
-        isMenuOpen,
-        handleClose,
-        title,
-        mediaInfo: { src, controls },
-    } = props;
-    return (
-        <Modal
-            open={isMenuOpen}
-            onClose={() => handleClose(false)}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-            sx={{
-                "& > :not(MuiBackdrop-root)": {
-                    backgroundColor: "rgba(255, 255, 255, 0.8)",
-                },
-            }}
+const VideoModal = ({ isMenuOpen, handleClose, title, mediaInfo: { src, controls } }: IVideoModalType) => (
+    <Modal open={isMenuOpen} onClose={() => handleClose(false)} size="xl" className="max-w-[950px] overflow-y-auto p-0">
+        <button
+            type="button"
+            aria-label="close"
+            onClick={() => handleClose(false)}
+            className="hover:bg-surface-sunk absolute top-5 right-5 z-10 rounded-full p-1.5"
         >
-            <Box
-                sx={{
-                    ...style,
-                    maxWidth: 950,
-                    width: "100%",
-                    overflowY: "auto",
-                    padding: "0",
-                    border: "0",
-                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
-                }}
-            >
-                <IconButton
-                    sx={{
-                        position: "absolute",
-                        right: "20px",
-                        top: "20px",
-                        zIndex: "1",
-                    }}
-                    component="span"
-                    onClick={() => handleClose(false)}
-                >
-                    <CloseIcon />
-                </IconButton>
-                {title && (
-                    <Typography
-                        variant="h5"
-                        id="modal-title"
-                        sx={{
-                            textAlign: "center",
-                            fontSize: "28px",
-                            fontWeight: "700",
-                            margin: "20px 0",
-                            paddingRight: "60px",
-                        }}
-                    >
-                        {title}
-                    </Typography>
-                )}
-                <VideoWrap>
-                    <CardMedia component="video" src={src} controls={controls} />
-                </VideoWrap>
-            </Box>
-        </Modal>
-    );
-};
+            <X className="size-5" />
+        </button>
+        {title && (
+            <h2 id="modal-title" className="my-5 pr-[60px] text-center font-sans text-[28px] font-bold tracking-normal">
+                {title}
+            </h2>
+        )}
+        <div className="mb-[30px] flex w-full px-[30px] pt-[30px]">
+            <video src={src} controls={controls} className="w-full" />
+        </div>
+    </Modal>
+);
 
 export default VideoModal;

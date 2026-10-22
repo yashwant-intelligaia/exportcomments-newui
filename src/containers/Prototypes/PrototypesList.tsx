@@ -1,13 +1,9 @@
-import { Box } from "@mui/material";
+"use client";
+
 import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 import { ProjectDetailsContext, PrototypePageContext } from "../../contexts";
-import {
-    processfilteredPrototypes,
-    useFetchComments,
-    useFetchFigmaImage,
-    useFetchPrototypeList,
-} from "../../hooks";
+import { processfilteredPrototypes, useFetchComments, useFetchFigmaImage, useFetchPrototypeList } from "../../hooks";
 import { processPrototypeData } from "../../hooks/customHook";
 import { Loader } from "../../stories/components/Loader/Loader";
 import { ProcessedPageDataType } from "../../types";
@@ -37,7 +33,7 @@ const LazyRow = ({
                     observer.disconnect();
                 }
             },
-            { rootMargin: "200px" } // start fetching just before the row is visible
+            { rootMargin: "200px" }, // start fetching just before the row is visible
         );
         observer.observe(el);
         return () => observer.disconnect();
@@ -47,18 +43,16 @@ const LazyRow = ({
 
 export const PrototypesList = () => {
     const { projectId, searchInput, selectedBranch } = useContext(ProjectDetailsContext);
-    const [processedPrototypeData, setProcessedPrototypeData] = useState<ProcessedPageDataType[]>(
-        []
-    );
+    const [processedPrototypeData, setProcessedPrototypeData] = useState<ProcessedPageDataType[]>([]);
     const [filteredPrototypeData, setFilteredPrototypeData] = useState<ProcessedPageDataType[]>([]);
     const [pageExpandMap, setPageExpandMap] = useState<Map<number, boolean>>(new Map());
 
     const { data: commentsData, isFetching: isFetchingComments } = useFetchComments(
         projectId,
-        selectedBranch?.key || ""
+        selectedBranch?.key || "",
     );
     const { data: prototypes = [], isFetching: isFetchingPrototypes } = useFetchPrototypeList(
-        selectedBranch?.key || ""
+        selectedBranch?.key || "",
     );
 
     const { drawerContent, isVersionUpdated, setVersionUpdated } = useContext(PrototypePageContext);
@@ -83,20 +77,14 @@ export const PrototypesList = () => {
         () => () => {
             if (flushTimerRef.current) clearTimeout(flushTimerRef.current);
         },
-        []
+        [],
     );
 
     const nodeIdsToFetch = useMemo(
-        () =>
-            filteredPrototypeData
-                .map((page) => page.nodeId)
-                .filter((nodeId) => nodeId && visibleNodeIds.has(nodeId)),
-        [filteredPrototypeData, visibleNodeIds]
+        () => filteredPrototypeData.map((page) => page.nodeId).filter((nodeId) => nodeId && visibleNodeIds.has(nodeId)),
+        [filteredPrototypeData, visibleNodeIds],
     );
-    const { data: figmaImage, isLoading: figmaImageLoading } = useFetchFigmaImage(
-        nodeIdsToFetch,
-        projectId
-    );
+    const { data: figmaImage, isLoading: figmaImageLoading } = useFetchFigmaImage(nodeIdsToFetch, projectId);
 
     const handleExpandToggle = (status: boolean, index: number) => {
         const updatedData = Array.from(filteredPrototypeData);
@@ -136,22 +124,13 @@ export const PrototypesList = () => {
     }, [searchInput, processedPrototypeData]);
 
     if (isFetchingComments || isFetchingPrototypes) {
-        return (
-            <Loader
-                message={getLoadingMessage("prototypes")}
-                image={getLoadingImage("prototypes")}
-            />
-        );
+        return <Loader message={getLoadingMessage("prototypes")} image={getLoadingImage("prototypes")} />;
     }
 
     return (
-        <Box sx={{ overflowX: "auto", margin: "1rem 1rem" }}>
+        <div className="m-4 overflow-x-auto">
             {filteredPrototypeData.map((page, index) => (
-                <LazyRow
-                    key={uniqueKey(`page-${page.pageId}`)}
-                    nodeId={page.nodeId}
-                    onVisible={markVisible}
-                >
+                <LazyRow key={uniqueKey(`page-${page.pageId}`)} nodeId={page.nodeId} onVisible={markVisible}>
                     <PrototypeAccordion
                         data={page}
                         onExpandToggle={(status) => handleExpandToggle(status, index)}
@@ -160,7 +139,7 @@ export const PrototypesList = () => {
                     />
                 </LazyRow>
             ))}
-            {drawerContent && drawerContent}
-        </Box>
+            {drawerContent}
+        </div>
     );
 };

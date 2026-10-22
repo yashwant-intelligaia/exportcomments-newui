@@ -1,50 +1,20 @@
-import { Box } from "@mui/material";
-import React from "react";
-import { useHistory } from "react-router-dom";
-import styled from "styled-components";
+"use client";
 
-const Brand = styled.div`
-    display: flex;
-    align-items: center;
-    color: #fff;
-    font-size: 18px;
-    font-weight: bolder;
-    text-decoration: unset;
-    :hover {
-        color: #fff;
-    }
-    span {
-        padding-left: 12px;
-    }
-`;
-
-const BrandLogo = styled.a`
-    color: #000;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1;
-    cursor: pointer;
-
-    @media screen and (max-width: 640px) {
-        img {
-            width: 140px;
-        }
-    }
-`;
+import { useHistory } from "@/utils/navigation";
 
 export const SbLogo = () => {
     const history = useHistory();
 
-    const redirectToDashbaord = () => {
-        history.push("/");
-    };
     return (
-        <Box>
-            <Brand>
-                <BrandLogo onClick={redirectToDashbaord}>
-                    <img src="/export-comment.svg" alt="Export Comment" />
-                </BrandLogo>
-            </Brand>
-        </Box>
+        <div>
+            <button
+                type="button"
+                onClick={() => history.push("/")}
+                className="flex items-center leading-none max-sm:[&_img]:w-[140px]"
+            >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/export-comment.svg" alt="Export Comment" />
+            </button>
+        </div>
     );
 };

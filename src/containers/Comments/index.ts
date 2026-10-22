@@ -1,4 +1,5 @@
-// eslint-disable-next-line import/no-cycle
+"use client";
+
 export * from "./CommentsList";
 export * from "./NoCommentsFound";
 export * from "./ReactionList";

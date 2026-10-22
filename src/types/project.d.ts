@@ -80,14 +80,7 @@ interface PageType {
 }
 
 type FilterType =
-    | "View All"
-    | "This Week"
-    | "Last 30 Days"
-    | "Last 6 Months"
-    | "This Year"
-    | "Last Year"
-    | "Custom Range"
-    | "";
+    "View All" | "This Week" | "Last 30 Days" | "Last 6 Months" | "This Year" | "Last Year" | "Custom Range" | "";
 
 interface ProjectFilterContextType {
     filter: FilterType;

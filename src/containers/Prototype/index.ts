@@ -1,7 +1,6 @@
+"use client";
+
 export * from "./Cell";
-export * from "./CellExpanderFormatter";
-export * from "./CreateVersionDrawer";
-export * from "./FlowVersionDrawer";
 export * from "./InvitePageFlow";
 export * from "./InviteProjectPage";
 export * from "./NewCreateVersionDrawer";
@@ -10,7 +9,6 @@ export * from "./NoPrototypesFound";
 export * from "./PageOrFlowCommentsDrawer";
 export * from "./PrototypeAccordion";
 export * from "./PrototypeNameCell";
-export * from "./PrototypeSearch";
 export * from "./ShareFlowLinkModel";
 export * from "./ShareFlowVersionModal";
 export * from "./SharePageLinkModel";

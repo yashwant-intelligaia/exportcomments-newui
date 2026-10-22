@@ -1,5 +1,8 @@
-import { Box, Button } from "@mui/material";
+"use client";
+
 import { useContext } from "react";
+
+import { Button } from "@/components/ui/Button";
 
 import { AddProjectContext } from "../../../contexts";
 
@@ -10,35 +13,19 @@ interface AddNewProjectFooterPropsType {
 const AddNewProjectFooter = ({ onClose }: AddNewProjectFooterPropsType) => {
     const { onSubmit, projectData, isLoading } = useContext(AddProjectContext);
 
-    const handleSubmitAddProject = () => {
-        onSubmit(true);
-    };
-
     return (
-        <Box
-            sx={{ background: "#fff", flexShrink: "1" }}
-            display="flex"
-            justifyContent="flex-end"
-            pb={2}
-            width="100%"
-        >
-            <Button
-                variant="text"
-                sx={{ marginRight: "10px", textTransform: "inherit" }}
-                onClick={onClose}
-            >
+        <div className="bg-surface flex w-full shrink justify-end gap-2.5 pb-4">
+            <Button variant="text" onClick={onClose}>
                 Cancel
             </Button>
             <Button
-                variant="contained"
-                onClick={handleSubmitAddProject}
                 id="NB-add-project-button"
+                onClick={() => onSubmit(true)}
                 disabled={projectData.length === 0 || isLoading}
-                sx={{ textTransform: "inherit" }}
             >
                 Add
             </Button>
-        </Box>
+        </div>
     );
 };
 

@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./EcBasicCard";
 export * from "./EcBreadcrumb";
 export * from "./EcComment";

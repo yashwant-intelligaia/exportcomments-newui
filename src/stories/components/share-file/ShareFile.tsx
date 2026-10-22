@@ -1,11 +1,12 @@
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import DoneIcon from "@mui/icons-material/Done";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Avatar, Box, Button, Checkbox, Modal, Typography } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import { cloneDeep } from "lodash";
+"use client";
+
+import { Check, Pencil, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+
+import { Button } from "@/components/ui/Button";
+import { Avatar } from "@/components/ui/Display";
+import { Checkbox, TextField } from "@/components/ui/Form";
+import { Modal } from "@/components/ui/Modal";
 
 import Fail from "../../../assets/error.svg";
 import Success from "../../../assets/success.svg";
@@ -13,198 +14,21 @@ import { APP_CONSTANT } from "../../../constants/AppConstant";
 import { useCommonPost } from "../../../hooks/filesHook";
 import { IFileUser, IShareFileRequestType, ISharesheetSnackBarMessage } from "../../../types";
 import { emailValidation, getLoadingImage, getLoadingMessage } from "../../../utils";
+import { cloneDeep } from "../../../utils/object";
 import { Loader } from "../Loader/Loader";
 
-const ModalWrapper = styled.div`
-    width: 700px;
-`;
-const style = {
-    position: "absolute" as const,
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 640,
-    maxWidth: "90%",
-    bgcolor: "background.paper",
-    borderRadius: 1,
-    pt: 3,
-    px: 3,
-    pb: 3,
-    boxShadow: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.25,
-};
+const emailInputClass =
+    "h-9 w-full rounded-sm border border-ink/60 bg-surface px-2.5 text-sm text-ink placeholder:text-muted focus:ring-2 focus:ring-ink focus:outline-none";
 
-const ModalFooter = styled.div`
-    display: flex;
-    justify-content: flex-end;
-
-    .marginR-10 {
-        margin-right: 10px;
-    }
-
-    button {
-        text-transform: none;
-    }
-`;
-
-const DivRow = styled.div`
-padding - left: 0;
-padding - top: 16px;
-margin: 0;
-`;
-
-const SucessImg = styled.img`
-    cursor: pointer;
-    height: 32px;
-    width: 32px;
-    margin-left: 10px;
-    border-radius: 50%;
-`;
-
-const DivWrapper = styled.div`
-    min-height: 150px;
-    max-height: 250px;
-    overflow-y: auto;
-    margin: 20px 0 10px 0;
-    .flextable-row {
-        display: flex;
-        align-items: center;
-        justify-content: ;
-        .inner-cell {
-            display: flex;
-            width: 100%;
-            .input-wrapper {
-                display: flex;
-                width: 100%;
-                align-items: center;
-                flex-wrap: wrap;
-                position: relative input {
-                    height: 30px;
-                    line-height: 1;
-                }
-                .email-done {
-                    position: absolute;
-                    right: 5px;
-                    z-index: 9;
-                    margin-top: 5px;
-                    cursor: pointer;
-                    color: #2979ff;
-                    font-size: 1rem;
-                }
-            }
-            .edit-email {
-                font-size: 1rem;
-                color: #2979ff;
-                margin-left: 5px;
-                cursor: pointer;
-                position: relative;
-                top: 2px;
-            }
-        }
-        .flexlist-item {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            position: relative;
-            label {
-                margin-right: 0;
-            }
-        }
-    }
-`;
-
-const Input = styled.input`
-    background-color: #f9f9f9;
-    border-radius: 4px 4px 0 0;
-    border: 0.125rem solid transparent;
-    color: #9e9e9e;
-    font-size: 0.875rem;
-    font-weight: 400;
-    height: 2.25rem;
-    padding: 8px 10px;
-    width: 100%;
-    letter-spacing: 0.1px;
-    box-shadow: 0 1px 0 #616161;
-    :hover {
-        box-shadow: 0 2px 0 #616161;
-        -webkit-box-shadow: 0 2px 0 #616161;
-    }
-    :active,
-    :focus {
-        box-shadow: 0 2px 0 #2979ff;
-        -webkit-box-shadow: 0 2px 0 #2979ff;
-    }
-    ::placeholder {
-        color: #9e9e9e;
-        font-weight: 400;
-        opacity: 1;
-    }
-`;
-const EmailErrorSpan = styled.span`
-    width: 100%;
-    display: flex;
-    color: #ea2227;
-    font-size: 10px;
-    margin-left: 5px;
-    text-transform: capitalize;
-`;
-
-const CenterDiv = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-`;
-
-const ModalTitle = styled.div`
-    position: relative;
-    padding-right: 16px;
-    #parent-modal-title {
-        font-size: 18px;
-        color: #212121;
-        margin: 0 0 10px 0;
-    }
-`;
-
-const CloseModal = styled.div`
-    position: absolute;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-`;
-
-const UserAvtarInfo = styled.div`
-    display: flex;
-    align-items: center;
-
-    .u-info {
-        display: flex;
-        flex-wrap: wrap;
-        line-height: 20px;
-
-        span.u-name {
-            width: 100%;
-            font-weight: 500;
-            font-size: 14px;
-            color: #212121;
-        }
-        span.u-email {
-            width: 100%;
-            font-weight: 400;
-            font-size: 12px;
-            color: #616161;
-        }
-    }
-
-    @media (max-width: 340px) {
-        img {
-            width: 30px;
-            height: 30px;
-        }
-    }
-`;
+const StatusBanner = ({ image, message, tone }: { image: string; message: string; tone: "ok" | "error" }) => (
+    <div role="alert" className={`my-3 rounded-md p-3 ${tone === "ok" ? "bg-mint" : "bg-danger-soft"}`}>
+        <div className="flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img alt="status" src={image} className="size-8 rounded-full" />
+        </div>
+        <div className="mt-2 flex justify-center text-sm">{message}</div>
+    </div>
+);
 
 export const ShareFile = (props: ISharesheetSnackBarMessage) => {
     const { users, projectId, close: onClose } = props;
@@ -215,7 +39,7 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
     const [selectedOption, setSelectedOption] = useState([] as IFileUser[]);
     const [invite, setInvite] = useState(false);
     const [message, setMessage] = useState("");
-    const { mutate, data, isLoading, error, reset } = useCommonPost({
+    const { mutate, data, isPending, error, reset } = useCommonPost({
         alertRequired: true,
     });
     useEffect(() => {
@@ -223,7 +47,7 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
             setInvite(true);
             setMessage(data.data.message);
         } else if (error) {
-            setMessage(error?.response?.data?.message);
+            setMessage((error as any)?.response?.data?.message);
         }
     }, [data, error]);
 
@@ -232,17 +56,11 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
             setFilterOption(
                 options.filter((option: IFileUser) => {
                     if (option.name) {
-                        return option?.name
-                            ?.toString()
-                            .toLowerCase()
-                            .startsWith(userInput.toString().toLowerCase());
+                        return option?.name?.toString().toLowerCase().startsWith(userInput.toString().toLowerCase());
                     }
 
-                    return option?.email
-                        ?.toString()
-                        .toLowerCase()
-                        .startsWith(userInput.toString().toLowerCase());
-                })
+                    return option?.email?.toString().toLowerCase().startsWith(userInput.toString().toLowerCase());
+                }),
             );
             setSelectedOption(options.filter((user: IFileUser) => user.selected));
         } else {
@@ -264,11 +82,8 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
                             .startsWith(e.target.value.toString().toLowerCase());
                     }
 
-                    return option?.name
-                        ?.toString()
-                        .toLowerCase()
-                        .startsWith(e.target.value.toString().toLowerCase());
-                })
+                    return option?.name?.toString().toLowerCase().startsWith(e.target.value.toString().toLowerCase());
+                }),
             );
         } else {
             setFilterOption(cloneDeep(options));
@@ -433,228 +248,132 @@ export const ShareFile = (props: ISharesheetSnackBarMessage) => {
     };
 
     return (
-        <ModalWrapper>
-            {isLoading && <Loader message={getLoadingMessage("")} image={getLoadingImage("")} />}
-            <Modal
-                open
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{ ...style, width: 640, maxWidth: "90%" }} className="share-modal">
-                    <ModalTitle>
-                        <h2 id="parent-modal-title">Share with people</h2>
-                        <CloseModal onClick={close}>
-                            <CloseRoundedIcon />
-                        </CloseModal>
-                    </ModalTitle>
+        <>
+            {isPending && <Loader message={getLoadingMessage("")} image={getLoadingImage("")} />}
+            <Modal open size="sm" className="share-modal">
+                <div className="relative pr-4">
+                    <h2 id="parent-modal-title" className="mb-2.5 font-sans text-lg font-semibold tracking-normal">
+                        Share with people
+                    </h2>
+                    <button
+                        aria-label="close"
+                        onClick={close}
+                        className="text-muted hover:text-ink absolute top-0 right-0 rounded-full p-1"
+                    >
+                        <X className="size-5" />
+                    </button>
+                </div>
 
-                    {error && (
-                        <div className="alert alert-danger" role="alert">
-                            <CenterDiv>
-                                <SucessImg alt="profile" src={Fail} />
-                            </CenterDiv>
-                            <CenterDiv>{message}</CenterDiv>
-                        </div>
-                    )}
-                    {!invite && (
-                        <TextField
-                            value={userInput}
-                            label="Search Users"
-                            variant="standard"
-                            onChange={onChange}
-                            sx={{ width: "100%" }}
-                            helperText={emailError || ""}
-                            error={!!emailError}
-                        />
-                    )}
-                    {filteredOption && filteredOption.length > 0 && (
-                        <DivWrapper>
-                            {filteredOption.map((option, index) => (
-                                <DivRow className="flextable-row" key={option.userId}>
-                                    <div className="flexlist-item">
-                                        <Checkbox
-                                            id={`check - api - ${index} `}
-                                            checked={option.selected}
-                                            disabled={!option.email}
-                                            onChange={optionChange(option)}
-                                        />
-
-                                        <UserAvtarInfo>
-                                            <Avatar
-                                                src={option.avatar}
-                                                style={{
-                                                    display: "flex",
-                                                    marginRight: "8px",
-                                                }}
-                                            />
-                                            <div className="u-info">
-                                                <span className="u-name">{option.name}</span>
-                                                <span className="u-email">
-                                                    <div
-                                                        className={
-                                                            option && option.email
-                                                                ? "inner-cell"
-                                                                : "inner-cell with-out-email"
-                                                        }
-                                                    >
-                                                        {!option.email && option.editValue && (
-                                                            <div
-                                                                className={
-                                                                    option.validEmail === "invalid"
-                                                                        ? "input-wrapper error"
-                                                                        : "input-wrapper"
-                                                                }
-                                                            />
-                                                        )}
-                                                    </div>
-
-                                                    <div
-                                                        className={
-                                                            option && option.email
-                                                                ? "inner-cell"
-                                                                : "inner-cell with-out-email"
-                                                        }
-                                                    >
-                                                        {option.iseditable && option.editValue && (
-                                                            <div
-                                                                className={
-                                                                    option.validEmail === "invalid"
-                                                                        ? "input-wrapper error"
-                                                                        : "input-wrapper"
-                                                                }
-                                                            >
-                                                                <Input
-                                                                    type="textbox"
-                                                                    value={option.tempEmail}
-                                                                    onChange={editEmailValueChange(
-                                                                        option
-                                                                    )}
-                                                                    onKeyPress={emailKeyPress(
-                                                                        option
-                                                                    )}
-                                                                    placeholder="enter email"
-                                                                />
-                                                                {option.validEmail ===
-                                                                    "invalid" && (
-                                                                    <EmailErrorSpan>
-                                                                        invalid email.
-                                                                    </EmailErrorSpan>
-                                                                )}
-                                                                {option.validEmail !==
-                                                                    "invalid" && (
-                                                                    <span
-                                                                        role="presentation"
-                                                                        className="email-done"
-                                                                        onClick={doneEmail(option)}
-                                                                    >
-                                                                        <DoneIcon />
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                        {option.email && !option.editValue && (
-                                                            <span>{option.email}</span>
-                                                        )}
-                                                        {!option.email && !option.editValue && (
-                                                            <span
-                                                                role="presentation"
-                                                                onClick={editValueChange(option)}
-                                                            >
-                                                                Add an email
-                                                                <EditOutlinedIcon
-                                                                    onClick={editValueChange(
-                                                                        option
-                                                                    )}
-                                                                    className="edit-email"
-                                                                />
+                {error && <StatusBanner image={Fail.src} message={message} tone="error" />}
+                {!invite && (
+                    <TextField
+                        value={userInput}
+                        label="Search Users"
+                        onChange={onChange}
+                        helperText={emailError || ""}
+                        error={!!emailError}
+                    />
+                )}
+                {filteredOption && filteredOption.length > 0 && (
+                    <div className="my-5 max-h-[250px] min-h-[150px] overflow-y-auto">
+                        {filteredOption.map((option, index) => (
+                            <div className="flex items-center pt-4" key={option.userId}>
+                                <div className="relative my-2.5 flex items-center">
+                                    <Checkbox
+                                        checked={option.selected}
+                                        disabled={!option.email}
+                                        onChange={(checked) => optionChange(option)({ target: { checked } })}
+                                        className="mr-2"
+                                        aria-label={`select-${index}`}
+                                    />
+                                    <Avatar
+                                        src={option.avatar}
+                                        name={option.name || option.email}
+                                        size={40}
+                                        className="mr-2"
+                                    />
+                                    <div className="flex flex-wrap leading-5">
+                                        <span className="text-ink w-full text-sm font-medium">{option.name}</span>
+                                        <span className="text-muted w-full text-xs">
+                                            <div className="flex w-full items-center">
+                                                {option.iseditable && option.editValue && (
+                                                    <div className="relative flex w-full flex-wrap items-center">
+                                                        <input
+                                                            type="text"
+                                                            value={option.tempEmail}
+                                                            onChange={editEmailValueChange(option)}
+                                                            onKeyDown={emailKeyPress(option)}
+                                                            placeholder="enter email"
+                                                            className={emailInputClass}
+                                                        />
+                                                        {option.validEmail === "invalid" ? (
+                                                            <span className="text-danger ml-1 flex w-full text-[10px] capitalize">
+                                                                invalid email.
                                                             </span>
+                                                        ) : (
+                                                            <button
+                                                                type="button"
+                                                                aria-label="confirm email"
+                                                                className="text-blue-ink absolute right-1"
+                                                                onClick={doneEmail(option)}
+                                                            >
+                                                                <Check className="size-4" />
+                                                            </button>
                                                         )}
-                                                        {option.email &&
-                                                            option.iseditable &&
-                                                            !option.editValue && (
-                                                                <span
-                                                                    role="presentation"
-                                                                    onClick={editValueChange(
-                                                                        option
-                                                                    )}
-                                                                >
-                                                                    <EditOutlinedIcon
-                                                                        onClick={editValueChange(
-                                                                            option
-                                                                        )}
-                                                                        className="edit-email"
-                                                                    />
-                                                                </span>
-                                                            )}
                                                     </div>
-                                                </span>
+                                                )}
+                                                {option.email && !option.editValue && <span>{option.email}</span>}
+                                                {!option.email && !option.editValue && (
+                                                    <button
+                                                        type="button"
+                                                        className="flex items-center"
+                                                        onClick={editValueChange(option)}
+                                                    >
+                                                        Add an email
+                                                        <Pencil className="text-blue-ink relative top-0.5 ml-1 size-4" />
+                                                    </button>
+                                                )}
+                                                {option.email && option.iseditable && !option.editValue && (
+                                                    <button
+                                                        type="button"
+                                                        aria-label="edit email"
+                                                        onClick={editValueChange(option)}
+                                                    >
+                                                        <Pencil className="text-blue-ink ml-1 size-4" />
+                                                    </button>
+                                                )}
                                             </div>
-                                        </UserAvtarInfo>
+                                        </span>
                                     </div>
-                                </DivRow>
-                            ))}
-                        </DivWrapper>
-                    )}
-                    {filteredOption && filteredOption.length === 0 && (
-                        <Box
-                            key="id"
-                            display="flex"
-                            alignItems="center"
-                            component="li"
-                            p={2}
-                            m={0}
-                            sx={{
-                                cursor: "pointer",
-                                background: "#fff",
-                                "&:hover": {
-                                    background: "#EBF2FF !important",
-                                },
-                            }}
-                            onClick={addNewUser}
-                        >
-                            <Avatar
-                                sx={{
-                                    width: "36px",
-                                    height: "36px",
-                                    bgcolor: "#efefef",
-                                    color: "#000",
-                                    fontSize: "18px",
-                                }}
-                                src=""
-                            />
-                            <Box ml={1} fontWeight={400}>
-                                <Box fontSize={14} color="#616161">
-                                    <Typography variant="inherit">{`Add ${userInput}`}</Typography>
-                                </Box>
-                            </Box>
-                        </Box>
-                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                {filteredOption && filteredOption.length === 0 && (
+                    <button
+                        type="button"
+                        className="bg-surface hover:bg-blue-soft flex w-full items-center gap-2 p-4 text-left"
+                        onClick={addNewUser}
+                    >
+                        <Avatar name="" size={36} />
+                        <span className="text-muted text-sm">{`Add ${userInput}`}</span>
+                    </button>
+                )}
 
-                    {invite && (
-                        <div className="alert alert-success" role="alert">
-                            <CenterDiv>
-                                <SucessImg alt="profile" src={Success} />
-                            </CenterDiv>
-                            <CenterDiv>{message}</CenterDiv>
-                        </div>
-                    )}
+                {invite && <StatusBanner image={Success.src} message={message} tone="ok" />}
 
-                    <ModalFooter>
-                        <Button className="marginR-10" variant="outlined" onClick={close}>
-                            Close
+                <div className="flex justify-end gap-2.5">
+                    <Button variant="outlined" onClick={close}>
+                        Close
+                    </Button>
+                    {!invite && (
+                        <Button disabled={!selectedOption.length} onClick={handleAction}>
+                            Share
                         </Button>
-                        {!invite && (
-                            <Button
-                                variant="contained"
-                                disabled={!selectedOption.length}
-                                onClick={handleAction}
-                            >
-                                Share
-                            </Button>
-                        )}
-                    </ModalFooter>
-                </Box>
+                    )}
+                </div>
             </Modal>
-        </ModalWrapper>
+        </>
     );
 };

@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./ActionCell";
 export * from "./CommentCell";
 export * from "./CreatedByCell";

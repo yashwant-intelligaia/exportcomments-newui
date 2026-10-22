@@ -1,5 +1,4 @@
-import { AlertColor, SnackbarProps } from "@mui/material";
-
+import type { Severity as AlertColor } from "../components/ui/Snackbar";
 import { ITreeRowType } from ".";
 
 interface ISnackBarMessage {
@@ -34,7 +33,8 @@ interface ISnackBar {
     onClose(): void;
 }
 
-interface SnackbarPropsType extends SnackbarProps {
+interface SnackbarPropsType {
+    open: boolean;
     title?: string;
     message: string;
     severity: AlertColor | undefined;
@@ -42,10 +42,4 @@ interface SnackbarPropsType extends SnackbarProps {
     severity?: AlertColor;
     onClose?: () => void;
 }
-export {
-    ICreateGitTicketSnackBarMessage,
-    ISharesheetSnackBarMessage,
-    ISnackBar,
-    ISnackBarMessage,
-    SnackbarPropsType,
-};
+export { ICreateGitTicketSnackBarMessage, ISharesheetSnackBarMessage, ISnackBar, ISnackBarMessage, SnackbarPropsType };

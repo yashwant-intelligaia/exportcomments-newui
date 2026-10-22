@@ -1,100 +1,30 @@
-import {
-    Avatar,
-    Box,
-    Divider,
-    List,
-    // ListItem,
-    ListItemButton,
-    ListItemText,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
+"use client";
+
+import { Avatar } from "@/components/ui/Display";
 
 import { UserContext } from "../../contexts";
 import { useAuthMutations } from "../../hooks/authHook";
 
-// import { Dashboardicon, Projecticon, TaskIcon } from "../../utils";
-
 const ResponsiveDrawerNavigation = () => {
     const { user: userDetail } = UserContext();
     const { logoutUserSession } = useAuthMutations();
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     return (
-        <Box style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            {isMobile && (
-                <Box sx={{ width: "100%" }} role="presentation" className="m-slide-menu">
-                    <header>
-                        <Box className="menu-avatar">
-                            <Avatar
-                                style={{ width: "80px", height: "80px" }}
-                                alt="user"
-                                src={userDetail.avatar}
-                            />
-                        </Box>
-                        <Box className="avatar-name"> {userDetail.name} </Box>
-                        <Box className="avatar-email"> {userDetail.email}</Box>
-                    </header>
-                </Box>
-            )}
-
-            {/* TODO: uncomment below code to enable navigation links in responsive drawer */}
-            {/* <Box sx={{ flexGrow: 1 }}>
-                <List
-                    sx={{
-                        ".MuiListItemButton-root:hover,.Mui-selected": {
-                            background: "#EBF2FF",
-                            color: "#5494FF",
-                            ".MuiListItemIcon-root svg path": {
-                                stroke: "#5494FF",
-                            },
-                        },
-                        ".MuiListItemIcon-root": {
-                            minWidth: "35px",
-                            "& svg path": {
-                                stroke: "#3A3A44",
-                            },
-                        },
-                    }}
+        <div className="flex h-full flex-col">
+            <header className="border-line bg-paper flex flex-col items-center gap-1 border-b px-4 py-6 text-center">
+                <Avatar src={userDetail.avatar} name={userDetail.name} size={80} />
+                <span className="text-ink font-semibold">{userDetail.name}</span>
+                <span className="text-muted text-sm">{userDetail.email}</span>
+            </header>
+            <footer className="border-line mt-auto border-t p-2">
+                <button
+                    type="button"
+                    onClick={logoutUserSession}
+                    className="text-ink hover:bg-surface-sunk w-full rounded-sm px-3 py-2.5 text-center"
                 >
-                    <ListItem disablePadding onClick={() => {}}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <Dashboardicon />
-                            </ListItemIcon>
-                            <ListItemText primary="Dashboard" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding onClick={() => {}}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <Projecticon />
-                            </ListItemIcon>
-                            <ListItemText primary="Project" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding onClick={() => {}}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <TaskIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Task" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </Box> */}
-
-            {isMobile && (
-                <footer style={{ marginTop: "auto" }}>
-                    <Divider />
-                    <List>
-                        <ListItemButton key="logout" onClick={logoutUserSession}>
-                            <ListItemText sx={{ textAlign: "center" }} primary="Logout" />
-                        </ListItemButton>
-                    </List>
-                </footer>
-            )}
-        </Box>
+                    Logout
+                </button>
+            </footer>
+        </div>
     );
 };
 

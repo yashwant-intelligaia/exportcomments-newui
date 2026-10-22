@@ -1,10 +1,10 @@
+"use client";
+
 import { createContext, useState } from "react";
 
 import { PrototypePageContextType } from "../types/prototype";
 
-const PrototypePageContext = createContext<PrototypePageContextType>(
-    {} as PrototypePageContextType
-);
+const PrototypePageContext = createContext<PrototypePageContextType>({} as PrototypePageContextType);
 
 const PrototypePageContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const [drawerContent, setDrawerContent] = useState<JSX.Element>();

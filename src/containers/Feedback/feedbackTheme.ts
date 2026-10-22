@@ -1,3 +1,5 @@
+"use client";
+
 import { ITheme } from "survey-core";
 
 export const themeJson: ITheme = {
@@ -99,8 +101,7 @@ export const themeJson: ITheme = {
         textAreaWidth: 480,
         overlapEnabled: false,
         // TODO: check for responsive background image
-        backgroundImage:
-            "https://export-comments.s3.ap-south-1.amazonaws.com/export-comments-email-banner.png",
+        backgroundImage: "https://export-comments.s3.ap-south-1.amazonaws.com/export-comments-email-banner.png",
         backgroundImageOpacity: 1,
         backgroundImageFit: "cover",
         logoPositionX: "right",

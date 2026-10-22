@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, ReactNode, useState } from "react";
 
 import {
@@ -34,9 +36,7 @@ interface ProjectDetailsContextProps {
     setSelectedBranch: React.Dispatch<React.SetStateAction<BranchResponseType | undefined>>;
 }
 
-const ProjectDetailsContext = createContext<ProjectDetailsContextProps>(
-    {} as ProjectDetailsContextProps
-);
+const ProjectDetailsContext = createContext<ProjectDetailsContextProps>({} as ProjectDetailsContextProps);
 
 const ProjectDetailsContextProvider = ({ children }: { children: ReactNode }) => {
     const [view, setView] = useState<ProjectViewByType>("comments");

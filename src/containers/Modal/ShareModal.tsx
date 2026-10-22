@@ -1,6 +1,10 @@
-import { Box, Modal } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import styled from "styled-components";
+"use client";
+
+import { ReactNode } from "react";
+
+import { cn } from "@/components/ui/cn";
+import { Avatar } from "@/components/ui/Display";
+import { Modal } from "@/components/ui/Modal";
 
 interface ShareModalPropsType {
     title: string | JSX.Element;
@@ -8,167 +12,55 @@ interface ShareModalPropsType {
     actionButtons: JSX.Element | JSX.Element[];
 }
 
-export const useStyles = makeStyles({
-    option: {
-        padding: 0,
-    },
-});
-export const ModalWrapper = styled.div`
-    width: 700px;
-`;
-export const style = {
-    position: "absolute" as const,
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 640,
-    maxWidth: "90%",
-    bgcolor: "background.paper",
-    borderRadius: 1,
-    pt: 3,
-    px: 3,
-    pb: 3,
-    boxShadow: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.25,
-};
+export const ShareModal = ({ title, children, actionButtons }: ShareModalPropsType) => (
+    <Modal open size="sm" className="share-modal">
+        <div className="pr-4 [&_h2]:mb-2.5 [&_h2]:font-sans [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:tracking-normal">
+            {title}
+        </div>
+        {children}
+        <div className="flex justify-end gap-2.5">{actionButtons}</div>
+    </Modal>
+);
 
-export const ModalFooter = styled.div`
-    display: flex;
-    justify-content: flex-end;
+/** Invite field on the left, primary action on the right (stacked on mobile). */
+export const ShareInviteRow = ({ field, action }: { field: ReactNode; action: ReactNode }) => (
+    <div className="flex w-full flex-col justify-between gap-4 sm:flex-row sm:items-center sm:gap-0">
+        <div className="flex grow flex-col">{field}</div>
+        <div className="flex min-w-40 justify-end">{action}</div>
+    </div>
+);
 
-    .marginR-10 {
-        margin-right: 10px;
-    }
+/** "People with access" list shell. */
+export const PeopleList = ({ children }: { children: ReactNode }) => (
+    <div className="my-5 mb-2.5 max-h-[250px] min-h-[150px] overflow-y-auto">
+        <p className="text-ink mb-2 font-medium">People with access</p>
+        {children}
+    </div>
+);
 
-    button {
-        text-transform: none;
-    }
-`;
-
-export const DivRow = styled.div`
-padding - left: 0;
-padding - top: 16px;
-margin: 0;
-`;
-
-export const ShareModalDivWrapper = styled.div`
-    min-height: 150px;
-    max-height: 250px;
-    overflow-y: auto;
-    margin: 20px 0 10px 0;
-    .flextable-row {
-        display: flex;
-        align-items: center;
-        justify-content: ;
-        .inner-cell {
-            display: flex;
-            width: 100%;
-            .input-wrapper {
-                display: flex;
-                width: 100%;
-                align-items: center;
-                flex-wrap: wrap;
-                position: relative input {
-                    height: 30px;
-                    line-height: 1;
-                }
-                .email-done {
-                    position: absolute;
-                    right: 5px;
-                    z-index: 9;
-                    margin-top: 5px;
-                    cursor: pointer;
-                    color: #2979ff;
-                    font-size: 1rem;
-                }
-            }
-            .edit-email {
-                font-size: 1rem;
-                color: #2979ff;
-                margin-left: 5px;
-                cursor: pointer;
-                position: relative;
-                top: 2px;
-            }
-        }
-        .flexlist-item {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            position: relative;
-            width: 100%;
-            label {
-                margin-right: 0;
-            }
-        }
-
-        &.product-owner {
-            border-bottom: solid 1px #ccc;
-            margin-bottom: 0.75rem;
-        }
-    }
-`;
-
-export const ModalTitle = styled.div`
-    position: relative;
-    padding-right: 16px;
-    #parent-modal-title {
-        font-size: 18px;
-        color: #212121;
-        margin: 0 0 10px 0;
-    }
-`;
-
-export const UserAvtarInfo = styled.div`
-    display: flex;
-    align-items: center;
-
-    .u-info {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        line-height: 20px;
-        flex-grow: 1;
-
-        span.u-name {
-            width: 100%;
-            font-weight: 500;
-            font-size: 14px;
-            color: #212121;
-        }
-        span.u-email {
-            width: 100%;
-            font-weight: 400;
-            font-size: 12px;
-            color: #616161;
-        }
-    }
-
-    @media (max-width: 340px) {
-        img {
-            width: 30px;
-            height: 30px;
-        }
-    }
-`;
-
-export const ShareModal = (props: ShareModalPropsType) => {
-    const { title, children, actionButtons } = props;
-    return (
-        <ModalWrapper>
-            <Modal
-                open
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={style} className="share-modal">
-                    <ModalTitle>{title}</ModalTitle>
-                    {children}
-                    <ModalFooter>{actionButtons}</ModalFooter>
-                </Box>
-            </Modal>
-        </ModalWrapper>
-    );
-};
+export const PersonRow = ({
+    avatar,
+    name,
+    email,
+    trailing,
+    divider,
+}: {
+    avatar?: string;
+    name?: string;
+    email?: string;
+    trailing?: ReactNode;
+    divider?: boolean;
+}) => (
+    <div className={cn("flex items-center pt-4", divider && "border-line mb-3 border-b pb-3")}>
+        <div className="flex w-full items-center">
+            <Avatar src={avatar} name={name || email} size={40} className="mr-2" />
+            <div className="flex grow flex-wrap items-center leading-5">
+                <div className="flex grow flex-col">
+                    <span className="text-ink text-sm font-medium">{name}</span>
+                    {email && <span className="text-muted text-xs">{email}</span>}
+                </div>
+                {trailing && <div className="text-muted flex min-w-24 items-center text-xs">{trailing}</div>}
+            </div>
+        </div>
+    </div>
+);
