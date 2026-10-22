@@ -1,39 +1,17 @@
 "use client";
 
-import styled from "styled-components";
+import { cn } from "@/components/ui/cn";
 
-const Cell = styled.div`
-    height: 26px;
-    width: 85px;
-    border-radius: 100px;
-    padding: 5px 10px 5px 10px;
-    color: #fff;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 16px;
-    letter-spacing: 0.5px;
-    text-align: center;
-    text-transform: capitalize;
-    &.resolved {
-        background-color: #4caf50;
-    }
-    &.unresolved {
-        background-color: #ff9800;
-    }
-`;
-export const StatusCell = (props: any) => {
-    const { value } = props;
-
+export const StatusCell = ({ value }: { value: any }) => {
+    const status = value.row[value.column.key];
     return (
-        <>
-            <Cell
-                className={`${
-                    value.row[value.column.key] === "resolved" ? "  resolved" : "unresolved"
-                }`}
-            >
-                <span>{value.row[value.column.key]}</span>
-            </Cell>
-        </>
+        <div
+            className={cn(
+                "h-[26px] w-[85px] rounded-pill px-2.5 py-[5px] text-center text-xs leading-4 font-medium tracking-wide text-white capitalize",
+                status === "resolved" ? "bg-[#2e7d32]" : "bg-[#b45309]"
+            )}
+        >
+            <span>{status}</span>
+        </div>
     );
 };

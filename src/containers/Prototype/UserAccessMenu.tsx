@@ -1,7 +1,9 @@
 "use client";
 
-import { Avatar, AvatarGroup, Menu, MenuItem, Typography } from "@mui/material";
 import { useState } from "react";
+
+import { Avatar, AvatarGroup } from "@/components/ui/Display";
+import { Popover } from "@/components/ui/Popover";
 
 import { PageUserType } from "../../types";
 
@@ -13,86 +15,30 @@ interface UserAccessMenuPropsType {
 
 export const UserAccessMenu = ({ max, pageUsers, avatarSize }: UserAccessMenuPropsType) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const open = Boolean(anchorEl);
-
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
 
     return (
         <>
             {pageUsers.length ? (
-                <AvatarGroup
-                    max={max}
-                    sx={{
-                        "& .MuiAvatar-root": {
-                            width: 26.5,
-                            height: 26.5,
-                            fontSize: 13,
-                            border: "none",
-                        },
-                        cursor: "pointer",
-                    }}
-                    onClick={handleMenuOpen}
-                >
-                    {pageUsers.map((user) => (
-                        <Avatar
-                            key={user.user_id}
-                            src={user.avatar}
-                            style={{
-                                width: avatarSize,
-                                height: avatarSize,
-                                border: `1px solid transparent`,
-                                boxSizing: "content-box",
-                            }}
-                        />
-                    ))}
-                </AvatarGroup>
+                <button type="button" aria-label="Users with access" className="cursor-pointer" onClick={(e) => setAnchorEl(e.currentTarget)}>
+                    <AvatarGroup max={max} size={avatarSize}>
+                        {pageUsers.map((user) => (
+                            <Avatar key={user.user_id} src={user.avatar} name={user.name || user.email} size={avatarSize} />
+                        ))}
+                    </AvatarGroup>
+                </button>
             ) : (
-                <Typography variant="body2" color="gray">
-                    There are no users
-                </Typography>
+                <span className="text-sm text-muted">There are no users</span>
             )}
-            <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleMenuClose}
-                PaperProps={{
-                    style: {
-                        width: "230px",
-                        maxHeight: "200px",
-                        paddingTop: "10px",
-                    },
-                }}
-                sx={{ overflowY: "auto" }}
-            >
-                {pageUsers.map((user) => (
-                    <MenuItem
-                        key={user.user_id}
-                        sx={{
-                            "&:hover": { backgroundColor: "transparent" },
-                            pointerEvents: "none",
-                            whiteSpace: "normal",
-                            wordBreak: "break-word",
-                        }}
-                    >
-                        <Avatar
-                            src={user.avatar}
-                            alt={user.name}
-                            sx={{
-                                marginRight: "5px",
-                                width: "25px",
-                                height: "25px",
-                            }}
-                        />
-                        <Typography fontSize="16px">{user.name || user.email}</Typography>
-                    </MenuItem>
-                ))}
-            </Menu>
+            <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)} className="max-h-[200px] w-[230px] overflow-y-auto pt-2.5">
+                <ul>
+                    {pageUsers.map((user) => (
+                        <li key={user.user_id} className="flex items-center gap-1.5 px-4 py-2 break-words whitespace-normal">
+                            <Avatar src={user.avatar} name={user.name || user.email} size={25} />
+                            <span className="text-base">{user.name || user.email}</span>
+                        </li>
+                    ))}
+                </ul>
+            </Popover>
         </>
     );
 };

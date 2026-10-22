@@ -1,35 +1,18 @@
 "use client";
 
-import AddReactionOutlinedIcon from "@mui/icons-material/AddReactionOutlined";
-import ClearIcon from "@mui/icons-material/ClearOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ShareIcon from "@mui/icons-material/Share";
-import {
-    Avatar,
-    AvatarGroup,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Chip,
-    Collapse,
-    Link,
-    Menu,
-    MenuItem,
-    Stack,
-    styled as styles,
-    TextField,
-    Typography,
-} from "@mui/material";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import { QueryObserverResult } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { format } from "date-fns";
+import { ChevronDown, Share2, SmilePlus, X } from "lucide-react";
 import * as React from "react";
 import { useState } from "react";
-import { QueryObserverResult } from "@tanstack/react-query";
+
+import { Button, IconButton } from "@/components/ui/Button";
+import { cn } from "@/components/ui/cn";
+import { Avatar, AvatarGroup, Card } from "@/components/ui/Display";
+import { TextField } from "@/components/ui/Form";
+import { Menu, MenuItem } from "@/components/ui/Popover";
 import { useParams } from "@/utils/navigation";
-import styled from "styled-components";
 
 import angryFace from "../../assets/angry-face.svg";
 import faceWithRollingEyes from "../../assets/face-with-rolling-eyes.svg";
@@ -42,110 +25,11 @@ import { EcOverflowTooltip } from "../../stories/components";
 import { UserType } from "../../types";
 import { ShareFlowVersionModal } from "./ShareFlowVersionModal";
 
-interface ExpandMoreProps extends IconButtonProps {
-    expand: boolean;
-}
-const ExpandMore = styles((props: ExpandMoreProps) => <IconButton {...props} />)(
-    ({ theme, expand }) => ({
-        transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-        marginLeft: "auto",
-        transition: theme.transitions.create("transform", {
-            duration: theme.transitions.duration.shortest,
-        }),
-    })
-);
-
-const ShareIconStyled = styled(ShareIcon)`
-    // margin-right: 2%;
-
-    @media (max-width: 600px) {
-        margin-right: 0;
-        margin-bottom: 8px;
-    }
-`;
-
-const FigmaLink = styled(Link)`
-    margin-right: 2%;
-
-    @media (max-width: 600px) {
-        margin-right: 0;
-        margin-bottom: 8px;
-        margin-left-auto;
-    }
-`;
-const CustCardContainer = styled.div`
-    & .fv-row-items {
-        display: flex;
-        align-items: center;
-        @media (max-width: 600px) {
-            width: 100%;
-            flex-direction: column;
-            align-items: inherit;
-            gap: 15px;
-            .MuiBox-root {
-                margin-left: 0px;
-                border-left: 0px none;
-                padding-left: 0px;
-                &.share-link-fv {
-                    margin-left: auto;
-                }
-            }
-        }
-    }
-    @media (max-width: 600px) {
-        .MuiCardHeader-root {
-            flex-direction: column;
-            align-items: inherit;
-            .MuiCardHeader-action {
-                width: 100%;
-                text-align: center;
-                padding-right: 5px;
-                .MuiIconButton-root {
-                    background: #f0f0f0;
-                }
-            }
-        }
-        .MuiCollapse-wrapper {
-            & button:not(.MuiButton-root) {
-                margin: auto;
-            }
-        }
-    }
-`;
-
-const EmojiButton = styled.button`
-    font-size: 24px;
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    outline: none;
-    border-radius: 50%; /* Set the border-radius to create a circular shape */
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.5s;
-    img {
-        transition: all 0.25s;
-    }
-    &:hover {
-        background-color: #f0f0f0;
-    }
-    &.selected {
-        border: 1px solid transparent;
-        background-color: #transparent;
-        img {
-            transform: scale(1.4);
-        }
-    }
-`;
-
 const EMOJI_DATA = [
     {
         id: 1,
         name: "pouting-face",
-        src: poutingFace,
+        src: poutingFace.src,
         alt: "Pouting Face",
         suggestions: [
             "Feeling Enraged",
@@ -161,7 +45,7 @@ const EMOJI_DATA = [
     {
         id: 2,
         name: "angry-face",
-        src: angryFace,
+        src: angryFace.src,
         alt: "Angry Face",
         suggestions: [
             "Annoyed about the Designs",
@@ -176,7 +60,7 @@ const EMOJI_DATA = [
     {
         id: 3,
         name: "face-with-rolling-eyes",
-        src: faceWithRollingEyes,
+        src: faceWithRollingEyes.src,
         alt: "Face Rolling Eyes",
         suggestions: [
             "Dissatisfied",
@@ -190,7 +74,7 @@ const EMOJI_DATA = [
     {
         id: 4,
         name: "smiling-eyes-face",
-        src: smilingEyesFace,
+        src: smilingEyesFace.src,
         alt: "Smiling Eyes Face",
         suggestions: [
             "Feeling Contentment",
@@ -210,7 +94,7 @@ const EMOJI_DATA = [
     {
         id: 5,
         name: "smiling-face-heart",
-        src: smilingFaceHeart,
+        src: smilingFaceHeart.src,
         alt: "Smiling Face Heart",
         suggestions: [
             "Cheerful Design",
@@ -253,7 +137,7 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
         projectId: string;
     } = useParams();
     const { user } = UserContext();
-    const versionNameRef = React.useRef();
+    const versionNameRef = React.useRef<HTMLSpanElement>(null);
     const suggestions = [
         "Good UI",
         "Meets design criterias",
@@ -385,532 +269,178 @@ export const NewFlowVersionCard = (props: NewFlowVersionCardPropsType) => {
             />
         );
     };
+    const isExpanded = expandedId === version.versionId;
+    const meta = "relative mx-2 my-px border-l border-muted pl-2.5 text-sm leading-[15px] max-sm:mx-0 max-sm:border-l-0 max-sm:pl-0";
+
     return (
-        <CustCardContainer>
-            <Card sx={{ margin: "20px 10px" }}>
-                <CardHeader
-                    title={
-                        <>
-                            <Box className="fv-row-items">
-                                <Box
-                                    sx={{
-                                        fontSize: "20px",
-                                        paddingRight: "5px",
-                                    }}
-                                >
-                                    <EcOverflowTooltip
-                                        childRef={versionNameRef}
-                                        title={version.versionName}
-                                        placement="top"
-                                        arrow
+        <div>
+            <Card className="mx-2.5 my-5">
+                <div className="flex items-start justify-between p-4 max-sm:flex-col">
+                    <div className="min-w-0 grow">
+                        <div className="flex items-center max-sm:w-full max-sm:flex-col max-sm:items-stretch max-sm:gap-4">
+                            <div className="pr-1.5 text-xl">
+                                <EcOverflowTooltip childRef={versionNameRef} title={version.versionName} placement="top" arrow>
+                                    <span ref={versionNameRef} className="inline-block max-w-[250px] truncate pr-1.5 align-bottom text-[1.375rem]">
+                                        {`${version.versionName}`}
+                                    </span>
+                                </EcOverflowTooltip>
+                            </div>
+                            <div className="flex items-center">
+                                <div className={meta}>
+                                    Date <strong>{format(new Date(version.versionCreatedAt), "MMMM dd, yyyy")}</strong>
+                                </div>
+                                <div className={cn(meta, "flex items-center max-sm:ml-auto")}>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleShareFlowVersion(version, nodeId)}
+                                        className="flex items-center gap-1 text-sm font-medium text-blue-ink"
                                     >
-                                        <Box
-                                            ref={versionNameRef}
-                                            sx={{
-                                                fontSize: "1.375rem",
-                                                paddingRight: "5px",
-                                                display: "inline-block",
-                                                maxWidth: "250px",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                whiteSpace: "nowrap",
-                                            }}
-                                        >
-                                            {`${version.versionName}`}
-                                        </Box>
-                                    </EcOverflowTooltip>
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            position: "relative",
-                                            margin: "1px 8px",
-                                            fontSize: "14px",
-                                            borderLeft: "1px solid #9e9e9e",
-                                            paddingLeft: "10px",
-                                            lineHeight: "15px",
-                                        }}
-                                    >
-                                        Date{" "}
-                                        <strong>
-                                            {format(
-                                                new Date(version.versionCreatedAt),
-                                                "MMMM dd, yyyy"
-                                            )}
-                                        </strong>
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            position: "relative",
-                                            margin: "1px 8px",
-                                            fontSize: "14px",
-                                            borderLeft: "1px solid #9e9e9e",
-                                            paddingLeft: "10px",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            lineHeight: "15px",
-                                        }}
-                                        className="share-link-fv"
-                                    >
-                                        <ShareIconStyled
-                                            style={{
-                                                color: "rgb(41, 121, 255)",
-                                                fontSize: "14px",
-                                                marginRight: "5px",
-                                                marginBottom: "0",
-                                            }}
-                                            onClick={() => handleShareFlowVersion(version, nodeId)}
-                                            sx={{
-                                                cursor: "pointer",
-                                            }}
-                                        />
-                                        <FigmaLink
-                                            onClick={() => handleShareFlowVersion(version, nodeId)}
-                                            sx={{
-                                                fontSize: "14px",
-                                                fontWeight: "500",
-                                                cursor: "pointer",
-                                                textDecoration: "none",
-                                                color: "rgb(41, 121, 255)",
-                                                marginTop: "2px",
-                                            }}
-                                        >
-                                            {" "}
-                                            Share
-                                        </FigmaLink>
-                                    </Box>
-                                </Box>
-                            </Box>
-                            <Box
-                                className="fv-row-items"
-                                sx={{
-                                    paddingTop: "18px",
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    {version.versionRating != null ? (
-                                        <Typography
-                                            sx={{
-                                                fontSize: "14px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            Average rating
-                                        </Typography>
-                                    ) : (
-                                        <Typography
-                                            sx={{
-                                                fontSize: "14px",
-                                                marginRight: "5px",
-                                            }}
-                                        >
-                                            Add rating
-                                        </Typography>
-                                    )}
-
-                                    {averageEmoji !== null && version.versionRating != null && (
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                marginRight: "2px",
-                                            }}
-                                        >
-                                            <img
-                                                src={averageEmoji.src}
-                                                alt={averageEmoji.alt}
-                                                className="emoji"
-                                                style={{
-                                                    width: "20px",
-                                                    height: "20px",
-                                                }}
-                                            />
-                                        </Box>
-                                    )}
-                                    <AddReactionOutlinedIcon
-                                        onClick={() => handleExpandClickEmoji(version.versionId)}
-                                        sx={{
-                                            fontSize: "20px",
-                                            cursor: "pointer",
-                                        }}
-                                    />
-                                </Box>
-                                {version.versionRating != null && (
-                                    <Box
-                                        sx={{
-                                            position: "relative",
-                                            margin: "1px 8px",
-                                            fontSize: "14px",
-                                            borderLeft: "1px solid #9e9e9e",
-                                            paddingLeft: "10px",
-                                            cursor: "pointer",
-                                            lineHeight: "15px",
-                                        }}
-                                        onClick={() => handleExpandTotalFeedback(version.versionId)}
-                                    >
-                                        Total Feedback :
-                                        <span
-                                            style={{
-                                                fontSize: "16px",
-                                                fontWeight: "bold",
-                                                marginRight: "5px",
-                                                marginLeft: "5px",
-                                            }}
-                                        >
-                                            {version.versionRating.length}
-                                        </span>
-                                    </Box>
+                                        <Share2 className="size-3.5" />
+                                        Share
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center pt-[18px] max-sm:w-full max-sm:flex-col max-sm:items-stretch max-sm:gap-4">
+                            <div className="flex items-center">
+                                <span className="mr-1 text-sm">{version.versionRating != null ? "Average rating" : "Add rating"}</span>
+                                {averageEmoji !== null && version.versionRating != null && (
+                                    <span className="mr-0.5 flex items-center">
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img src={averageEmoji.src} alt={averageEmoji.alt} className="size-5" />
+                                    </span>
                                 )}
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            position: "relative",
-                                            margin: "1px 8px",
-                                            fontSize: "14px",
-                                            borderLeft: "1px solid #9e9e9e",
-                                            paddingLeft: "10px",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            lineHeight: "15px",
-                                        }}
-                                    >
-                                        Contributors :
-                                    </Box>
-                                    <Box>
-                                        {version.versionUser != null ? (
-                                            <>
-                                                <AvatarGroup
-                                                    max={4}
-                                                    sx={{
-                                                        "& .MuiAvatar-root": {
-                                                            width: 24,
-                                                            height: 24,
-                                                            fontSize: 12,
-                                                        },
-                                                        cursor: "pointer",
-                                                    }}
-                                                >
-                                                    {version.versionUser.map(
-                                                        (versionuser: UserType) => (
-                                                            <Avatar
-                                                                key={versionuser.user_id}
-                                                                src={versionuser.avatar}
-                                                                style={{
-                                                                    width: 24,
-                                                                    height: 24,
-                                                                    border: `1px solid transparent`,
-                                                                    boxSizing: "content-box",
-                                                                }}
-                                                                onClick={(event) =>
-                                                                    handleClick(
-                                                                        event,
-                                                                        version.versionId
-                                                                    )
-                                                                }
-                                                            />
-                                                        )
-                                                    )}
-                                                </AvatarGroup>
-                                                <Menu
-                                                    anchorEl={anchorEl}
-                                                    open={Boolean(
-                                                        anchorEl &&
-                                                            selectedVersion === version.versionId
-                                                    )}
-                                                    onClose={handleClose}
-                                                    PaperProps={{
-                                                        style: {
-                                                            width: "230px",
-                                                            maxHeight: "200px",
-                                                            paddingTop: "10px",
-                                                        },
-                                                    }}
-                                                    sx={{
-                                                        overflowY: "auto",
-                                                    }}
-                                                >
-                                                    {version.versionUser.map(
-                                                        (versionuser: UserType) => (
-                                                            <MenuItem key={versionuser.user_id}>
-                                                                <Avatar
-                                                                    src={versionuser.avatar}
-                                                                    alt={versionuser.name}
-                                                                    sx={{
-                                                                        marginRight: "10px",
-                                                                        width: "25px",
-                                                                        height: "25px",
-                                                                    }}
-                                                                />
-                                                                <Typography variant="body2">
-                                                                    {versionuser.name ||
-                                                                        versionuser.email}
-                                                                </Typography>
-                                                            </MenuItem>
-                                                        )
-                                                    )}
-                                                </Menu>
-                                            </>
-                                        ) : (
-                                            <Typography
-                                                sx={{
-                                                    fontWeight: "normal",
-                                                    color: "#c0c0c0",
-                                                    fontSize: "12px",
-                                                }}
+                                <button type="button" aria-label="Add rating" onClick={() => handleExpandClickEmoji(version.versionId)}>
+                                    <SmilePlus className="size-5 cursor-pointer" />
+                                </button>
+                            </div>
+                            {version.versionRating != null && (
+                                <button type="button" className={cn(meta, "cursor-pointer text-left")} onClick={() => handleExpandTotalFeedback(version.versionId)}>
+                                    Total Feedback :<span className="mx-1 text-base font-bold">{version.versionRating.length}</span>
+                                </button>
+                            )}
+                            <div className="flex items-center">
+                                <div className={cn(meta, "flex items-center")}>Contributors :</div>
+                                <div>
+                                    {version.versionUser != null ? (
+                                        <>
+                                            <AvatarGroup max={4} size={24}>
+                                                {version.versionUser.map((versionuser: UserType) => (
+                                                    <button key={versionuser.user_id} type="button" onClick={(event) => handleClick(event, version.versionId)}>
+                                                        <Avatar src={versionuser.avatar} name={versionuser.name || versionuser.email} size={24} />
+                                                    </button>
+                                                ))}
+                                            </AvatarGroup>
+                                            <Menu
+                                                anchorEl={anchorEl}
+                                                open={Boolean(anchorEl && selectedVersion === version.versionId)}
+                                                onClose={handleClose}
+                                                className="max-h-[200px] w-[230px] overflow-y-auto pt-2.5"
                                             >
-                                                There is no contributors
-                                            </Typography>
-                                        )}
-                                    </Box>
-                                </Box>
-                            </Box>
-                        </>
-                    }
-                    action={
-                        <ExpandMore
-                            expand={expandedId === version.versionId}
-                            onClick={() => handleExpandClick(version.versionId)}
-                            aria-expanded={expandedId === version.versionId}
-                            aria-label="show more"
-                            sx={{ marginTop: "20px" }}
-                        >
-                            <ExpandMoreIcon />
-                        </ExpandMore>
-                    }
-                />
-                <Collapse in={expandedId === version.versionId} timeout="auto" unmountOnExit>
-                    {totalFeedback && version.versionRating ? (
-                        <CardContent
-                            sx={{
-                                borderTop: "1px solid #C0C0C0",
-                            }}
-                        >
-                            <Box>
-                                <Typography
-                                    sx={{
-                                        fontSize: "16px",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Recent Feedback
-                                </Typography>
-                            </Box>
-                            <Box
-                                sx={{
-                                    marginTop: "20px",
-                                    overflow: "auto",
-                                    maxHeight: "360px",
-                                }}
-                            >
-                                {version.versionRating.map((rating: any) => (
-                                    <>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "space-between",
-                                                marginTop: "20px",
-                                            }}
-                                        >
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                }}
-                                            >
-                                                <Avatar
-                                                    src={rating.avatar}
-                                                    alt={rating.name}
-                                                    sx={{
-                                                        marginRight: "10px",
-                                                        width: "25px",
-                                                        height: "25px",
-                                                    }}
-                                                />
-
-                                                <Typography>{rating.name}</Typography>
-                                            </Box>
-                                            <Box>
-                                                <Typography
-                                                    sx={{
-                                                        fontSize: "12px",
-                                                    }}
-                                                >
-                                                    Date :
-                                                    <span>
-                                                        {format(
-                                                            new Date(rating.ratingCreatedAt),
-                                                            "MMMM dd, yyyy"
-                                                        )}
-                                                    </span>{" "}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                        <Box
-                                            sx={{
-                                                paddingLeft: "4px",
-                                                marginTop: "10px",
-                                            }}
-                                        >
-                                            <Typography sx={{ fontSize: "14px" }}>
-                                                {rating.comment}
-                                            </Typography>
-                                        </Box>
-                                    </>
+                                                {version.versionUser.map((versionuser: UserType) => (
+                                                    <MenuItem key={versionuser.user_id}>
+                                                        <Avatar src={versionuser.avatar} name={versionuser.name || versionuser.email} size={25} />
+                                                        <span className="text-sm">{versionuser.name || versionuser.email}</span>
+                                                    </MenuItem>
+                                                ))}
+                                            </Menu>
+                                        </>
+                                    ) : (
+                                        <span className="text-xs font-normal text-muted">There is no contributors</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <IconButton
+                        aria-label="show more"
+                        aria-expanded={isExpanded}
+                        onClick={() => handleExpandClick(version.versionId)}
+                        className="mt-5 ml-auto max-sm:w-full max-sm:rounded-sm max-sm:bg-surface-sunk"
+                    >
+                        <ChevronDown className={cn("size-5 transition-transform", isExpanded && "rotate-180")} />
+                    </IconButton>
+                </div>
+                {isExpanded &&
+                    (totalFeedback && version.versionRating ? (
+                        <div className="border-t border-line p-4">
+                            <p className="text-base font-bold">Recent Feedback</p>
+                            <div className="mt-5 max-h-[360px] overflow-auto">
+                                {version.versionRating.map((rating: any, index: number) => (
+                                    <React.Fragment key={`${rating.ratingCreatedAt}-${index}`}>
+                                        <div className="mt-5 flex items-center justify-between">
+                                            <div className="flex items-center gap-2.5">
+                                                <Avatar src={rating.avatar} name={rating.name} size={25} />
+                                                <span>{rating.name}</span>
+                                            </div>
+                                            <span className="text-xs">
+                                                Date :<span>{format(new Date(rating.ratingCreatedAt), "MMMM dd, yyyy")}</span>{" "}
+                                            </span>
+                                        </div>
+                                        <p className="mt-2.5 pl-1 text-sm">{rating.comment}</p>
+                                    </React.Fragment>
                                 ))}
-                            </Box>
-                        </CardContent>
+                            </div>
+                        </div>
                     ) : (
-                        <CardContent
-                            sx={{
-                                borderTop: "1px solid #C0C0C0",
-                            }}
-                        >
-                            <Box>
-                                <Typography
-                                    sx={{
-                                        fontSize: "16px",
-                                        fontWeight: "bold",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    How do you find this prototype
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        marginTop: "8px",
-                                        fontSize: "14px",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    Rating should be based on whether the protoype/design meets the
-                                    objective or not
-                                </Typography>
-                            </Box>
-                            <Box
-                                sx={{
-                                    marginTop: "40px",
-                                    textAlign: "center",
-                                    justifyContent: "space-between",
-                                }}
-                            >
+                        <div className="border-t border-line p-4">
+                            <p className="text-center text-base font-bold">How do you find this prototype</p>
+                            <p className="mt-2 text-center text-sm">Rating should be based on whether the protoype/design meets the objective or not</p>
+                            <div className="mt-10 flex justify-center">
                                 {EMOJI_DATA.map((emoji) => (
-                                    <EmojiButton
+                                    <button
+                                        type="button"
                                         key={emoji.id}
-                                        className={selectedEmoji.id === emoji.id ? "selected" : ""}
+                                        aria-pressed={selectedEmoji.id === emoji.id}
                                         onClick={() => handleEmojiClick(emoji)}
+                                        className="mr-2.5 inline-flex size-[50px] items-center justify-center rounded-full bg-transparent transition-colors hover:bg-surface-sunk"
                                     >
-                                        <img src={emoji.src} alt={emoji.alt} className="emoji" />
-                                    </EmojiButton>
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img src={emoji.src} alt={emoji.alt} className={cn("transition-transform", selectedEmoji.id === emoji.id && "scale-[1.4]")} />
+                                    </button>
                                 ))}
-                            </Box>
+                            </div>
                             {selectedEmoji.id !== undefined && (
                                 <>
-                                    <Stack
-                                        direction="row"
-                                        sx={{
-                                            flexWrap: "wrap",
-                                            marginTop: "40px",
-                                            columnGap: "5px",
-                                        }}
-                                    >
-                                        {selectedEmoji?.suggestions?.map(
-                                            (suggestionsLabel: any) => (
-                                                <Chip
-                                                    key={suggestionsLabel}
-                                                    label={suggestionsLabel}
-                                                    onClick={() =>
-                                                        handleChipClick(suggestionsLabel)
-                                                    }
-                                                    variant="outlined"
-                                                    sx={{
-                                                        marginTop: "0px",
-                                                        marginBottom: "12px",
-                                                    }}
-                                                />
-                                            )
-                                        )}
-                                    </Stack>
-                                    <Box
-                                        sx={{
-                                            height: "200px",
-                                        }}
-                                    >
+                                    <div className="mt-10 flex flex-wrap gap-x-1.5">
+                                        {selectedEmoji?.suggestions?.map((suggestionsLabel: any) => (
+                                            <button
+                                                type="button"
+                                                key={suggestionsLabel}
+                                                onClick={() => handleChipClick(suggestionsLabel)}
+                                                className="mb-3 rounded-pill border border-ink/60 px-3 py-1 text-sm text-ink hover:bg-surface-sunk"
+                                            >
+                                                {suggestionsLabel}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="mb-4">
                                         <TextField
                                             id="outlined-basic"
                                             label="Leave a comments"
-                                            variant="outlined"
-                                            sx={{
-                                                height: "150px",
-                                                width: "100%",
-                                            }}
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <IconButton
-                                                        onClick={() => setCustomText("")}
-                                                        edge="end"
-                                                    >
-                                                        <ClearIcon />
-                                                    </IconButton>
-                                                ),
-                                            }}
-                                            value={customText}
-                                            onChange={handleTextFieldChange}
                                             multiline
                                             rows={6}
-                                        />
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            flexDirection: "row",
-                                            display: "flex",
-                                            justifyContent: "flex-end",
-                                        }}
-                                    >
-                                        <Button
-                                            variant="contained"
-                                            onClick={handleCancel}
-                                            sx={{
-                                                marginRight: "10px",
-                                            }}
-                                        >
-                                            Cancel
-                                        </Button>
-
-                                        <Button
-                                            variant="contained"
-                                            onClick={handlePost}
-                                            disabled={
-                                                selectedEmoji.id === undefined ||
-                                                customText.trim().length === 0 ||
-                                                false
+                                            value={customText}
+                                            onChange={handleTextFieldChange as any}
+                                            endAdornment={
+                                                <IconButton aria-label="Clear comment" size="small" onClick={() => setCustomText("")}>
+                                                    <X className="size-4" />
+                                                </IconButton>
                                             }
-                                        >
+                                        />
+                                    </div>
+                                    <div className="flex justify-end gap-2.5">
+                                        <Button onClick={handleCancel}>Cancel</Button>
+                                        <Button onClick={handlePost} disabled={selectedEmoji.id === undefined || customText.trim().length === 0}>
                                             Post
                                         </Button>
-                                    </Box>
+                                    </div>
                                 </>
                             )}
-                        </CardContent>
-                    )}
-                </Collapse>
+                        </div>
+                    ))}
             </Card>
-            {shareVersionDrawer && shareVersionDrawer}
-        </CustCardContainer>
+            {shareVersionDrawer}
+        </div>
     );
 };

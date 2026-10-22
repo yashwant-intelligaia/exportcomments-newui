@@ -1,16 +1,9 @@
 "use client";
 
-import { Done as DoneIcon } from "@mui/icons-material";
-import {
-    AccordionDetails,
-    Box,
-    Button,
-    Divider,
-    Grid,
-    IconButton,
-    Typography,
-} from "@mui/material";
-import { Fragment, useContext, useState } from "react";
+import { Check } from "lucide-react";
+import { useContext, useState } from "react";
+
+import { Button, IconButton } from "@/components/ui/Button";
 
 import { PrototypePageContext } from "../../contexts/PrototypePageContext";
 import { EcTooltip } from "../../stories/components";
@@ -100,179 +93,57 @@ const PrototypeAccordionDetails = (props: { data: PrototypeAccordionDetailsProps
     if (prototypes.length === 0) return <></>;
 
     return (
-        <>
-            <AccordionDetails
-                sx={{
-                    paddingLeft: {
-                        xl: "62px",
-                        lg: "62px",
-                        md: "62px",
-                        sm: "2.5rem",
-                        xs: "1rem",
-                    },
-                }}
-            >
-                <Grid container rowSpacing={4} columnSpacing={1} alignItems="center">
-                    {prototypes.map(
-                        ({
-                            prototypeId,
-                            prototypeTitle,
-                            versions = [],
-                            prototypeLink,
-                            prototypeComments = [],
-                            nodeId,
-                        }) => (
-                            <Fragment key={uniqueKey(`prototype-detail-${prototypeId}`)}>
-                                <Grid item xs={12} md={3} />
-                                <Grid item xs={12} md={4}>
-                                    <Typography
-                                        variant="subtitle2"
-                                        display="flex"
-                                        alignItems="center"
-                                        gap={0.2}
-                                    >
-                                        <IconButton
-                                            onClick={() => {
-                                                if (prototypeLink) {
-                                                    openLink({
-                                                        url: prototypeLink,
-                                                        target: "_blank",
-                                                    });
-                                                }
-                                            }}
-                                        >
-                                            <PlayIcon />
-                                        </IconButton>
-                                        <Box>{prototypeTitle}</Box>
-                                        {copiedPrototype[prototypeId] ? (
-                                            <EcTooltip title="Link Copied" placement="top" arrow>
-                                                <IconButton>
-                                                    <DoneIcon
-                                                        sx={{
-                                                            color: "black",
-                                                            fontSize: "20px",
-                                                        }}
-                                                    />
-                                                </IconButton>
-                                            </EcTooltip>
-                                        ) : (
-                                            <IconButton
-                                                onClick={() =>
-                                                    handleCopyLink(prototypeId, prototypeLink)
-                                                }
-                                            >
-                                                {" "}
-                                                <CopyIcon style={{ cursor: "pointer" }} />
-                                            </IconButton>
-                                        )}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={2}>
-                                    <Typography
-                                        variant="subtitle2"
-                                        display="flex"
-                                        alignItems="center"
-                                        gap={0.2}
-                                    >
-                                        <IconButton
-                                            onClick={() =>
-                                                handleViewPrototypeComments(
-                                                    prototypeComments,
-                                                    prototypeTitle
-                                                )
-                                            }
-                                        >
-                                            {" "}
-                                            <CommentIcon />
-                                        </IconButton>{" "}
-                                        {prototypeComments.length}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={3}>
-                                    <Typography
-                                        variant="subtitle2"
-                                        display="flex"
-                                        alignItems="center"
-                                        gap={0.2}
-                                    >
-                                        <Box
-                                            sx={{
-                                                cursor: "pointer",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: 0.5,
-                                            }}
-                                            onClick={() =>
-                                                handleViewVersionList(
-                                                    prototypeId,
-                                                    nodeId,
-                                                    prototypeTitle
-                                                )
-                                            }
-                                        >
-                                            <IconButton
-                                                sx={{
-                                                    "&:hover": {
-                                                        svg: {
-                                                            path: {
-                                                                stroke: "inherit!important",
-                                                                fill: "rgb(41, 121, 255)",
-                                                            },
-                                                        },
-                                                    },
-                                                }}
-                                            >
-                                                {" "}
-                                                <VersionIcon />
-                                            </IconButton>{" "}
-                                            {versions.length}
-                                        </Box>
-                                        <Divider
-                                            sx={{
-                                                height: "1rem",
-                                                margin: "auto 0.325rem",
-                                                borderColor: "rgba(210, 210, 214, 1",
-                                            }}
-                                            orientation="vertical"
-                                            variant="middle"
-                                            flexItem
-                                        />
-                                        <Button
-                                            variant="text"
-                                            className="create-new"
-                                            style={{
-                                                textDecoration: "none",
-                                                textTransform: "inherit",
-                                            }}
-                                            sx={{
-                                                color: "#4A4B57",
-                                                svg: {
-                                                    path: {
-                                                        stroke: "#4A4B57",
-                                                    },
-                                                },
-                                                " &:hover": {
-                                                    color: "rgb(41, 121, 255)",
-                                                },
-                                            }}
-                                            onClick={() =>
-                                                handleCreateNewVersion(
-                                                    prototypeId,
-                                                    nodeId,
-                                                    prototypeTitle
-                                                )
-                                            }
-                                        >
-                                            <PlusIcon /> Create new version
-                                        </Button>
-                                    </Typography>
-                                </Grid>
-                            </Fragment>
-                        )
-                    )}
-                </Grid>
-            </AccordionDetails>
-        </>
+        <div className="mt-6 pr-4 pb-4 pl-4 sm:pl-10 md:pl-[62px]">
+            <div className="grid max-h-[220px] grid-cols-12 items-center gap-x-2 gap-y-8 overflow-y-auto border-t border-dashed border-line pt-4">
+                {prototypes.map(({ prototypeId, prototypeTitle, versions = [], prototypeLink, prototypeComments = [], nodeId }) => (
+                    <div key={uniqueKey(`prototype-detail-${prototypeId}`)} className="col-span-12 grid grid-cols-12 items-center gap-x-2 gap-y-4">
+                        <div className="col-span-12 md:col-span-3" />
+                        <div className="col-span-12 flex items-center gap-0.5 text-sm font-medium text-ink md:col-span-4">
+                            <IconButton
+                                aria-label="Open prototype"
+                                onClick={() => prototypeLink && openLink({ url: prototypeLink, target: "_blank" })}
+                            >
+                                <PlayIcon />
+                            </IconButton>
+                            <span>{prototypeTitle}</span>
+                            {copiedPrototype[prototypeId] ? (
+                                <EcTooltip title="Link Copied" placement="top" arrow>
+                                    <IconButton aria-label="Link copied">
+                                        <Check className="size-5" />
+                                    </IconButton>
+                                </EcTooltip>
+                            ) : (
+                                <IconButton aria-label="Copy link" onClick={() => handleCopyLink(prototypeId, prototypeLink)}>
+                                    <CopyIcon />
+                                </IconButton>
+                            )}
+                        </div>
+                        <div className="col-span-12 flex items-center gap-0.5 text-sm font-medium text-ink md:col-span-2">
+                            <IconButton aria-label="View comments" onClick={() => handleViewPrototypeComments(prototypeComments, prototypeTitle)}>
+                                <CommentIcon />
+                            </IconButton>
+                            {prototypeComments.length}
+                        </div>
+                        <div className="col-span-12 flex items-center gap-0.5 text-sm font-medium text-ink md:col-span-3">
+                            <button
+                                type="button"
+                                className="flex items-center gap-1 hover:text-blue-ink"
+                                onClick={() => handleViewVersionList(prototypeId, nodeId, prototypeTitle)}
+                            >
+                                <span className="p-2">
+                                    <VersionIcon />
+                                </span>
+                                {versions.length}
+                            </button>
+                            <span className="mx-1.5 h-4 w-px bg-line" />
+                            <Button variant="text" size="small" className="text-xs text-body hover:text-blue-ink" onClick={() => handleCreateNewVersion(prototypeId, nodeId, prototypeTitle)}>
+                                <PlusIcon /> Create new version
+                            </Button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 };
 

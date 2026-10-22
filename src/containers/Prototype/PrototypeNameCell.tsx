@@ -1,7 +1,6 @@
 "use client";
 
-import { ContentCopy as ContentCopyIcon, Done as DoneIcon } from "@mui/icons-material";
-import { Typography } from "@mui/material";
+import { Check, Copy } from "lucide-react";
 import React, { useState } from "react";
 
 import desktopIcon from "../../assets/desktop-icon.svg";
@@ -23,72 +22,47 @@ interface PrototypeNameCellPropsType {
     onClick: (imageUrl: string) => void;
 }
 
-export const PrototypeNameCell = (props: PrototypeNameCellPropsType) => {
-    const { onClick, projectId, data } = props;
+export const PrototypeNameCell = ({ onClick, projectId, data }: PrototypeNameCellPropsType) => {
     const { name, nodeId, prototypeLink } = data;
     const [isCopied, setIsCopied] = useState(false);
-    const { data: figmaImage, isLoading: figmaImageLoading } = useFetchFigmaImage(
-        [nodeId],
-        parseInt(projectId, 10)
-    );
+    const { data: figmaImage, isLoading: figmaImageLoading } = useFetchFigmaImage([nodeId], parseInt(projectId, 10));
     const handleCopyLink = () => {
         copyToClipboard(prototypeLink).then(() => {
             setIsCopied(true);
-            setTimeout(() => {
-                setIsCopied(false);
-            }, 2000);
+            setTimeout(() => setIsCopied(false), 2000);
         });
     };
 
-    const getPreviewImgSrc = (id?: string) => {
-        if (figmaImageLoading) return previewLoaderImg;
-        if (!figmaImageLoading && !figmaImage) return placeHolderImg;
+    const getPreviewImgSrc = (id?: string): string => {
+        if (figmaImageLoading) return previewLoaderImg.src;
+        if (!figmaImage) return placeHolderImg.src;
         if (id && figmaImage[id]) return figmaImage[id];
-        return placeHolderImg;
+        return placeHolderImg.src;
     };
+
     return (
         <Cell>
             <EcImage
-                style={{
-                    cursor: figmaImageLoading ? "not-allowed" : "pointer",
-                    width: "148px",
-                    height: "88px",
-                    border: "2px solid #B4B4BB",
-                    borderRadius: "5px",
-                }}
-                onClick={() => (figmaImageLoading ? {} : onClick(figmaImage[nodeId]))}
+                className={`h-[88px] w-[148px] overflow-hidden rounded-[5px] border-2 border-[#b4b4bb] ${figmaImageLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
+                onClick={() => (figmaImageLoading ? undefined : onClick(figmaImage[nodeId]))}
                 id={`${projectId}-${name}-${nodeId}`}
             >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={getPreviewImgSrc(nodeId)} alt={name} />
             </EcImage>
-            <img src={desktopIcon} alt="desktop" style={{ margin: "0px 10px" }} />
-            <Typography
-                sx={{
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    color: "#2979FF",
-                    marginRight: "10px",
-                    fontSize: "14px",
-                }}
-                component="a"
-                target="_blank"
-                href={prototypeLink}
-            >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={desktopIcon.src} alt="desktop" className="mx-2.5" />
+            <a target="_blank" rel="noreferrer" href={prototypeLink} className="mr-2.5 cursor-pointer text-sm font-medium text-blue-ink">
                 {name}
-            </Typography>
+            </a>
             {isCopied ? (
                 <EcTooltip title="Link Copied" placement="top" arrow>
-                    <DoneIcon sx={{ color: "#2979FF", fontSize: "20px" }} />
+                    <Check className="size-5 text-blue-ink" />
                 </EcTooltip>
             ) : (
-                <ContentCopyIcon
-                    sx={{
-                        color: "#2979FF",
-                        cursor: "pointer",
-                        fontSize: "20px",
-                    }}
-                    onClick={handleCopyLink}
-                />
+                <button type="button" aria-label="Copy link" onClick={handleCopyLink}>
+                    <Copy className="size-5 cursor-pointer text-blue-ink" />
+                </button>
             )}
         </Cell>
     );

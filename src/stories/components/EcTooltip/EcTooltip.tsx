@@ -13,7 +13,9 @@ interface EcTooltipProps {
     children: ReactNode;
 }
 
-const EcTooltip = ({ title, description, titleFontWeight, placement, children }: EcTooltipProps) => (
+const EcTooltip = ({ title, description, titleFontWeight, placement, children }: EcTooltipProps) => !title ? (
+    <>{children}</>
+) : (
     <Tooltip
         placement={placement?.startsWith("bottom") ? "bottom" : "top"}
         title={

@@ -12,3 +12,4 @@ export * from "./SvgIcon";
 export * from "./BrandIcons";
 export * from "./Combobox";
 export * from "./Segmented";
+export * from "./DataTable";

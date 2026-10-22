@@ -1,8 +1,9 @@
 "use client";
 
-import { MoreVert as MoreVertIcon } from "@mui/icons-material";
-import { Box, IconButton, Menu, MenuItem } from "@mui/material";
-import React from "react";
+import { MoreVertical } from "lucide-react";
+import { useState } from "react";
+
+import { Menu, MenuItem } from "@/components/ui/Popover";
 
 import { UserContext } from "../../contexts";
 import { EcTooltip } from "../../stories/components";
@@ -13,73 +14,35 @@ interface ReplyCommentActionsPropsType {
     onAction: (type: CommentActionType) => void;
 }
 
-export const ReplyCommentActions = (props: ReplyCommentActionsPropsType) => {
-    const { data, onAction } = props;
+export const ReplyCommentActions = ({ data, onAction }: ReplyCommentActionsPropsType) => {
     const { user } = UserContext();
-    const [actionOptions, setActionOptions] = React.useState<null | HTMLSpanElement>(null);
-    const isMenuOpen = Boolean(actionOptions);
+    const [actionOptions, setActionOptions] = useState<null | HTMLElement>(null);
     const isButtonDisabled = user.figmaUserId !== data.user.id;
 
     return (
-        <>
-            <Box style={{ display: "flex", alignItems: "center" }}>
-                <EcTooltip
-                    disableHoverListener={!isButtonDisabled}
-                    title="This Action Can't Be Performed"
-                    placement="left-start"
-                    arrow
+        <div className="flex items-center">
+            <EcTooltip title={isButtonDisabled ? "This Action Can't Be Performed" : ""} placement="left-start" arrow>
+                <button
+                    type="button"
+                    aria-label="more actions"
+                    className="mr-1 flex items-center rounded-sm py-1 text-blue-ink"
+                    onClick={(event) => {
+                        if (!isButtonDisabled) setActionOptions(event.currentTarget);
+                    }}
                 >
-                    <Box
-                        style={{
-                            cursor: "pointer",
-                            display: "flex",
-                            alignSelf: "center",
-                            lineHeight: 1,
-                            marginRight: "4px",
-                        }}
-                        role="presentation"
-                    >
-                        <IconButton
-                            color="primary"
-                            aria-label="more actions"
-                            component="span"
-                            style={{
-                                padding: "4px 0",
-                                borderRadius: "4px",
-                            }}
-                            onClick={(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-                                if (!isButtonDisabled) {
-                                    setActionOptions(event.currentTarget);
-                                }
-                            }}
-                        >
-                            <MoreVertIcon className="actiondown-icon" />
-                        </IconButton>
-                    </Box>
-                </EcTooltip>
-
-                {/* Menu Options */}
-                <Menu
-                    className="mui-dropdown"
-                    anchorEl={actionOptions}
-                    id="primary-search-account-menu"
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                    }}
-                    transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                    }}
-                    keepMounted
-                    open={isMenuOpen}
-                    onClose={() => {
+                    <MoreVertical className="size-5" />
+                </button>
+            </EcTooltip>
+            <Menu open={Boolean(actionOptions)} anchorEl={actionOptions} onClose={() => setActionOptions(null)} placement="bottom-end">
+                <MenuItem
+                    onClick={() => {
                         setActionOptions(null);
+                        onAction("delete");
                     }}
                 >
-                    <MenuItem onClick={() => onAction("delete")}>Delete</MenuItem>
-                </Menu>
-            </Box>
-        </>
+                    Delete
+                </MenuItem>
+            </Menu>
+        </div>
     );
 };
