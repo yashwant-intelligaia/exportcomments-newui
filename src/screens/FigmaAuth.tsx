@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useHistory } from "@/utils/navigation";
 
@@ -23,9 +23,15 @@ export const FigmaAuth = () => {
     const { saveFigmaAccessToken } = useAuthMutations();
     const { mutate, isPending: isLoading, data, isError } = saveFigmaAccessToken;
 
+    // The Figma auth code is single-use. Guard against re-invocation
+    // (React StrictMode double-invokes effects in dev) so login fires once.
+    const hasRequestedLogin = useRef(false);
+
     useEffect(() => {
         setLoadingMessage(getLoadingMessage("login"));
         setLoadingImage(getLoadingImage("login"));
+        if (hasRequestedLogin.current) return;
+        hasRequestedLogin.current = true;
         mutate({
             code: query.get("code"),
             state: query.get("state"),
@@ -41,10 +47,11 @@ export const FigmaAuth = () => {
             // if (fetchGenerateAccessTokenStatus() === "true") {
             //     history.push("/generate-access-token");
             // }
+            history.push("/projects");
         }
     }, [data]);
 
-    if (isLoading && !data) {
+    if (!data && !isError) {
         return <Loader message={loadingMessage} image={loadingImage} />;
     }
     if (isError) {
@@ -54,10 +61,6 @@ export const FigmaAuth = () => {
                 <PageNotFound />
             </>
         );
-    }
-
-    if (data) {
-        history.push("/projects");
     }
 
     return <></>;
